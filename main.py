@@ -15,11 +15,11 @@ def main(args=None):
 
     if config.SHOULD_USE_OCR:
         ocr_service = OcrService()
-        image_path = '/Users/elroie/Computer Science/Final Project/Project/ML/images/electricity/test/test1.jpg'
+        image_path = '/Users/elroie/Computer Science/Final Project/Project/homeaccountant/ML/images/electricity/test/test1.jpg'
         ocr_service.process_image(image_path)
 
     # Start rest API.
-    #app.run()
+    app.run()
 
 if __name__ == "__main__":
     main()

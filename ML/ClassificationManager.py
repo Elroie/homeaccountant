@@ -1,4 +1,4 @@
-from ML.ImageRecognitionModel import ImageRecognitionModel
+from ImageRecognitionModel import ImageRecognitionModel
 import threading
 from Queue import Queue
 
@@ -9,11 +9,11 @@ class ClassificationManager(threading.Thread):
     def __init__(self):
         threading.Thread.__init__(self, name="Classification_Manager")
         self._electricity_classifier = \
-            ImageRecognitionModel('/Users/elroie/Computer Science/Final Project/Project/ML/images/electricity/train',
+            ImageRecognitionModel('/Users/elroie/Computer Science/Final Project/Project/homeaccountant/ML/images/electricity/train',
                                   'Electricity Bill', 'elec')
 
         self._water_classifier = \
-            ImageRecognitionModel('/Users/elroie/Computer Science/Final Project/Project/ML/images/water/train',
+            ImageRecognitionModel('/Users/elroie/Computer Science/Final Project/Project/homeaccountant/ML/images/water/train',
                                   'Water Bill', 'wa')
 
         # we bound the queue to hold only max of 1000 classification tasks.
@@ -56,38 +56,39 @@ class ClassificationManager(threading.Thread):
     def _test(self):
         """ Test all classification models """
         classification = self._electricity_classifier.classify(
-            '/Users/elroie/Computer Science/Final Project/Project/ML/images/electricity/test/negative_test.jpeg')
+            '/Users/elroie/Computer Science/Final Project/Project/homeaccountant/ML/images/electricity/test/negative_test.jpeg')
         assert classification.get_result() is False
 
-        classification = self._electricity_classifier.classify('/Users/elroie/Computer Science/Final Project/Project/ML/images/electricity/test/test1.jpg')
+        classification = \
+            self._electricity_classifier.classify('/Users/elroie/Computer Science/Final Project/Project/homeaccountant/ML/images/electricity/test/test1.jpg')
         assert classification.get_result() is True
 
         classification = self._electricity_classifier.classify(
-            '/Users/elroie/Computer Science/Final Project/Project/ML/images/electricity/test/negative_test1.jpg')
+            '/Users/elroie/Computer Science/Final Project/Project/homeaccountant/ML/images/electricity/test/negative_test1.jpg')
         assert classification.get_result() is False
 
         classification = self._electricity_classifier.classify(
-            '/Users/elroie/Computer Science/Final Project/Project/ML/images/electricity/test/negative_test2.jpg')
+            '/Users/elroie/Computer Science/Final Project/Project/homeaccountant/ML/images/electricity/test/negative_test2.jpg')
         assert classification.get_result() is False
 
         classification = self._water_classifier.classify(
-            '/Users/elroie/Computer Science/Final Project/Project/ML/images/water/test/negative_test2.jpg')
+            '/Users/elroie/Computer Science/Final Project/Project/homeaccountant/ML/images/water/test/negative_test2.jpg')
         assert classification.get_result() is False
 
         classification = self._water_classifier.classify(
-            '/Users/elroie/Computer Science/Final Project/Project/ML/images/water/test/negative_test2.jpg')
+            '/Users/elroie/Computer Science/Final Project/Project/homeaccountant/ML/images/water/test/negative_test2.jpg')
         assert classification.get_result() is False
 
         classification = self._water_classifier.classify(
-            '/Users/elroie/Computer Science/Final Project/Project/ML/images/water/test/negative_test12.jpg')
+            '/Users/elroie/Computer Science/Final Project/Project/homeaccountant/ML/images/water/test/negative_test12.jpg')
         assert classification.get_result() is False
 
         classification = self._water_classifier.classify(
-            '/Users/elroie/Computer Science/Final Project/Project/ML/images/water/test/test1.jpg')
+            '/Users/elroie/Computer Science/Final Project/Project/homeaccountant/ML/images/water/test/test1.jpg')
         assert classification.get_result() is True
 
         classification = self._water_classifier.classify(
-            '/Users/elroie/Computer Science/Final Project/Project/ML/images/water/test/negative_test1.jpg')
+            '/Users/elroie/Computer Science/Final Project/Project/homeaccountant/ML/images/water/test/negative_test1.jpg')
         assert classification.get_result() is False
 
         print 'finish testing, sit back and enjoy :)'

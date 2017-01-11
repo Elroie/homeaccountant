@@ -1,6 +1,6 @@
 
 ###### Machine Learning Configurations ######
-SHOULD_USE_MACHINE_LEARNING = False
+SHOULD_USE_MACHINE_LEARNING = True
 SHOULD_SAVE_MODEL = False
 #############################################
 
