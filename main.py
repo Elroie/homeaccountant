@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 from ML.ClassificationManager import ClassificationManager
-from REST.AccountResource import app
+from REST.api import app
 from OCR.ocr_service import OcrService
 import config
 
@@ -15,8 +15,8 @@ def main(args=None):
 
     if config.SHOULD_USE_OCR:
         ocr_service = OcrService()
-        image_path = '/Users/elroie/Computer Science/Final Project/Project/homeaccountant/ML/images/electricity/test/test1.jpg'
-        ocr_service.process_image(image_path)
+        image_path = config.BASE_PATH + 'ML/images/electricity/test/test1.jpg'
+        # ocr_service.enqueue_ocr_task(image_path)
 
     # Start rest API.
     app.run()

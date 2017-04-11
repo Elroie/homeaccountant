@@ -1,4 +1,6 @@
 
+BASE_PATH = '/Users/elroie/Computer Science/Final Project/Project/homeaccountant/'
+
 ###### Machine Learning Configurations ######
 SHOULD_USE_MACHINE_LEARNING = True
 SHOULD_SAVE_MODEL = False
