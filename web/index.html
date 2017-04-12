@@ -1,67 +1,59 @@
 <!DOCTYPE html>
-<html lang="en" class="no-js">
+<html lang="en-us" class="no-js">
 	<head>
-		<meta charset="utf-8" />
-		<title>Home Accountant</title>
+	
+		<meta charset="utf-8">
+		<title> SmartAdmin (AngularJS)</title>
+		<meta name="description" content="">
+		<meta name="author" content="">
 
-		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
 		<!-- #CSS Links -->
 		<!-- Basic Styles -->
-		<link rel="stylesheet" type="text/css" media="screen" href="/smart/styles/css/bootstrap.min.css">
-		<link rel="stylesheet" type="text/css" media="screen" href="/smart/bower_components/fontawesome/css/font-awesome.min.css">
+		<link rel="stylesheet" type="text/css" media="screen" href="styles/css/bootstrap.min.css">
+		<link rel="stylesheet" type="text/css" media="screen" href="styles/css/font-awesome.min.css">
 
 		<!-- SmartAdmin Styles : Caution! DO NOT change the order -->
-		<link rel="stylesheet" type="text/css" media="screen" href="/smart/styles/css/smartadmin-production-plugins.min.css">
-		<link rel="stylesheet" type="text/css" media="screen" href="/smart/styles/css/smartadmin-production.min.css">
-		<link rel="stylesheet" type="text/css" media="screen" href="/smart/styles/css/smartadmin-skins.min.css">
+		<link rel="stylesheet" type="text/css" media="screen" href="styles/css/smartadmin-production-plugins.min.css">
+		<link rel="stylesheet" type="text/css" media="screen" href="styles/css/smartadmin-production.min.css">
+		<link rel="stylesheet" type="text/css" media="screen" href="styles/css/smartadmin-skins.min.css">
+		
+		<link rel="stylesheet" type="text/css" media="screen" href="styles/css/smartadmin-angular.css">
 
-		<link rel="stylesheet" type="text/css" media="screen" href="/smart/styles/css/smartadmin-angular.css">
+		<!-- SmartAdmin RTL Support (Not using RTL? Disable the CSS below to save bandwidth) -->
+		<link rel="stylesheet" type="text/css" media="screen" href="styles/css/smartadmin-rtl.min.css">
 
-
-		 <!--We recommend you use "your_style.css" to override SmartAdmin
-		specific styles this will also ensure you retrain your customization with each SmartAdmin update.-->
-		<link rel="stylesheet" type="text/css" media="screen" href="/smart/styles/css/layout.css">
+		<!-- We recommend you use "your_style.css" to override SmartAdmin
+		specific styles this will also ensure you retrain your customization with each SmartAdmin update.
+		<link rel="stylesheet" type="text/css" media="screen" href="css/your_style.css"> -->
 
 		<!-- Demo purpose only: goes with demo.js, you can delete this css when designing your own WebApp -->
-		<link rel="stylesheet" type="text/css" media="screen" href="/smart/styles/css/demo.min.css">
-
-		<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.css">
+		<link rel="stylesheet" type="text/css" media="screen" href="styles/css/demo.min.css">
 
 		<!-- #FAVICONS -->
-		<link rel="shortcut icon" href="/smart/images/topagent.ico" type="image/x-icon">
+		<link rel="shortcut icon" href="styles/img/favicon/favicon.ico" type="image/x-icon">
 
 		<!-- #GOOGLE FONT -->
-	 	<!--<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,300,400,700"> -->
+	<!-- 	<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,300,400,700"> -->
 
 		<!-- #APP SCREEN / ICONS -->
 		<!-- Specifying a Webpage Icon for Web Clip
 		Ref: https://developer.apple.com/library/ios/documentation/AppleApplications/Reference/SafariWebContent/ConfiguringWebApplications/ConfiguringWebApplications.html -->
-		<!--<link rel="apple-touch-icon" href="styles/img/splash/sptouch-icon-iphone.png">-->
-		<!--<link rel="apple-touch-icon" sizes="76x76" href="styles/img/splash/touch-icon-ipad.png">-->
-		<!--<link rel="apple-touch-icon" sizes="120x120" href="styles/img/splash/touch-icon-iphone-retina.png">-->
-		<!--<link rel="apple-touch-icon" sizes="152x152" href="styles/img/splash/touch-icon-ipad-retina.png">-->
+		<link rel="apple-touch-icon" href="styles/img/splash/sptouch-icon-iphone.png">
+		<link rel="apple-touch-icon" sizes="76x76" href="styles/img/splash/touch-icon-ipad.png">
+		<link rel="apple-touch-icon" sizes="120x120" href="styles/img/splash/touch-icon-iphone-retina.png">
+		<link rel="apple-touch-icon" sizes="152x152" href="styles/img/splash/touch-icon-ipad-retina.png">
 
-		<!-- web_old web-app metas : hides Safari UI Components and Changes Status Bar Appearance -->
-		<meta name="apple-mobile-web-app-capable" content="yes" />
-		<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+		<!-- iOS web-app metas : hides Safari UI Components and Changes Status Bar Appearance -->
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
 
-		<!-- Startup image web_old web apps -->
-		<!--<link rel="apple-touch-startup-image" href="styles/img/splash/ipad-landscape.png" media="screen and (min-device-width: 481px) and (max-device-width: 1024px) and (orientation:landscape)" />-->
-		<!--<link rel="apple-touch-startup-image" href="styles/img/splash/ipad-portrait.png" media="screen and (min-device-width: 481px) and (max-device-width: 1024px) and (orientation:portrait)" />-->
-		<!--<link rel="apple-touch-startup-image" href="styles/img/splash/iphone.png" media="screen and (max-device-width: 320px)" />-->
+		<!-- Startup image for web apps -->
+		<link rel="apple-touch-startup-image" href="styles/img/splash/ipad-landscape.png" media="screen and (min-device-width: 481px) and (max-device-width: 1024px) and (orientation:landscape)">
+		<link rel="apple-touch-startup-image" href="styles/img/splash/ipad-portrait.png" media="screen and (min-device-width: 481px) and (max-device-width: 1024px) and (orientation:portrait)">
+		<link rel="apple-touch-startup-image" href="styles/img/splash/iphone.png" media="screen and (max-device-width: 320px)">
 
-
-		<script>
-            (function (window) {
-                window.__env = window.__env || {};
-                window.__env.apiUrl = '/api';
-                window.__env.enableDebug = false;
-            }(this));
-        </script>
-		<script type="text/javascript">
-            var API_BASE = '/api';
-		</script>
 	</head>
 	<!--
 
@@ -105,12 +97,10 @@
 
 	-->
 
-	<body
-	      data-smart-device-detect
-		  data-smart-fast-click
-		  data-smart-layout
-		  data-smart-page-title="Home Accountant"
-	>
+	<body data-smart-device-detect
+		data-smart-fast-click
+		data-smart-layout
+		data-smart-page-title="SmartAdmin AngularJS">
 
 		<!-- ui-view container -->
 
@@ -125,9 +115,11 @@
 			<script src="plugin/json3/lib/json3.min.js"></script>
 		<![endif]-->
 
-		<!-- Use for production after building the project with grunt -->
-		<script src="/smart/build/vendor.js"></script>
-		<script src="/smart/build/app.js"></script>
+		<!-- Use for production after building the project with grunt --> 
+		<script src="build/vendor.js"></script>		
+		<script src="build/app.js"></script>
 
-    </body>
+
+		</body>
+	
 </html>
