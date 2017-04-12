@@ -3,11 +3,14 @@ package com.example.omer.homeaccountant;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.os.Build;
+import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -29,6 +32,9 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
 
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+
 public class MainActivity extends ActionBarActivity {
     private static final int INPUT_FILE_REQUEST_CODE = 1;
     private static final int FILECHOOSER_RESULTCODE = 1;
@@ -39,6 +45,7 @@ public class MainActivity extends ActionBarActivity {
     private Uri mCapturedImageURI = null;
     private ValueCallback<Uri[]> mFilePathCallback;
     private String mCameraPhotoPath;
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -261,6 +268,28 @@ public class MainActivity extends ActionBarActivity {
                 exception.printStackTrace();
             }
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+        getMenuInflater().inflate(R.menu.menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+
+        switch (item.getItemId()){
+            case android.R.id.home:
+                NavUtils.navigateUpFromSameTask(this);
+                return true;
+
+            case R.id.action_camera:
+                startActivity(new Intent(this, UploadPic.class));
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }
 
