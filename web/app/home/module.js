@@ -13,7 +13,8 @@ angular.module('app.home', ['ui.router'])
             views: {
                 "content@app": {
                     templateUrl: 'app/home/views/home.html',
-                    controller: 'HomeController'
+                    controller: 'HomeController',
+                    controllerAs: 'ctrl'
                 }
             }
         })

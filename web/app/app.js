@@ -15,6 +15,7 @@ angular.module('app', [
     'restangular',
     'ui.router',
     'ui.bootstrap',
+    'ngFileUpload',
 
     // Smartadmin Angular Common Module
     'SmartAdmin',

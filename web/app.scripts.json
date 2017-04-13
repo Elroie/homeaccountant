@@ -33,8 +33,8 @@
       "flot-tooltip",
       "datatables",
       "angular-datatables",
-      "angular-datatables.bootstrap"
-
+      "angular-datatables.bootstrap",
+      "ng-file-upload"
     ],
     "vendor.ui": [
       "select2",
@@ -158,6 +158,7 @@
     "magnific-popup": "bower_components/magnific-popup/dist/jquery.magnific-popup.js",
     "fullcalendar": "smartadmin-plugin/fullcalendar/jquery.fullcalendar.min.js",
     "smartwidgets": "smartadmin-plugin/smartwidgets/jarvis.widget.min.js",
-    "notification": "smartadmin-plugin/notification/SmartNotification.min.js"
+    "notification": "smartadmin-plugin/notification/SmartNotification.min.js",
+    "ng-file-upload" : "bower_components/ng-file-upload/ng-file-upload.js"
   }
 }
