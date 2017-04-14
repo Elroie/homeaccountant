@@ -17,4 +17,5 @@ APPLICATION_PASSWORD = 'TAlOOpwRaKq5V+jEgOW+MFXK'
 
 
 class Config(object):
+    DEBUG = True
     UPLOADS_PATH = os.path.join(basedir, 'media', 'upload')
