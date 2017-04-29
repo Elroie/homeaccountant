@@ -7,7 +7,7 @@ import utils
 
 @utils.singleton
 class OcrService(Thread):
-    """This is a wrapper for abbyy OCR"""
+    """This is a wrapper for abbyy OCR123"""
 
     def __init__(self):
         Thread.__init__(self, name="OCR_Service")
