@@ -11,6 +11,6 @@ class ClassificationResult:
 
     def get_classification_result(self):
         if self.result == True:
-            return self.type;
+            return self.type
         else:
             return 'Not a ' + self.type

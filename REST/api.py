@@ -1,13 +1,20 @@
 import os
 import random
 import string
-
 import werkzeug
+import config
+
+from mongoengine import connect
 from flask import Flask, current_app as app, Blueprint, current_app
 from flask_restful import reqparse, abort
 from datetime import timedelta
 from flask import make_response, request, current_app
 from functools import update_wrapper
+from Entities.User import User
+from Entities.UserImage import UserImage
+from Entities.ScannedImage import ScannedImage
+
+from ML.ClassificationManager import ClassificationManager
 
 
 api_bp = Blueprint('v1', __name__)
@@ -74,6 +81,9 @@ def upload_image():
 
     file_obj = args['file']
 
+    # elroie todo: remove this when the endpoint is ready
+    user_id = args.get('user_id', '746fc33a-fb7c-4595-ba83-19842631859b')
+
     is_valid_extension = True
     # extract and validate file extension
     file_ext = file_obj.filename.rsplit('.', 1)[1]
@@ -100,8 +110,12 @@ def upload_image():
         os.makedirs(path)
 
     # save file to disk
+    file_path = os.path.join(path, file_name)
     with open(os.path.join(path, file_name), 'wb+') as d:
         d.write(file_obj.stream.read())
+
+    classification_manager = ClassificationManager()
+    classification_manager.enqueue_classification_task(user_id, file_path)
 
     return "", 204
 

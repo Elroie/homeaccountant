@@ -1,13 +1,16 @@
-import config
+import config, utils
 from threading import Thread
 from AbbyyOnlineSdk import *
 from Queue import Queue
-import utils
+from mongoengine import connect
+from Entities.UserImage import UserImage
+from Entities.ScannedImage import ScannedImage
 
 
-@utils.singleton
 class OcrService(Thread):
     """This is a wrapper for abbyy OCR"""
+
+    __metaclass__ = utils.Singleton
 
     def __init__(self):
         Thread.__init__(self, name="OCR_Service")
@@ -27,43 +30,57 @@ class OcrService(Thread):
             self.processor.Proxy = urllib2.ProxyHandler({"http": proxyString})
 
     def run(self):
-        while not self.should_stop:
-            ocr_task = self.ocr_queue.get(block=True, timeout=None)
+        try:
+            while not self.should_stop:
+                ocr_task = self.ocr_queue.get(block=True, timeout=None)
 
-            print "Uploading.."
-            settings = ProcessingSettings()
-            settings.Language = ocr_task.language
-            settings.OutputFormat = ocr_task.outputFormat
-            task = self.processor.ProcessImage(ocr_task.filePath, settings)
-            if task == None:
-                print "Error"
-                return
-            if task.Status == "NotEnoughCredits":
-                print "Not enough credits to process the document. Please add more pages to your application's account."
-                return
+                print "Uploading.."
+                settings = ProcessingSettings()
+                settings.Language = ocr_task['language']
+                settings.OutputFormat = ocr_task['outputFormat']
+                task = self.processor.ProcessImage(ocr_task['filePath'], settings)
+                if task == None:
+                    print "Error"
+                if task.Status == "NotEnoughCredits":
+                    print "Not enough credits to process the document. Please add more pages to your application's account."
 
-            print "Id = %s" % task.Id
-            print "Status = %s" % task.Status
+                print "Id = %s" % task.Id
+                print "Status = %s" % task.Status
 
-            # Wait for the task to be completed
-            sys.stdout.write("Waiting..")
+                # Wait for the task to be completed
+                sys.stdout.write("Waiting..")
 
-            while task.IsActive() == True:
-                time.sleep(5)
-                sys.stdout.write(".")
-                task = self.processor.GetTaskStatus(task)
+                while task.IsActive() == True:
+                    time.sleep(5)
+                    sys.stdout.write(".")
+                    task = self.processor.GetTaskStatus(task)
 
-            print "Status = %s" % task.Status
+                print "Status = %s" % task.Status
 
-            if task.Status == "Completed":
-                if task.DownloadUrl != None:
-                    self.processor.DownloadResult(task, ocr_task.resultFilePath)
-                    print "Result was written to %s" % ocr_task.resultFilePath
-            else:
-                print "Error processing task"
+                if task.Status == "Completed":
+                    if task.DownloadUrl != None:
+                        self.processor.DownloadResult(task, ocr_task['resultFilePath'])
+                        print "Result was written to %s" % ocr_task['resultFilePath']
 
-    def enqueue_ocr_task(self, filePath, resultFilePath, language, outputFormat):
+                        connect(config.DB_NAME)
+                        user_image = UserImage.objects(id=ocr_task['image_id'])[0]
+                        scanned_image = ScannedImage()
+                        scanned_image.original_image = user_image
+
+                        with open(ocr_task['resultFilePath']) as f:
+                            scanned_image.text = f.readlines()
+
+                        # Elroie todo: create textExtractors for each image (electricity & water)
+                        scanned_image.save()
+                else:
+                    print "Error processing task"
+        except Exception as ex:
+            # we should suppress and log the errors inside the threads since we don't want this manager to die.
+            print ex.message
+
+    def enqueue_ocr_task(self, image_id, filePath, resultFilePath, language='Hebrew', outputFormat='txt'):
         ocr_task = {
+            'image_id': image_id,
             'filePath': filePath,
             'resultFilePath': resultFilePath,
             'language': language,
