@@ -8,7 +8,7 @@ from Entities.ScannedImage import ScannedImage
 
 
 class OcrService(Thread):
-    """This is a wrapper for abbyy OCR"""
+    """This is a wrapper for abbyy OCR123"""
 
     __metaclass__ = utils.Singleton
 
