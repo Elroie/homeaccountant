@@ -110,7 +110,7 @@ public class MainActivity extends ActionBarActivity {
             webView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         }
 //        webView.loadUrl("http://34.249.108.4/index.html");
-        webView.loadUrl("http://10.0.0.12:8888/index.html");
+        webView.loadUrl("http://10.160.26.14:8888/index.html");
     }
     private File createImageFile() throws IOException {
         // Create an image file name
