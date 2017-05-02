@@ -11,38 +11,3 @@
 <br/>
     Enjoy Home Accountant.<br/><br/>
 </div>
-
-
-    <form method="get" action="">
-
-   <div data-role="fieldcontain">
-    <label for="name">Upload Bill:</label>
-    <input type="file" name="text" id="name" type="image/*" >
-    </div>
-
-</form>
-    
-    
-    
-    
-    
-    <br/>
-    <img ng-if="ctrl.image_path" ng-src="{{ ctrl.image_path }}" width="50px" height="50px" />
-    <br/>
-    <button id="logoFile"
-                                class="btn btn-default btn-md filter choose-file theFileInput"
-                                ng-model="ctrl.logoFile"
-                                ng-if="!ctrl.image_path"
-                                ngf-select
-                                ngf-change="selectFile($files, $file, $newFiles, $duplicateFiles, $invalidFiles, $event)"
-                                ngf-pattern="ctrl.logoType.allowedFileType"
-                                ngf-accept="ctrl.logoType.accept"
-                                ngf-resize="ctrl.logoType.resizeObj"
-                                ngf-resize-if="ctrl.logoType.resizeIfFn($file, $width, $height)"
-                                ngf-dimensions="ctrl.logoType.dimensionsFn($file, $width, $height)"
-                        ><span>Choose file</span></button>
-                        <button class="btn btn-primary btn-md" ng-if="!ctrl.image_path" ng-click="ctrl.upload()">Upload<span ng-if="ctrl.progressPercentage">{{ ctrl.progressPercentage }}%</span></button>
-
-
-</div>
-	
