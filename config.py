@@ -5,7 +5,7 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 BASE_PATH = '/Users/elroie/ComputerScience/FinalProject/Project/homeaccountant/'
 
 ###### Machine Learning Configurations ######
-SHOULD_USE_MACHINE_LEARNING = True
+SHOULD_USE_MACHINE_LEARNING = False
 SHOULD_SAVE_MODEL = False
 #############################################
 
