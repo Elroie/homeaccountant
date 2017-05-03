@@ -30,21 +30,21 @@ angular.module('app.graphs').directive('chartjsDoughnutChart', function () {
             var doughnutData = [
                 {
                     value: 300,
-                    color:"rgba(220,220,220,0.8)",
-                    highlight: "rgba(220,220,220,0.7)",
-                    label: "Grey"
+                    color:"rgba(220,220,0,0.5)",
+                    highlight: "rgba(220,220,0,0.3)",
+                    label: "Electricity"
                 },
                 {
                     value: 50,
                     color: "rgba(151,187,205,1)",
-                    highlight: "rgba(151,187,205,0.8)",
-                    label: "Blue"
+                    highlight: "rgba(151,187,205,0.4)",
+                    label: "Water"
                 },
                 {
                     value: 100,
                     color: "rgba(169, 3, 41, 0.7)",
-                    highlight: "rgba(169, 3, 41, 0.7)",
-                    label: "Red"
+                    highlight: "rgba(169, 3, 41, 0.4)",
+                    label: "Other"
                 }
             ];
 

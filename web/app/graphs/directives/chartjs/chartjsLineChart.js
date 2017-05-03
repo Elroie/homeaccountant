@@ -38,27 +38,37 @@ angular.module('app.graphs').directive('chartjsLineChart', function () {
                 legendTemplate : "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<datasets.length; i++){%><li><span style=\"background-color:<%=datasets[i].lineColor%>\"></span><%if(datasets[i].label){%><%=datasets[i].label%><%}%></li><%}%></ul>"
             };
 
-            var lineData = { labels: ["January", "February", "March", "April", "May", "June", "July"],
+            var lineData = { labels: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November","December"],
                 datasets: [
                     {
-                        label: "My First dataset",
-                        fillColor: "rgba(220,220,220,0.2)",
-                        strokeColor: "rgba(220,220,220,1)",
-                        pointColor: "rgba(220,220,220,1)",
+                        label: "Electricity",
+                        fillColor: "rgba(220,220,0,0.2)",
+                        strokeColor: "rgba(220,220,0,1)",
+                        pointColor: "rgba(220,220,0,1)",
                         pointStrokeColor: "#fff",
                         pointHighlightFill: "#fff",
-                        pointHighlightStroke: "rgba(220,220,220,1)",
-                        data: [65, 59, 80, 81, 56, 55, 40]
+                        pointHighlightStroke: "rgba(220,220,0,1)",
+                        data: [165, 239, 180, 221, 196, 255, 240,300,340,200,210,220]
                     },
                     {
-                        label: "My Second dataset",
+                        label: "Water",
                         fillColor: "rgba(151,187,205,0.2)",
                         strokeColor: "rgba(151,187,205,1)",
                         pointColor: "rgba(151,187,205,1)",
                         pointStrokeColor: "#fff",
                         pointHighlightFill: "#fff",
                         pointHighlightStroke: "rgba(151,187,205,1)",
-                        data: [28, 48, 40, 19, 86, 27, 90]
+                        data: [128, 148, 140, 119, 186, 127, 190, 200,240,150,110,120]
+                    },
+                    {
+                        label: "Other",
+                        fillColor: "rgba(169, 3, 41,0.2)",
+                        strokeColor: "rgba(169, 3, 41,1)",
+                        pointColor: "rgba(169, 3, 41,1)",
+                        pointStrokeColor: "#fff",
+                        pointHighlightFill: "#fff",
+                        pointHighlightStroke: "rgba(169, 3, 41,1)",
+                        data: [100, 118, 160, 109, 286, 327, 190, 100,140,50,90,120]
                     }
                 ]
             };
