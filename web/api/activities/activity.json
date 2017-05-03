@@ -1,21 +1,16 @@
 {
 	"activities":{
-		"last_update":"12/12/2013 9:43AM",
+		"last_update":"01/05/2017 9:43AM",
 		"types":[
-			{
-				"title":"Msgs",
-				"name":"msgs",
-				"length":14
-			},
 			{
 				"title":"Notify",
 				"name":"notify",
-				"length":3
+				"length":2
 			},
 			{
 				"title":"Tasks",
 				"name":"tasks",
-				"length":4
+				"length":3
 			}
 		]
 	}

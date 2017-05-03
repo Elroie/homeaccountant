@@ -1,20 +1,15 @@
 {
 	"title":"Notify",
-	"length":3,
+	"length":2,
 	"data":[
 		{
-			"icon":"fa-user",
-			"message":"2 new users just signed up! martin.luther and kevin.reliey",
-			"time":	"1 min ago..."					
-		},
-		{
 			"icon":"fa-facebook",
-			"message":"Facebook recived +33 unique likes",
-			"time":	"4 hrs ago..."
+			"message":"You can get notifications on your Facebook account",
+			"time":	"4 hours ago..."
 		},
 		{
 			"icon":"fa-check",
-			"message":"2 projects were completed on time! Submitted for your approval - Click here",
+			"message":"Home Accountant released new version 2.0",
 			"time":	"1 day ago..."
 		}
 	]
