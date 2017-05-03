@@ -75,7 +75,6 @@
       "raphael",
       "morris",
       "dygraphs",
-      "chartjs",
       "highcharts",
       "highchartTable"
     ]
@@ -122,7 +121,7 @@
     "raphael": "bower_components/raphael/raphael-min.js",
     "morris": "bower_components/morris.js/morris.min.js",
     "dygraphs": "bower_components/dygraphs/dygraph-combined.js",
-    "chartjs": "bower_components/Chart.js/Chart.min.js",
+
     "highcharts": "bower_components/highcharts/highcharts.js",
     "highchartTable": "bower_components/highchartTable/jquery.highchartTable.js",
     "datatables": "bower_components/datatables/media/js/jquery.dataTables.min.js",

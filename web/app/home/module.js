@@ -83,4 +83,17 @@ angular.module('app.home', ['ui.router'])
                 }
             }
         })
+        .state('app.report_type', {
+            url: '/reports-list',
+            data: {
+                title: 'Electricity Reports'
+            },
+            views: {
+                "content@app": {
+                    templateUrl: 'app/home/views/report-type.html',
+                    controller: 'ReportTypeController',
+                    controllerAs: 'ctrl'
+                }
+            }
+        })
 });

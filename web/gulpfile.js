@@ -19,6 +19,7 @@ var source = {
             'app.config.js',
 
             // application bootstrap file
+
             'app/main.js',
 
             // main module
@@ -26,11 +27,13 @@ var source = {
 
             // module files
             'app/**/module.js',
-
-            'app/**/directives/*.js',
-
             // other js files [controllers, services, etc.]
-            'app/**/!(module)*.js'
+
+            'app/**/!(module)*.js',
+            //
+            // 'app/graphs/directives/chartjs/chartjsLineChart.js',
+            // 'app/graphs/directives/chartjs/chartjsDoughnutChart.js',
+            // 'app/graphs/directives/chartjs/chartjsRadarChart.js'
         ],
         tpl: 'app/**/*.tpl.html'
     }
