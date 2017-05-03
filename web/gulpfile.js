@@ -27,6 +27,8 @@ var source = {
             // module files
             'app/**/module.js',
 
+            'app/**/directives/*.js',
+
             // other js files [controllers, services, etc.]
             'app/**/!(module)*.js'
         ],
