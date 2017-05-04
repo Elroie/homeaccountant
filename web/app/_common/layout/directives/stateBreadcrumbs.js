@@ -12,6 +12,7 @@ angular.module('SmartAdmin.Layout').directive('stateBreadcrumbs', function ($roo
             function setBreadcrumbs(breadcrumbs) {
                 var html = '<li>HomeAccountant</li>';
                 angular.forEach(breadcrumbs, function (crumb) {
+                if (crumb == "Blank") crumb="Home";
                     html += '<li>' + crumb + '</li>'
                 });
                 element.html(html)

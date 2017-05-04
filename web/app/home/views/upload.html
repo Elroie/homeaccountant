@@ -1,4 +1,9 @@
 
+  <script>
+  $( function() {
+    $( "#datepicker" ).datepicker();
+  } );
+  </script>
 <div id="content">
 <div class="row">
     <big-breadcrumbs items="['Upload Report']" icon="fa fa-lg fa-fw fa-cloud-upload" class="col-xs-12 col-sm-7 col-md-7 col-lg-4"></big-breadcrumbs>
@@ -102,9 +107,7 @@
 												<div class="col-sm-6">
 													<div class="form-group">
 														<div class="input-group">
-																	<br/>
 															<img ng-if="ctrl.image_path" ng-src="{{ ctrl.image_path }}" width="50px" height="50px" />
-															<br/>
 															<button id="logoFile"
 																						class="btn btn-default btn-md filter choose-file theFileInput"
 																						ng-model="ctrl.logoFile"
@@ -120,98 +123,67 @@
 																				<button class="btn btn-primary btn-md" ng-if="!ctrl.image_path" ng-click="ctrl.upload()">Upload<span ng-if="ctrl.progressPercentage">{{ ctrl.progressPercentage }}%</span></button>
 
 														</div>
+
 													</div>
+
 												</div>
 											</div>
+											<div class="alert alert-info fade in">
+																<button class="close" data-dismiss="alert">
+																	×
+																</button>
+																<i class="fa-fw fa fa-info"></i>
+																<strong>Info!</strong> File should be in JPEG \ JPG \ PNG format
+											</div>
+
 
 										</div>
 										<div class="tab-pane" id="tab2">
 											<br>
-											<h3><strong>Step 2</strong> - Bill Information</h3>
+											<h3><strong>Step 2</strong> - Add Bill Information</h3>
+												<div class="col-sm-6">
+													<div class="form-group">
+														<div class="input-group">
+															<span class="input-group-addon"><i class="fa fa-dollar fa-lg fa-fw"></i></span>
+															<input class="form-control input-lg" data-mask="999" data-mask-placeholder="X" name="billsum" id="billsum" type="text">
+														</div>
+													</div>
+												</div>
+												<div class="col-sm-6">
+													<div class="form-group">
+														<div class="input-group">
+															<span class="input-group-addon"><i class="fa fa-calendar fa-lg fa-fw"></i></span>
+															<input type="date" class="form-control input-lg"  name="date" id="datepicker" type="text" data-date-inline-picker="true">
+														</div>
+													</div>
+												</div>
+<br><br>
+											<div class="row">
 
-											<div class="row">
-												<div class="col-sm-4">
-													<div class="form-group">
-														
-													</div>
-												</div>
-												<div class="col-sm-4">
-													<div class="form-group">
-														<div class="input-group">
-															<span class="input-group-addon"><i class="fa fa-map-marker fa-lg fa-fw"></i></span>
-															<select class="form-control input-lg" name="city">
-																<option value="" selected="selected">Select City</option>
-																<option>Amsterdam</option>
-																<option>Atlanta</option>
-																<option>Baltimore</option>
-																<option>Boston</option>
-																<option>Buenos Aires</option>
-																<option>Calgary</option>
-																<option>Chicago</option>
-																<option>Denver</option>
-																<option>Dubai</option>
-																<option>Frankfurt</option>
-																<option>Hong Kong</option>
-																<option>Honolulu</option>
-																<option>Houston</option>
-																<option>Kuala Lumpur</option>
-																<option>London</option>
-																<option>Los Angeles</option>
-																<option>Melbourne</option>
-																<option>Mexico City</option>
-																<option>Miami</option>
-																<option>Minneapolis</option>
-															</select>
-														</div>
-													</div>
-												</div>
-												<div class="col-sm-4">
-													<div class="form-group">
-														<div class="input-group">
-															<span class="input-group-addon"><i class="fa fa-envelope-o fa-lg fa-fw"></i></span>
-															<input class="form-control input-lg" placeholder="Postal Code" name="postal" id="postal" type="text">
-														</div>
-													</div>
-												</div>
-											</div>
-											<div class="row">
-												<div class="col-sm-6">
-													<div class="form-group">
-														<div class="input-group">
-															<span class="input-group-addon"><i class="fa fa-phone fa-lg fa-fw"></i></span>
-															<input class="form-control input-lg" data-mask="+99 (999) 999-9999" data-mask-placeholder="X" placeholder="+1" name="wphone" id="wphone" type="text">
-														</div>
-													</div>
-												</div>
-												<div class="col-sm-6">
-													<div class="form-group">
-														<div class="input-group">
-															<span class="input-group-addon"><i class="fa fa-mobile fa-lg fa-fw"></i></span>
-															<input class="form-control input-lg" data-mask="+99 (999) 999-9999" data-mask-placeholder="X" placeholder="+01" name="hphone" id="hphone" type="text">
-														</div>
-													</div>
-												</div>
 											</div>
 										</div>
 										<div class="tab-pane" id="tab3">
 											<br>
-											<h3><strong>Step 3</strong> - Domain Setup</h3>
-											<div class="alert alert-info fade in">
+											<h3><strong>Step 3</strong> - Leave a Reminder</h3>
+
+											<div class="form-group">
+												<div class="input-group">
+													<span class="input-group-addon"><i class="fa fa-comment-o fa-lg fa-fw"></i></span>
+													<input class="form-control input-lg" placeholder="Write comment ..." name="etc" id="etc" type="text">
+												</div>
+											</div>
+																						<div class="alert alert-info fade in">
 												<button class="close" data-dismiss="alert">
 													×
 												</button>
 												<i class="fa-fw fa fa-info"></i>
-												<strong>Info!</strong> Place an info message box if you wish.
-											</div>
-											<div class="form-group">
-												<label>This is a label</label>
-												<input class="form-control input-lg" placeholder="Another input box here..." name="etc" id="etc" type="text">
+												<strong>Info!</strong> Comments can help you track information or highlight important reports.
 											</div>
 										</div>
 										<div class="tab-pane" id="tab4">
 											<br>
-											<h3><strong>Step 4</strong> - Save Form</h3>
-											<br>
+											<h3><strong>Step 4</strong> - Save Report</h3>
+
 											<h1 class="text-center text-success"><strong><i class="fa fa-check fa-lg"></i> Complete</strong></h1>
 											<h4 class="text-center">Click next to finish</h4>
 											<br>
@@ -254,6 +226,7 @@
 			<!-- end widget -->
 
 		</article>
+
 
 
 
