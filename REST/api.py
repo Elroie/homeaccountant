@@ -212,3 +212,49 @@ def upload_image():
 @api_bp.route("/download", methods=['POST'])
 def download_file(file_name):
     pass
+
+@api_bp.route("/user/update", methods=['POST', 'OPTIONS'])
+@crossdomain(origin='*')
+def update_user():
+    firstname = request.json.get('firstName')
+    lastname = request.json.get('lastName')
+    email = request.json.get('email')
+    phone = request.json.get('phone')
+    country = request.json.get('country')
+    city = request.json.get('city')
+    address = request.json.get('address')
+    hometype = request.json.get('homeType')
+    homesize = request.json.get('homeSize')
+    income = request.json.get('income')
+    residence = request.json.get('residence')
+
+    if firstname is None:
+        abort(400) # missing arguments
+    elif lastname is None:
+        abort(400)  # missing arguments
+    elif email is None:
+        abort(400)  # missing arguments
+    elif phone is None:
+        abort(400)  # missing arguments
+    elif country is None:
+        abort(400)  # missing arguments
+    elif city is None:
+        abort(400)  # missing arguments
+    elif address is None:
+        abort(400)  # missing arguments
+    elif hometype is None:
+        abort(400)  # missing arguments
+    elif homesize is None:
+        abort(400)  # missing arguments
+    elif income is None:
+        abort(400)  # missing arguments
+    elif residence is None:
+        abort(400)  # missing arguments
+
+
+    connect(config.DB_NAME)
+    username = request.g.user
+
+    user = User(id=request.g.user, username=username,password=User.hash_password(password))
+    user.save()
+    return jsonify({ 'username': user.username }), 201,

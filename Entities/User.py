@@ -9,6 +9,18 @@ class User(Document):
     id = UUIDField(required=True, primary_key=True)
     username = StringField(required=True)
     password = StringField(required=True)
+    firstName = StringField(required=True)
+    lastName = StringField(required=True)
+    email = StringField(required=True)
+    phone = StringField(required=True)
+    country = StringField(required=True)
+    city = StringField(required=True)
+    address = StringField(required=True)
+    homeType = StringField(required=True)
+    homeSize = IntField(required=True)
+    income = IntField(required=True)
+    residence = IntField(required=True)
+
 
     @staticmethod
     def hash_password(password):
