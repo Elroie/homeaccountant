@@ -30,13 +30,13 @@ angular.module('app', [
     //'app.inbox',
     'app.graphs',
     'app.tables',
-    //'app.forms',
-    //'app.ui',
-    //'app.widgets',
+    'app.forms',
+    'app.ui',
+    'app.widgets',
     //'app.maps',
     //'app.appViews',
     //'app.misc',
-    //'app.smartAdmin',
+    'app.smartAdmin',
     //'app.eCommerce'
     'app.home'
 ])
