@@ -3,6 +3,7 @@ import random
 import string
 import werkzeug
 import config
+import json
 
 from mongoengine import connect
 from flask import Flask, current_app as app, Blueprint, current_app
@@ -70,8 +71,21 @@ def test():
     manager.get_all_notes()
     return "test....."
 
+@api_bp.route("/addnote", methods=['POST'])
+def test():
+    manager = FeedNoteManager()
+    user_id = request.args.get('user_id', '746fc33a-fb7c-4595-ba83-19842631859b')
+    note_title = request.args.get('note_title', 'note_text')
+    note_text = request.args.get('note_text', '746fc33a-fb7c-4595-ba83-19842631859b')
+    manager.add(user_id,note_title,note_text)
+    return
 
-
+@api_bp.route("/notes", methods=['GET'])
+def test():
+    manager = FeedNoteManager()
+    user_id = request.args.get('user_id', '746fc33a-fb7c-4595-ba83-19842631859b')
+    notes = manager.get_all_notes(user_id)
+    return json.dumps(notes)
 
 @api_bp.route("/login")
 def login(username, password):
