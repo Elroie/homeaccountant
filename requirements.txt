@@ -25,3 +25,4 @@ WTForms==2.1
 mongoengine==0.12.0
 scipy==0.19.0
 numpy==1.12.1
+passlib==1.7.1

@@ -25,3 +25,4 @@ DB_NAME = 'homeaccountant'
 class Config(object):
     DEBUG = True
     UPLOADS_PATH = os.path.join(basedir, 'media', 'upload')
+    SECRET_KEY = 'HRHIHHNJANU='

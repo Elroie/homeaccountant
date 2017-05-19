@@ -1,6 +1,7 @@
 from flask.json import jsonify
 from mongoengine import *
 
+from Entities.User import User
 from Entities.FeedNote import FeedNote
 import config
 import uuid
@@ -27,5 +28,14 @@ class FeedNoteManager(object):
 
     def get_all_notes(self,user_id):
         connect(config.DB_NAME)
-        return list(FeedNote.objects(user_id = user_id))
+        # return list(FeedNote.objects(user_id=uuid.UUID(user_id)))
+        # return list(FeedNote.objects(user_id=user_id))
+        #user =  User.objects(id=uuid.UUID(user_id)).first()
+        notes = FeedNote.objects().all()
+        return notes
+
+    def get_note_count(self,user_id):
+        connect(config.DB_NAME)
+        return len(FeedNote.objects(user_id=uuid.UUID(user_id)))
+        #return len(FeedNote.objects(user_id=user_id))
 

@@ -1,231 +1,231 @@
 
-  <script>
-  $( function() {
-    $( "#datepicker" ).datepicker();
-  } );
-  </script>
+<script>
+    $( function() {
+        $( "#datepicker" ).datepicker();
+    } );
+</script>
 <div id="content">
-<div class="row">
-    <big-breadcrumbs items="['Upload Report']" icon="fa fa-lg fa-fw fa-cloud-upload" class="col-xs-12 col-sm-7 col-md-7 col-lg-4"></big-breadcrumbs>
-</div>
-<!--
+	<div class="row">
+		<big-breadcrumbs items="['Upload Report']" icon="fa fa-lg fa-fw fa-cloud-upload" class="col-xs-12 col-sm-7 col-md-7 col-lg-4"></big-breadcrumbs>
+	</div>
+	<!--
 
-    <form method="get" action="">
+        <form method="get" action="">
 
-   <div data-role="fieldcontain">
-    <label for="name">Upload Bill:</label>
-    <input type="file" name="text" id="name" type="image/*" >
+       <div data-role="fieldcontain">
+        <label for="name">Upload Bill:</label>
+        <input type="file" name="text" id="name" type="image/*" >
+        </div>
+
+    </form>
+
+
+
+
+
+        <br/>
+        <img ng-if="ctrl.image_path" ng-src="{{ ctrl.image_path }}" width="50px" height="50px" />
+        <br/>
+        <button id="logoFile"
+                                    class="btn btn-default btn-md filter choose-file theFileInput"
+                                    ng-model="ctrl.logoFile"
+                                    ng-if="!ctrl.image_path"
+                                    ngf-select
+                                    ngf-change="selectFile($files, $file, $newFiles, $duplicateFiles, $invalidFiles, $event)"
+                                    ngf-pattern="ctrl.logoType.allowedFileType"
+                                    ngf-accept="ctrl.logoType.accept"
+                                    ngf-resize="ctrl.logoType.resizeObj"
+                                    ngf-resize-if="ctrl.logoType.resizeIfFn($file, $width, $height)"
+                                    ngf-dimensions="ctrl.logoType.dimensionsFn($file, $width, $height)"
+                            ><span>Choose file</span></button>
+                            <button class="btn btn-primary btn-md" ng-if="!ctrl.image_path" ng-click="ctrl.upload()">Upload<span ng-if="ctrl.progressPercentage">{{ ctrl.progressPercentage }}%</span></button>
+
+
     </div>
+    -->
+	<article class="col-sm-12 col-md-12 col-lg-6 sortable-grid ui-sortable">
 
-</form>
+		<!-- Widget ID (each widget will need unique ID)-->
+		<div class="jarviswidget jarviswidget-color-darken jarviswidget-sortable" id="wid-id-0" data-widget-editbutton="false" data-widget-deletebutton="false" role="widget" style="position: relative; opacity: 1; left: 0px; top: 0px;">
+			<!-- widget options:
+            usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
 
+            data-widget-colorbutton="false"
+            data-widget-editbutton="false"
+            data-widget-togglebutton="false"
+            data-widget-deletebutton="false"
+            data-widget-fullscreenbutton="false"
+            data-widget-custombutton="false"
+            data-widget-collapsed="true"
+            data-widget-sortable="false"
 
-
-
-
-    <br/>
-    <img ng-if="ctrl.image_path" ng-src="{{ ctrl.image_path }}" width="50px" height="50px" />
-    <br/>
-    <button id="logoFile"
-                                class="btn btn-default btn-md filter choose-file theFileInput"
-                                ng-model="ctrl.logoFile"
-                                ng-if="!ctrl.image_path"
-                                ngf-select
-                                ngf-change="selectFile($files, $file, $newFiles, $duplicateFiles, $invalidFiles, $event)"
-                                ngf-pattern="ctrl.logoType.allowedFileType"
-                                ngf-accept="ctrl.logoType.accept"
-                                ngf-resize="ctrl.logoType.resizeObj"
-                                ngf-resize-if="ctrl.logoType.resizeIfFn($file, $width, $height)"
-                                ngf-dimensions="ctrl.logoType.dimensionsFn($file, $width, $height)"
-                        ><span>Choose file</span></button>
-                        <button class="btn btn-primary btn-md" ng-if="!ctrl.image_path" ng-click="ctrl.upload()">Upload<span ng-if="ctrl.progressPercentage">{{ ctrl.progressPercentage }}%</span></button>
-
-
-</div>
--->
-<article class="col-sm-12 col-md-12 col-lg-6 sortable-grid ui-sortable">
-
-			<!-- Widget ID (each widget will need unique ID)-->
-			<div class="jarviswidget jarviswidget-color-darken jarviswidget-sortable" id="wid-id-0" data-widget-editbutton="false" data-widget-deletebutton="false" role="widget" style="position: relative; opacity: 1; left: 0px; top: 0px;">
-				<!-- widget options:
-				usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
-
-				data-widget-colorbutton="false"
-				data-widget-editbutton="false"
-				data-widget-togglebutton="false"
-				data-widget-deletebutton="false"
-				data-widget-fullscreenbutton="false"
-				data-widget-custombutton="false"
-				data-widget-collapsed="true"
-				data-widget-sortable="false"
-
-				-->
-				<header role="heading">
-					<span class="widget-icon"> <i class="fa fa-check"></i> </span>
-					<h2>Upload a New Report</h2>
+            -->
+			<header role="heading">
+				<span class="widget-icon"> <i class="fa fa-check"></i> </span>
+				<h2>Upload a New Report</h2>
 
 				<span class="jarviswidget-loader"><i class="fa fa-refresh fa-spin"></i></span></header>
 
-				<!-- widget div-->
-				<div role="content">
+			<!-- widget div-->
+			<div role="content">
 
-					<!-- widget edit box -->
-					<div class="jarviswidget-editbox">
-						<!-- This area used as dropdown edit box -->
-
-					</div>
-					<!-- end widget edit box -->
-
-					<!-- widget content -->
-					<div class="widget-body">
-
-						<div class="row">
-							<form id="wizard-1" novalidate="novalidate">
-								<div id="bootstrap-wizard-1" class="col-sm-12">
-									<div class="form-bootstrapWizard">
-										<ul class="bootstrapWizard form-wizard">
-											<li class="active" data-target="#step1">
-												<a href="#tab1" data-toggle="tab"> <span class="step">1</span> <span class="title">Choose File</span> </a>
-											</li>
-											<li data-target="#step2">
-												<a href="#tab2" data-toggle="tab"> <span class="step">2</span> <span class="title">Bill information</span> </a>
-											</li>
-											<li data-target="#step3">
-												<a href="#tab3" data-toggle="tab"> <span class="step">3</span> <span class="title">Comments</span> </a>
-											</li>
-											<li data-target="#step4">
-												<a href="#tab4" data-toggle="tab"> <span class="step">4</span> <span class="title">Save Bill</span> </a>
-											</li>
-										</ul>
-										<div class="clearfix"></div>
-									</div>
-									<div class="tab-content">
-										<div class="tab-pane active" id="tab1">
-											<br>
-											<h3><strong>Step 1 </strong> - Choose File</h3>
-											<div class="row">
-												<div class="col-sm-6">
-													<div class="form-group">
-														<div class="input-group">
-															<img ng-if="ctrl.image_path" ng-src="{{ ctrl.image_path }}" width="50px" height="50px" />
-															<button id="logoFile"
-																						class="btn btn-default btn-md filter choose-file theFileInput"
-																						ng-model="ctrl.logoFile"
-																						ng-if="!ctrl.image_path"
-																						ngf-select
-																						ngf-change="selectFile($files, $file, $newFiles, $duplicateFiles, $invalidFiles, $event)"
-																						ngf-pattern="ctrl.logoType.allowedFileType"
-																						ngf-accept="ctrl.logoType.accept"
-																						ngf-resize="ctrl.logoType.resizeObj"
-																						ngf-resize-if="ctrl.logoType.resizeIfFn($file, $width, $height)"
-																						ngf-dimensions="ctrl.logoType.dimensionsFn($file, $width, $height)"
-																				><span>Choose file</span></button>
-																				<button class="btn btn-primary btn-md" ng-if="!ctrl.image_path" ng-click="ctrl.upload()">Upload<span ng-if="ctrl.progressPercentage">{{ ctrl.progressPercentage }}%</span></button>
-
-														</div>
-
-													</div>
-
-												</div>
-											</div>
-											<div class="alert alert-info fade in">
-																<button class="close" data-dismiss="alert">
-																	×
-																</button>
-																<i class="fa-fw fa fa-info"></i>
-																<strong>Info!</strong> File should be in JPEG \ JPG \ PNG format
-											</div>
-
-
-										</div>
-										<div class="tab-pane" id="tab2">
-											<br>
-											<h3><strong>Step 2</strong> - Add Bill Information</h3>
-												<div class="col-sm-6">
-													<div class="form-group">
-														<div class="input-group">
-															<span class="input-group-addon"><i class="fa fa-dollar fa-lg fa-fw"></i></span>
-															<input class="form-control input-lg" data-mask="999" data-mask-placeholder="X" name="billsum" id="billsum" type="text">
-														</div>
-													</div>
-												</div>
-												<div class="col-sm-6">
-													<div class="form-group">
-														<div class="input-group">
-															<span class="input-group-addon"><i class="fa fa-calendar fa-lg fa-fw"></i></span>
-															<input type="date" class="form-control input-lg"  name="date" id="datepicker" type="text" data-date-inline-picker="true">
-														</div>
-													</div>
-												</div>
-<br><br>
-											<div class="row">
-
-											</div>
-										</div>
-										<div class="tab-pane" id="tab3">
-											<br>
-											<h3><strong>Step 3</strong> - Leave a Reminder</h3>
-
-											<div class="form-group">
-												<div class="input-group">
-													<span class="input-group-addon"><i class="fa fa-comment-o fa-lg fa-fw"></i></span>
-													<input class="form-control input-lg" placeholder="Write comment ..." name="etc" id="etc" type="text">
-												</div>
-											</div>
-																						<div class="alert alert-info fade in">
-												<button class="close" data-dismiss="alert">
-													×
-												</button>
-												<i class="fa-fw fa fa-info"></i>
-												<strong>Info!</strong> Comments can help you track information or highlight important reports.
-											</div>
-										</div>
-										<div class="tab-pane" id="tab4">
-											<br>
-											<h3><strong>Step 4</strong> - Save Report</h3>
-
-											<h1 class="text-center text-success"><strong><i class="fa fa-check fa-lg"></i> Complete</strong></h1>
-											<h4 class="text-center">Click next to finish</h4>
-											<br>
-											<br>
-										</div>
-
-										<div class="form-actions">
-											<div class="row">
-												<div class="col-sm-12">
-													<ul class="pager wizard no-margin">
-														<!--<li class="previous first disabled">
-														<a href="javascript:void(0);" class="btn btn-lg btn-default"> First </a>
-														</li>-->
-														<li class="previous disabled">
-															<a href="javascript:void(0);" class="btn btn-lg btn-default"> Previous </a>
-														</li>
-														<!--<li class="next last">
-														<a href="javascript:void(0);" class="btn btn-lg btn-primary"> Last </a>
-														</li>-->
-														<li class="next">
-															<a href="javascript:void(0);" class="btn btn-lg txt-color-darken"> Next </a>
-														</li>
-													</ul>
-												</div>
-											</div>
-										</div>
-
-									</div>
-								</div>
-							</form>
-						</div>
-
-					</div>
-					<!-- end widget content -->
+				<!-- widget edit box -->
+				<div class="jarviswidget-editbox">
+					<!-- This area used as dropdown edit box -->
 
 				</div>
-				<!-- end widget div -->
+				<!-- end widget edit box -->
+
+				<!-- widget content -->
+				<div class="widget-body">
+
+					<div class="row">
+						<form id="wizard-1" novalidate="novalidate" data-smart-validate-form>
+							<div id="bootstrap-wizard-1" class="col-sm-12" data-smart-wizard smart-wizard-callback="wizard1CompleteCallback">
+								<div class="form-bootstrapWizard">
+									<ul class="bootstrapWizard form-wizard">
+										<li class="active" data-smart-wizard-tab="1">
+											<a href="#tab1" data-toggle="tab"> <span class="step">1</span> <span class="title">Choose File</span> </a>
+										</li>
+										<li data-smart-wizard-tab="2">
+											<a href="#tab2" data-toggle="tab"> <span class="step">2</span> <span class="title">Bill information</span> </a>
+										</li>
+										<li  data-smart-wizard-tab="3">
+											<a href="#tab3" data-toggle="tab"> <span class="step">3</span> <span class="title">Comments</span> </a>
+										</li>
+										<li data-smart-wizard-tab="4">
+											<a href="#tab4" data-toggle="tab"> <span class="step">4</span> <span class="title">Save Bill</span> </a>
+										</li>
+									</ul>
+									<div class="clearfix"></div>
+								</div>
+								<div class="tab-content">
+									<div class="tab-pane active" id="tab1" data-smart-wizard-pane="1">
+										<br>
+										<h3><strong>Step 1 </strong> - Choose File</h3>
+										<div class="row">
+											<div class="col-sm-6">
+												<div class="form-group">
+													<div class="input-group">
+														<img ng-if="ctrl.image_path" ng-src="{{ ctrl.image_path }}" width="50px" height="50px" />
+														<button id="logoFile"
+																class="btn btn-default btn-md filter choose-file theFileInput"
+																ng-model="ctrl.logoFile"
+																ng-if="!ctrl.image_path"
+																ngf-select
+																ngf-change="selectFile($files, $file, $newFiles, $duplicateFiles, $invalidFiles, $event)"
+																ngf-pattern="ctrl.logoType.allowedFileType"
+																ngf-accept="ctrl.logoType.accept"
+																ngf-resize="ctrl.logoType.resizeObj"
+																ngf-resize-if="ctrl.logoType.resizeIfFn($file, $width, $height)"
+																ngf-dimensions="ctrl.logoType.dimensionsFn($file, $width, $height)"
+														><span>Choose file</span></button>
+														<button class="btn btn-primary btn-md" ng-if="!ctrl.image_path" ng-click="ctrl.upload()">Upload<span ng-if="ctrl.progressPercentage">{{ ctrl.progressPercentage }}%</span></button>
+
+													</div>
+
+												</div>
+
+											</div>
+										</div>
+										<div class="alert alert-info fade in">
+											<button class="close" data-dismiss="alert">
+												×
+											</button>
+											<i class="fa-fw fa fa-info"></i>
+											<strong>Info!</strong> File should be in JPEG \ JPG \ PNG format
+										</div>
+
+
+									</div>
+									<div class="tab-pane" id="tab2" data-smart-wizard-pane="2">
+										<br>
+										<h3><strong>Step 2</strong> - Add Bill Information</h3>
+										<div class="col-sm-6">
+											<div class="form-group">
+												<div class="input-group">
+													<span class="input-group-addon"><i class="fa fa-dollar fa-lg fa-fw"></i></span>
+													<input class="form-control input-lg" data-mask="999" data-mask-placeholder="X" name="billsum" id="billsum" type="text" ng-model="ctrl.billAmount">
+												</div>
+											</div>
+										</div>
+										<div class="col-sm-6">
+											<div class="form-group">
+												<div class="input-group">
+													<span class="input-group-addon"><i class="fa fa-calendar fa-lg fa-fw"></i></span>
+													<input type="date" class="form-control input-lg"  name="date" id="datepicker" type="text" data-date-inline-picker="true" ng-model="ctrl.billDate">
+												</div>
+											</div>
+										</div>
+										<br><br>
+										<div class="row">
+
+										</div>
+									</div>
+									<div class="tab-pane" id="tab3" data-smart-wizard-pane="3">
+										<br>
+										<h3><strong>Step 3</strong> - Leave a Reminder</h3>
+
+										<div class="form-group">
+											<div class="input-group">
+												<span class="input-group-addon"><i class="fa fa-comment-o fa-lg fa-fw"></i></span>
+												<input class="form-control input-lg" placeholder="Write comment ..." name="etc" id="etc" type="text" ng-model="ctrl.billNote">
+											</div>
+										</div>
+										<div class="alert alert-info fade in">
+											<button class="close" data-dismiss="alert">
+												×
+											</button>
+											<i class="fa-fw fa fa-info"></i>
+											<strong>Info!</strong> Comments can help you track information or highlight important reports.
+										</div>
+									</div>
+									<div class="tab-pane" id="tab4" data-smart-wizard-pane="4">
+										<br>
+										<h3><strong>Step 4</strong> - Save Report</h3>
+
+										<h1 class="text-center text-success"><strong><i class="fa fa-check fa-lg"></i> Complete</strong></h1>
+										<h4 class="text-center">Click next to finish</h4>
+										<br>
+										<br>
+									</div>
+
+									<div class="form-actions">
+										<div class="row">
+											<div class="col-sm-12">
+												<ul class="pager wizard no-margin">
+													<!--<li class="previous first disabled">
+                                                    <a href="javascript:void(0);" class="btn btn-lg btn-default"> First </a>
+                                                    </li>-->
+													<li class="previous disabled" data-smart-wizard-prev>
+														<a href="javascript:void(0);" class="btn btn-lg btn-default"> Previous </a>
+													</li>
+													<!--<li class="next last">
+                                                    <a href="javascript:void(0);" class="btn btn-lg btn-primary"> Last </a>
+                                                    </li>-->
+													<li class="next" data-smart-wizard-next>
+														<a href="javascript:void(0);" class="btn btn-lg txt-color-darken"> Next </a>
+													</li>
+												</ul>
+											</div>
+										</div>
+									</div>
+
+								</div>
+							</div>
+						</form>
+					</div>
+
+				</div>
+				<!-- end widget content -->
 
 			</div>
-			<!-- end widget -->
+			<!-- end widget div -->
 
-		</article>
+		</div>
+		<!-- end widget -->
+
+	</article>
 
 
 
