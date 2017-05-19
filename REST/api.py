@@ -23,6 +23,7 @@ from ML.BillCommentManager import BillCommentManager
 
 from ML.ClassificationManager import ClassificationManager
 from ML.FeedNoteManager import FeedNoteManager
+from ML.GraphDataManager import GraphDataManager
 
 api_bp = Blueprint('v1', __name__)
 
@@ -88,6 +89,8 @@ def verify_authentication(func):
 def test():
     return "test....."
 
+
+
 @api_bp.route("/addnote", methods=['POST'])
 def add_note():
     parser = reqparse.RequestParser(bundle_errors=True)
@@ -100,7 +103,8 @@ def add_note():
     note_title = 'Sample Title'
     note_text = 'Sample Text'
     manager.add(user_id,note_title,note_text)
-    return "", 204
+    return "note added", 200
+
 
 @api_bp.route("/allnotes", methods=['GET'])
 def return_all_notes():
@@ -120,14 +124,13 @@ def return_notes_count():
 def add_comment():
     parser = reqparse.RequestParser(bundle_errors=True)
     parser.add_argument('file', type=werkzeug.FileStorage, location='files', required=True)
-    args = parser.parse_args()
-    file_obj = args['file']
+
     manager = BillCommentManager()
-    user_id = request.args.get('user_id', 'a9ab55e1-419c-43c6-9cb4-8e71462c84b3')
-    bill_id = request.args.get('bill_id', '746fc33a-fb7c-4595-ba83-198426311234')
-    comment_text = request.args.get('comment_text', 'Sample Text')
+    user_id = 'a9ab55e1-419c-43c6-9cb4-8e71462c84b3'
+    bill_id = '746fc33a-fb7c-4595-ba83-198426311234'
+    comment_text = 'Sample Text'
     manager.add(user_id,bill_id,comment_text)
-    return
+    return "comment added", 200
 
 @api_bp.route("/allcomments", methods=['GET'])
 def return_all_comments():
@@ -135,7 +138,7 @@ def return_all_comments():
     user_id = request.args.get('user_id', 'a9ab55e1-419c-43c6-9cb4-8e71462c84b3')
     bill_id = request.args.get('bill_id', '746fc33a-fb7c-4595-ba83-198426311234')
     comments = manager.get_all_comments(user_id,bill_id)
-    return json.dumps(comments)
+    return comments.to_json()
 
 
 @api_bp.route("/register",methods = ['POST'])
@@ -244,3 +247,27 @@ def upload_image():
 @api_bp.route("/download", methods=['POST'])
 def download_file(file_name):
     pass
+
+
+@api_bp.route("/reportcount", methods=['GET'])
+def return_report_count():
+    manager = ClassificationManager()
+    user_id = request.args.get('user_id', 'a9ab55e1-419c-43c6-9cb4-8e71462c84b3')
+    return str(manager.get_report_count(user_id))
+
+@api_bp.route("/addgraphdata", methods=['POST'])
+def add_data():
+    parser = reqparse.RequestParser(bundle_errors=True)
+    parser.add_argument('file', type=werkzeug.FileStorage, location='files', required=True)
+
+    manager = GraphDataManager()
+    user_id = 'a9ab55e1-419c-43c6-9cb4-8e71462c84b3'
+    manager.add(user_id, True, 5, 100, 200, 300)
+    return "data added", 200
+
+@api_bp.route("/allgraphdata", methods=['GET'])
+def return_all_graphdata():
+    manager = GraphDataManager()
+    user_id = request.args.get('user_id', 'a9ab55e1-419c-43c6-9cb4-8e71462c84b3')
+    comments = manager.get_all_graphdata(user_id)
+    return comments.to_json()

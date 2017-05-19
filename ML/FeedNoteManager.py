@@ -31,11 +31,11 @@ class FeedNoteManager(object):
         # return list(FeedNote.objects(user_id=uuid.UUID(user_id)))
         # return list(FeedNote.objects(user_id=user_id))
         #user =  User.objects(id=uuid.UUID(user_id)).first()
-        notes = FeedNote.objects().all()
+        notes = FeedNote.objects(user_id=user_id)
         return notes
 
     def get_note_count(self,user_id):
         connect(config.DB_NAME)
-        return len(FeedNote.objects(user_id=uuid.UUID(user_id)))
+        return len(FeedNote.objects(user_id=user_id))
         #return len(FeedNote.objects(user_id=user_id))
 

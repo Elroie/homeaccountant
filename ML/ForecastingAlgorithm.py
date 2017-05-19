@@ -9,7 +9,7 @@ from datetime import datetime
 from Entities.GraphData import GraphData
 
 
-class GraphDataManager(object):
+class ForecastingAlgorithm(object):
     def __init__(self):
         pass
 
@@ -20,10 +20,17 @@ class GraphDataManager(object):
         graphdata.save()
         return jsonify({'total': electricity_price+water_price+other_price}), 201,
 
-    def get_all_graphdata(self,user_id):
+    def electricity_forecasting(self,user_id):
         connect(config.DB_NAME)
-        # return list(FeedNote.objects(user_id=uuid.UUID(user_id)))
-        # return list(FeedNote.objects(user_id=user_id))
-        #user =  User.objects(id=uuid.UUID(user_id)).first()
+        graphdata = GraphData.objects(user_id=user_id)
+        return graphdata
+
+    def water_forecasting(self, user_id):
+        connect(config.DB_NAME)
+        graphdata = GraphData.objects(user_id=user_id)
+        return graphdata
+
+    def other_forecasting(self, user_id):
+        connect(config.DB_NAME)
         graphdata = GraphData.objects(user_id=user_id)
         return graphdata

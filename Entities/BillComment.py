@@ -3,9 +3,9 @@ from Entities.User import User
 from Entities.ScannedImage import ScannedImage
 
 class BillComment(Document):
-    id_user = ReferenceField(User, reverse_delete_rule=CASCADE)
-    id_bill = ReferenceField(ScannedImage, reverse_delete_rule=CASCADE)
+    user_id = UUIDField(required=True)
+    bill_id = UUIDField(required=True)
     id = UUIDField(required=True, primary_key=True)
     text = StringField(required=True)
-    time = StringField(required=True)
+    time = DateTimeField(required=True)
 

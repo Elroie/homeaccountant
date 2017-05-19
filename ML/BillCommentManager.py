@@ -14,10 +14,14 @@ class BillCommentManager(object):
 
         connect(config.DB_NAME)
 
-        note = BillComment(id=uuid.uuid4(), user_id=user_id, bill_id=bill_id,text=text, time=datetime.now())
-        note.save()
-        return jsonify({'note': note.title}), 201,
+        comment = BillComment(id=uuid.uuid4(), user_id=user_id, bill_id=bill_id,text=text, time=datetime.now())
+        comment.save()
+        return jsonify({'note': comment.text}), 201,
 
     def get_all_comments(self,user_id,bill_id):
         connect(config.DB_NAME)
-        return list(BillComment.objects(user_id=user_id , bill_id = bill_id))
+        return BillComment.objects(user_id=user_id , bill_id = bill_id)
+
+    def bill_comments_count(self,user_id,bill_id):
+        connect(config.DB_NAME)
+        return len(BillComment.objects(user_id=user_id , bill_id = bill_id))

@@ -126,3 +126,8 @@ class ClassificationManager(threading.Thread):
         user_image.save()
         self.feed_note_manager.add(classification_task['user_id'], classification_result.get_type() + " Report", "New report uploaded", user_image.id, attachment_type="REPORT")
         return user_image
+
+
+    def get_report_count(self, user_id):
+        connect(DB_NAME)
+        return len(UserImage.objects().all())

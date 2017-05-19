@@ -3,9 +3,11 @@ from Entities.User import User
 from Entities.ScannedImage import ScannedImage
 
 class GraphData(Document):
-    id_user = ReferenceField(User, reverse_delete_rule=CASCADE)
-    id_bill = ReferenceField(ScannedImage, reverse_delete_rule=CASCADE)
+    user_id = UUIDField(required=True)
+    is_forecast = BooleanField(required=True)
     id = UUIDField(required=True, primary_key=True)
-    text = StringField(required=True)
-    time = StringField(required=True)
+    month = IntField(required=True)
+    electricity_price = IntField(required=True)
+    water_price = IntField(required=True)
+    other_price = IntField(required=True)
 
