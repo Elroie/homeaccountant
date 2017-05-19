@@ -3,14 +3,16 @@ import random
 import string
 import werkzeug
 import config
+import uuid
 
 from mongoengine import connect
 from flask import Flask, current_app as app, Blueprint, current_app
 from flask_restful import reqparse, abort
 from datetime import timedelta
-from flask import make_response, request, current_app
+from flask import make_response, request, current_app , jsonify , g
 from functools import update_wrapper
 from Entities.User import User
+import Entities.User
 from Entities.UserImage import UserImage
 from Entities.ScannedImage import ScannedImage
 
@@ -63,14 +65,51 @@ def crossdomain(origin=None, methods=None, headers=None,
 
 
 @api_bp.route("/test", methods=['GET'])
+@crossdomain(origin='*')
 def test():
     return "test....."
 
 
-@api_bp.route("/login")
-def login(username, password):
-    pass
+@api_bp.route("/register",methods = ['POST'])
+@crossdomain(origin='*')
+def register_new_user():
+    username = request.json.get('username')
+    password = request.json.get('password')
+    if username is None or password is None:
+        abort(400) # missing arguments
+    if User.objects(username = username).first() is not None:
+        abort(400) # existing user
 
+    connect(config.DB_NAME)
+    user = User(id=uuid.uuid4(), username=username,password=User.hash_password(password))
+    user.hash_password(password)
+    user.save()
+    return jsonify({ 'username': user.username }), 201,
+
+
+@api_bp.route("/login",methods = ['POST'])
+@crossdomain(origin='*')
+def login(username_or_token, password):
+    # first try to authenticate by token
+    user = User.verify_auth_token(username_or_token)
+    if not user:
+        # try to authenticate with username/password
+        user = User.objects(username = username_or_token).first()
+        if not user or not user.verify_password(password):
+            return False
+
+    g.user = user
+    return True
+
+@api_bp.route("/logout")
+@crossdomain(origin='*')
+
+
+@api_bp.route('/token')
+@crossdomain(origin='*')
+def get_auth_token():
+    token = g.user.generate_auth_token()
+    return jsonify({ 'token': token.decode('ascii') })
 
 @api_bp.route("/upload", methods=['POST', 'OPTIONS'])
 @crossdomain(origin='*')
