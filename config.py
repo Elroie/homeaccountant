@@ -11,8 +11,10 @@ SHOULD_SAVE_MODEL = False
 
 ###### OCR ######
 SHOULD_USE_OCR = True
-APPLICATION_ID = 'HomeAccountant'
-APPLICATION_PASSWORD = 'TAlOOpwRaKq5V+jEgOW+MFXK'
+# APPLICATION_ID = 'HomeAccountant'
+# APPLICATION_PASSWORD = 'TAlOOpwRaKq5V+jEgOW+MFXK'
+APPLICATION_ID = 'home_bills'
+APPLICATION_PASSWORD = 'fo39+Fy0MPEleDRQ4OyAj0yz'
 #############################################
 
 ###### DB ######
