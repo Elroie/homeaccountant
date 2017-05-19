@@ -1,12 +1,12 @@
 from flask.json import jsonify
 from mongoengine import *
 
-from Entities.FeedNote import FeedNote
+from Entities.BillComment import BillComment
 import config
 import uuid
 from datetime import datetime
 
-class FeedNoteManager(object):
+class GraphDataManager(object):
     def __init__(self):
         pass
 
@@ -14,7 +14,7 @@ class FeedNoteManager(object):
 
         connect(config.DB_NAME)
 
-        note = FeedNote(note_id=uuid.uuid4(), user_id=user_id, text=text, title=title, time=datetime.now())
+        note = BillComment(note_id=uuid.uuid4(), user_id=user_id, text=text, title=title, time=datetime.now())
 
         if attachment_id is not None:
             note.attachment_id=attachment_id
@@ -24,8 +24,3 @@ class FeedNoteManager(object):
 
         note.save()
         return jsonify({'note': note.title}), 201,
-
-    def get_all_notes(self,user_id):
-        connect(config.DB_NAME)
-        return list(FeedNote.objects(user_id = user_id))
-

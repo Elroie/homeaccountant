@@ -17,6 +17,7 @@ from Entities.User import User
 import Entities.User
 from Entities.UserImage import UserImage
 from Entities.ScannedImage import ScannedImage
+from ML.BillCommentManager import BillCommentManager
 
 from ML.ClassificationManager import ClassificationManager
 from ML.FeedNoteManager import FeedNoteManager
@@ -76,20 +77,38 @@ def test():
     return "test....."
 
 @api_bp.route("/addnote", methods=['POST'])
-def test():
+def add_note():
     manager = FeedNoteManager()
     user_id = request.args.get('user_id', '746fc33a-fb7c-4595-ba83-19842631859b')
-    note_title = request.args.get('note_title', 'note_text')
-    note_text = request.args.get('note_text', '746fc33a-fb7c-4595-ba83-19842631859b')
+    note_title = request.args.get('note_title', 'Sample Title')
+    note_text = request.args.get('note_text', 'Sample Text')
     manager.add(user_id,note_title,note_text)
     return
 
-@api_bp.route("/notes", methods=['GET'])
-def test():
+@api_bp.route("/allnotes", methods=['GET'])
+def return_all_notes():
     manager = FeedNoteManager()
     user_id = request.args.get('user_id', '746fc33a-fb7c-4595-ba83-19842631859b')
     notes = manager.get_all_notes(user_id)
     return json.dumps(notes)
+
+@api_bp.route("/addcomment", methods=['POST'])
+def add_comment():
+    manager = BillCommentManager()
+    user_id = request.args.get('user_id', '746fc33a-fb7c-4595-ba83-19842631859b')
+    bill_id = request.args.get('bill_id', '746fc33a-fb7c-4595-ba83-198426311234')
+    comment_text = request.args.get('comment_text', 'Sample Text')
+    manager.add(user_id,bill_id,comment_text)
+    return
+
+@api_bp.route("/allcomments", methods=['GET'])
+def return_all_comments():
+    manager = BillCommentManager()
+    user_id = request.args.get('user_id', '746fc33a-fb7c-4595-ba83-19842631859b')
+    bill_id = request.args.get('bill_id', '746fc33a-fb7c-4595-ba83-198426311234')
+    comments = manager.get_all_comments(user_id,bill_id)
+    return json.dumps(comments)
+
 
 @api_bp.route("/register",methods = ['POST'])
 @crossdomain(origin='*')
@@ -124,7 +143,17 @@ def login(username_or_token, password):
 
 @api_bp.route("/logout")
 @crossdomain(origin='*')
+def logout(username_or_token, password):
+    # first try to authenticate by token
+    user = User.verify_auth_token(username_or_token)
+    if not user:
+        # try to authenticate with username/password
+        user = User.objects(username = username_or_token).first()
+        if not user or not user.verify_password(password):
+            return False
 
+    g.user = user
+    return True
 
 @api_bp.route('/token')
 @crossdomain(origin='*')
