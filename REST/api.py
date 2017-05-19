@@ -13,11 +13,12 @@ from flask import Flask, current_app as app, Blueprint, current_app
 from flask_restful import reqparse, abort
 from datetime import timedelta
 from flask import make_response, request, current_app , jsonify , g
-from functools import update_wrapper
+from functools import update_wrapper, wraps
 from Entities.User import User
 import Entities.User
 from Entities.UserImage import UserImage
 from Entities.ScannedImage import ScannedImage
+from werkzeug.exceptions import HTTPException, NotFound, BadRequest, Unauthorized
 from ML.BillCommentManager import BillCommentManager
 
 from ML.ClassificationManager import ClassificationManager
@@ -68,13 +69,23 @@ def crossdomain(origin=None, methods=None, headers=None,
     return decorator
 
 
+def verify_authentication(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+       token = request.headers.get('token')
+       if token is None:
+           raise Unauthorized("the token is not valid you son of a bitch")
+       user = User.verify_auth_token(token)
+       if user is None:
+           raise Unauthorized("the token is not valid you son of a bitch")
+
+       return func()
+    return wrapper
+
+@verify_authentication
 @api_bp.route("/test", methods=['GET'])
 @crossdomain(origin='*')
 def test():
-    manager = FeedNoteManager()
-    manager.add("a9ab55e1-419c-43c6-9cb4-8e71462c84b3","Water Report","New bill uploaded")
-    manager.add("a9ab55e1-419c-43c6-9cb4-8e71462c84b3","Electricity Report", "New bill uploaded")
-    manager.get_all_notes()
     return "test....."
 
 @api_bp.route("/addnote", methods=['POST'])
@@ -144,33 +155,31 @@ def register_new_user():
     return jsonify({ 'username': user.username }), 201,
 
 
-@api_bp.route("/login",methods = ['POST'])
+@api_bp.route("/login",methods = ['GET'])
 @crossdomain(origin='*')
-def login(username_or_token, password):
+def login():
+    username_or_token = request.json.get('username')
     # first try to authenticate by token
     user = User.verify_auth_token(username_or_token)
-    if not user:
+    if user is None:
+        password = request.json.get('password')
         # try to authenticate with username/password
         user = User.objects(username = username_or_token).first()
-        if not user or not user.verify_password(password):
-            return False
+        if not user or not user.verify_hashed_password(password):
+            return "", 404
+        g.user = user
+        token = g.user.generate_auth_token()
+        return jsonify({ 'token': token.decode('ascii') })
 
     g.user = user
-    return True
+    return "", 200
 
 @api_bp.route("/logout")
 @crossdomain(origin='*')
-def logout(username_or_token, password):
-    # first try to authenticate by token
-    user = User.verify_auth_token(username_or_token)
-    if not user:
-        # try to authenticate with username/password
-        user = User.objects(username = username_or_token).first()
-        if not user or not user.verify_password(password):
-            return False
+def logout(token):
+    g.user = ""
+    return "", 200
 
-    g.user = user
-    return True
 
 @api_bp.route('/token')
 @crossdomain(origin='*')
@@ -183,9 +192,15 @@ def get_auth_token():
 def upload_image():
     parser = reqparse.RequestParser(bundle_errors=True)
     parser.add_argument('file', type=werkzeug.FileStorage, location='files', required=True)
+    parser.add_argument('date', type=str, location='form', required=True)
+    parser.add_argument('note', type=str, location='form', required=True)
+    parser.add_argument('amount', type=str, location='form', required=True)
     args = parser.parse_args()
 
     file_obj = args['file']
+    date = args['date']
+    note = args['note']
+    amount = args['amount']
 
     # elroie todo: remove this when the endpoint is ready
     user_id = args.get('user_id', '746fc33a-fb7c-4595-ba83-19842631859b')
@@ -193,7 +208,7 @@ def upload_image():
     is_valid_extension = True
     # extract and validate file extension
     file_ext = file_obj.filename.rsplit('.', 1)[1]
-    if file_ext not in ['jpg', 'jpeg', 'png']:
+    if file_ext.lower() not in ['jpg', 'jpeg', 'png']:
         is_valid_extension = False
 
     if not is_valid_extension:
