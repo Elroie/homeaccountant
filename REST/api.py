@@ -23,7 +23,6 @@ from ML.BillCommentManager import BillCommentManager
 
 from ML.ClassificationManager import ClassificationManager
 from ML.FeedNoteManager import FeedNoteManager
-from ML.GraphDataManager import GraphDataManager
 
 api_bp = Blueprint('v1', __name__)
 
@@ -80,6 +79,7 @@ def verify_authentication(func):
        if user is None:
            raise Unauthorized("the token is not valid you son of a bitch")
 
+       g.user = user
        return func()
     return wrapper
 
@@ -88,8 +88,6 @@ def verify_authentication(func):
 @crossdomain(origin='*')
 def test():
     return "test....."
-
-
 
 @api_bp.route("/addnote", methods=['POST'])
 def add_note():
@@ -103,8 +101,7 @@ def add_note():
     note_title = 'Sample Title'
     note_text = 'Sample Text'
     manager.add(user_id,note_title,note_text)
-    return "note added", 200
-
+    return "", 204
 
 @api_bp.route("/allnotes", methods=['GET'])
 def return_all_notes():
@@ -124,13 +121,14 @@ def return_notes_count():
 def add_comment():
     parser = reqparse.RequestParser(bundle_errors=True)
     parser.add_argument('file', type=werkzeug.FileStorage, location='files', required=True)
-
+    args = parser.parse_args()
+    file_obj = args['file']
     manager = BillCommentManager()
-    user_id = 'a9ab55e1-419c-43c6-9cb4-8e71462c84b3'
-    bill_id = '746fc33a-fb7c-4595-ba83-198426311234'
-    comment_text = 'Sample Text'
+    user_id = request.args.get('user_id', 'a9ab55e1-419c-43c6-9cb4-8e71462c84b3')
+    bill_id = request.args.get('bill_id', '746fc33a-fb7c-4595-ba83-198426311234')
+    comment_text = request.args.get('comment_text', 'Sample Text')
     manager.add(user_id,bill_id,comment_text)
-    return "comment added", 200
+    return
 
 @api_bp.route("/allcomments", methods=['GET'])
 def return_all_comments():
@@ -138,7 +136,7 @@ def return_all_comments():
     user_id = request.args.get('user_id', 'a9ab55e1-419c-43c6-9cb4-8e71462c84b3')
     bill_id = request.args.get('bill_id', '746fc33a-fb7c-4595-ba83-198426311234')
     comments = manager.get_all_comments(user_id,bill_id)
-    return comments.to_json()
+    return json.dumps(comments)
 
 
 @api_bp.route("/register",methods = ['POST'])
@@ -248,26 +246,57 @@ def upload_image():
 def download_file(file_name):
     pass
 
+@api_bp.route("/user/update", methods=['POST', 'OPTIONS'])
+@verify_authentication
+@crossdomain(origin='*')
+def update_user():
+    firstname = request.json.get('firstName')
+    lastname = request.json.get('lastName')
+    email = request.json.get('email')
+    phone = request.json.get('phone')
+    country = request.json.get('country')
+    city = request.json.get('city')
+    address = request.json.get('address')
+    hometype = request.json.get('homeType')
+    homesize = request.json.get('homeSize')
+    income = request.json.get('income')
+    residence = request.json.get('residence')
 
-@api_bp.route("/reportcount", methods=['GET'])
-def return_report_count():
-    manager = ClassificationManager()
-    user_id = request.args.get('user_id', 'a9ab55e1-419c-43c6-9cb4-8e71462c84b3')
-    return str(manager.get_report_count(user_id))
+    if firstname is None:
+        abort(400) # missing arguments
+    elif lastname is None:
+        abort(400)  # missing arguments
+    elif email is None:
+        abort(400)  # missing arguments
+    elif phone is None:
+        abort(400)  # missing arguments
+    elif country is None:
+        abort(400)  # missing arguments
+    elif city is None:
+        abort(400)  # missing arguments
+    elif address is None:
+        abort(400)  # missing arguments
+    elif hometype is None:
+        abort(400)  # missing arguments
+    elif homesize is None:
+        abort(400)  # missing arguments
+    elif income is None:
+        abort(400)  # missing arguments
+    elif residence is None:
+        abort(400)  # missing arguments
 
-@api_bp.route("/addgraphdata", methods=['POST'])
-def add_data():
-    parser = reqparse.RequestParser(bundle_errors=True)
-    parser.add_argument('file', type=werkzeug.FileStorage, location='files', required=True)
-
-    manager = GraphDataManager()
-    user_id = 'a9ab55e1-419c-43c6-9cb4-8e71462c84b3'
-    manager.add(user_id, True, 5, 100, 200, 300)
-    return "data added", 200
-
-@api_bp.route("/allgraphdata", methods=['GET'])
-def return_all_graphdata():
-    manager = GraphDataManager()
-    user_id = request.args.get('user_id', 'a9ab55e1-419c-43c6-9cb4-8e71462c84b3')
-    comments = manager.get_all_graphdata(user_id)
-    return comments.to_json()
+    connect(config.DB_NAME)
+    user = g.user
+    user.firstName = firstname
+    user.lastName = lastname
+    user.email = email
+    user.phone = phone
+    user.country = country
+    user.city = city
+    user.address = address
+    user.homeType = hometype
+    user.homeSize = homesize
+    user.income = income
+    user.residence = residence
+    user.save()
+    return jsonify({'username': user.username}), 200,
