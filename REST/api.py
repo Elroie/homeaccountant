@@ -7,6 +7,7 @@ import json
 import uuid
 
 
+
 from mongoengine import connect
 from flask import Flask, current_app as app, Blueprint, current_app
 from flask_restful import reqparse, abort
@@ -78,24 +79,40 @@ def test():
 
 @api_bp.route("/addnote", methods=['POST'])
 def add_note():
+    parser = reqparse.RequestParser(bundle_errors=True)
+    parser.add_argument('user_id', type=werkzeug.FileStorage, location='files', required=True)
+    parser.add_argument('user_id', type=werkzeug.FileStorage, location='files', required=True)
+    # args = parser.parse_args()
+    # file_obj = args['file']
     manager = FeedNoteManager()
-    user_id = request.args.get('user_id', '746fc33a-fb7c-4595-ba83-19842631859b')
-    note_title = request.args.get('note_title', 'Sample Title')
-    note_text = request.args.get('note_text', 'Sample Text')
+    user_id = 'a9ab55e1-419c-43c6-9cb4-8e71462c84b3'
+    note_title = 'Sample Title'
+    note_text = 'Sample Text'
     manager.add(user_id,note_title,note_text)
-    return
+    return "", 204
 
 @api_bp.route("/allnotes", methods=['GET'])
 def return_all_notes():
     manager = FeedNoteManager()
-    user_id = request.args.get('user_id', '746fc33a-fb7c-4595-ba83-19842631859b')
+    user_id = request.args.get('user_id', 'a9ab55e1-419c-43c6-9cb4-8e71462c84b3')
     notes = manager.get_all_notes(user_id)
-    return json.dumps(notes)
+    return notes.to_json()
+
+@api_bp.route("/notescount", methods=['GET'])
+def return_notes_count():
+    manager = FeedNoteManager()
+    user_id = request.args.get('user_id', 'a9ab55e1-419c-43c6-9cb4-8e71462c84b3')
+    return str(manager.get_note_count(user_id))
+
 
 @api_bp.route("/addcomment", methods=['POST'])
 def add_comment():
+    parser = reqparse.RequestParser(bundle_errors=True)
+    parser.add_argument('file', type=werkzeug.FileStorage, location='files', required=True)
+    args = parser.parse_args()
+    file_obj = args['file']
     manager = BillCommentManager()
-    user_id = request.args.get('user_id', '746fc33a-fb7c-4595-ba83-19842631859b')
+    user_id = request.args.get('user_id', 'a9ab55e1-419c-43c6-9cb4-8e71462c84b3')
     bill_id = request.args.get('bill_id', '746fc33a-fb7c-4595-ba83-198426311234')
     comment_text = request.args.get('comment_text', 'Sample Text')
     manager.add(user_id,bill_id,comment_text)
@@ -104,7 +121,7 @@ def add_comment():
 @api_bp.route("/allcomments", methods=['GET'])
 def return_all_comments():
     manager = BillCommentManager()
-    user_id = request.args.get('user_id', '746fc33a-fb7c-4595-ba83-19842631859b')
+    user_id = request.args.get('user_id', 'a9ab55e1-419c-43c6-9cb4-8e71462c84b3')
     bill_id = request.args.get('bill_id', '746fc33a-fb7c-4595-ba83-198426311234')
     comments = manager.get_all_comments(user_id,bill_id)
     return json.dumps(comments)
