@@ -6,8 +6,8 @@ angular.module('app.home').controller('ReportController', ['$scope', '$timeout',
     var ctrl = this;
 
     $scope.wizard1CompleteCallback = function(wizardData){
-        debugger;
-        console.log('wizard1CompleteCallback', wizardData);
+        ctrl.upload();
+
         $.smallBox({
             title: "Congratulations! Smart wizard finished",
             content: "<i class='fa fa-clock-o'></i> <i>1 seconds ago...</i>",
@@ -42,12 +42,16 @@ angular.module('app.home').controller('ReportController', ['$scope', '$timeout',
         ctrl.uploadCompleted = false;
         ctrl.inUploadProgress = true;
         $timeout(function(){
-            debugger;
             ctrl.showWidget = true;
             Upload.upload({
                 // url: 'http://10.0.0.12:5000/api/upload',
                 url: 'http://127.0.0.1:5000/api/upload',
-                data: {file: ctrl.logoFile}
+                data: {
+                    file: ctrl.logoFile,
+                    date: ctrl.billDate,
+                    note: ctrl.billNote,
+                    amount: ctrl.billAmount
+                }
             }).then(function (resp) {
                 ctrl.uploadCompleted = true;
                 ctrl.service.image_path = resp.data.image_path;

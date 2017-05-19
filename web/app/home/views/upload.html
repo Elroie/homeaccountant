@@ -145,7 +145,7 @@
 											<div class="form-group">
 												<div class="input-group">
 													<span class="input-group-addon"><i class="fa fa-dollar fa-lg fa-fw"></i></span>
-													<input class="form-control input-lg" data-mask="999" data-mask-placeholder="X" name="billsum" id="billsum" type="text">
+													<input class="form-control input-lg" data-mask="999" data-mask-placeholder="X" name="billsum" id="billsum" type="text" ng-model="ctrl.billAmount">
 												</div>
 											</div>
 										</div>
@@ -153,7 +153,7 @@
 											<div class="form-group">
 												<div class="input-group">
 													<span class="input-group-addon"><i class="fa fa-calendar fa-lg fa-fw"></i></span>
-													<input type="date" class="form-control input-lg"  name="date" id="datepicker" type="text" data-date-inline-picker="true">
+													<input type="date" class="form-control input-lg"  name="date" id="datepicker" type="text" data-date-inline-picker="true" ng-model="ctrl.billDate">
 												</div>
 											</div>
 										</div>
@@ -169,7 +169,7 @@
 										<div class="form-group">
 											<div class="input-group">
 												<span class="input-group-addon"><i class="fa fa-comment-o fa-lg fa-fw"></i></span>
-												<input class="form-control input-lg" placeholder="Write comment ..." name="etc" id="etc" type="text">
+												<input class="form-control input-lg" placeholder="Write comment ..." name="etc" id="etc" type="text" ng-model="ctrl.billNote">
 											</div>
 										</div>
 										<div class="alert alert-info fade in">
