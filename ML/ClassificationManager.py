@@ -50,13 +50,13 @@ class ClassificationManager(threading.Thread):
                 if classification_result.get_type() == self.electricity and classification_result.get_result() == True:
                     # save to db as electricity bill.
                     user_image = self._save_classification_result(classification_task, classification_result)
-                    ocr_service.enqueue_ocr_task(user_image.id, image_path, os.path.join(image_path, '_scanned' + '.txt'))
+                    ocr_service.enqueue_ocr_task(user_image.id, image_path, os.path.join(image_path, '_scanned' + '.txt'), self.electricity)
                 else:
                     classification_result = self._water_classifier.classify(classification_task['image_path'])
                     if classification_result.get_type() == self.water and classification_result.get_result() == True:
                         # save to db as water bill.
                         user_image = self._save_classification_result(classification_task, classification_result)
-                        ocr_service.enqueue_ocr_task(user_image.id, image_path, os.path.join(image_path, '_scanned' + '.txt'))
+                        ocr_service.enqueue_ocr_task(user_image.id, image_path, os.path.join(image_path, '_scanned' + '.txt'), self.water)
                     else:
                         # we couldn't classify this image... no OCR required
                         self._save_classification_result(classification_task, classification_result)

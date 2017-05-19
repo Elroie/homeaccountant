@@ -3,7 +3,9 @@ import random
 import string
 import werkzeug
 import config
+import json
 import uuid
+
 
 from mongoengine import connect
 from flask import Flask, current_app as app, Blueprint, current_app
@@ -16,6 +18,7 @@ import Entities.User
 from Entities.UserImage import UserImage
 from Entities.ScannedImage import ScannedImage
 from werkzeug.exceptions import HTTPException, NotFound, BadRequest, Unauthorized
+from ML.BillCommentManager import BillCommentManager
 
 from ML.ClassificationManager import ClassificationManager
 from ML.FeedNoteManager import FeedNoteManager
@@ -84,7 +87,38 @@ def verify_authentication(func):
 def test():
     return "test....."
 
+@api_bp.route("/addnote", methods=['POST'])
+def add_note():
+    manager = FeedNoteManager()
+    user_id = request.args.get('user_id', '746fc33a-fb7c-4595-ba83-19842631859b')
+    note_title = request.args.get('note_title', 'Sample Title')
+    note_text = request.args.get('note_text', 'Sample Text')
+    manager.add(user_id,note_title,note_text)
+    return
 
+@api_bp.route("/allnotes", methods=['GET'])
+def return_all_notes():
+    manager = FeedNoteManager()
+    user_id = request.args.get('user_id', '746fc33a-fb7c-4595-ba83-19842631859b')
+    notes = manager.get_all_notes(user_id)
+    return json.dumps(notes)
+
+@api_bp.route("/addcomment", methods=['POST'])
+def add_comment():
+    manager = BillCommentManager()
+    user_id = request.args.get('user_id', '746fc33a-fb7c-4595-ba83-19842631859b')
+    bill_id = request.args.get('bill_id', '746fc33a-fb7c-4595-ba83-198426311234')
+    comment_text = request.args.get('comment_text', 'Sample Text')
+    manager.add(user_id,bill_id,comment_text)
+    return
+
+@api_bp.route("/allcomments", methods=['GET'])
+def return_all_comments():
+    manager = BillCommentManager()
+    user_id = request.args.get('user_id', '746fc33a-fb7c-4595-ba83-19842631859b')
+    bill_id = request.args.get('bill_id', '746fc33a-fb7c-4595-ba83-198426311234')
+    comments = manager.get_all_comments(user_id,bill_id)
+    return json.dumps(comments)
 
 
 @api_bp.route("/register",methods = ['POST'])
@@ -141,9 +175,15 @@ def get_auth_token():
 def upload_image():
     parser = reqparse.RequestParser(bundle_errors=True)
     parser.add_argument('file', type=werkzeug.FileStorage, location='files', required=True)
+    parser.add_argument('date', type=str, location='form', required=True)
+    parser.add_argument('note', type=str, location='form', required=True)
+    parser.add_argument('amount', type=str, location='form', required=True)
     args = parser.parse_args()
 
     file_obj = args['file']
+    date = args['date']
+    note = args['note']
+    amount = args['amount']
 
     # elroie todo: remove this when the endpoint is ready
     user_id = args.get('user_id', '746fc33a-fb7c-4595-ba83-19842631859b')
@@ -151,7 +191,7 @@ def upload_image():
     is_valid_extension = True
     # extract and validate file extension
     file_ext = file_obj.filename.rsplit('.', 1)[1]
-    if file_ext not in ['jpg', 'jpeg', 'png']:
+    if file_ext.lower() not in ['jpg', 'jpeg', 'png']:
         is_valid_extension = False
 
     if not is_valid_extension:

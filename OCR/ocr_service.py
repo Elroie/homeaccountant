@@ -5,6 +5,7 @@ from Queue import Queue
 from mongoengine import connect
 from Entities.UserImage import UserImage
 from Entities.ScannedImage import ScannedImage
+from OCR.TextExtractor import TextExtractorBase
 
 
 class OcrService(Thread):
@@ -68,9 +69,16 @@ class OcrService(Thread):
                         scanned_image.original_image = user_image
 
                         with open(ocr_task['resultFilePath']) as f:
-                            scanned_image.text = f.readlines()
+                            scanned_image.text = f.read()
 
-                        # Elroie todo: create textExtractors for each image (electricity & water)
+                        # try extract data from ocr.... in any case save the ocr result
+                        try:
+                            text_extractor = TextExtractorBase.create(ocr_task['classification_type'])
+                            scanned_image.to_date = text_extractor.get_date(ocr_task['filePath'])
+                            scanned_image.price = text_extractor.get_price(ocr_task['filePath'])
+                        except Exception as e:
+                            print e
+
                         scanned_image.save()
                 else:
                     print "Error processing task"
@@ -78,11 +86,12 @@ class OcrService(Thread):
             # we should suppress and log the errors inside the threads since we don't want this manager to die.
             print ex.message
 
-    def enqueue_ocr_task(self, image_id, filePath, resultFilePath, language='Hebrew', outputFormat='txt'):
+    def enqueue_ocr_task(self, image_id, filePath, resultFilePath, classification_type,language='Hebrew', outputFormat='txt'):
         ocr_task = {
             'image_id': image_id,
             'filePath': filePath,
             'resultFilePath': resultFilePath,
+            'classification_type': classification_type,
             'language': language,
             'outputFormat': outputFormat
         }
