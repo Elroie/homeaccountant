@@ -27,8 +27,8 @@ def create_app():
 
     mongoengine.connect(config.DB_NAME)
     if len(User.objects) == 0:
-        test_user = User(id=uuid.uuid4(), username='testuser', password='ab1234', firstName='test',
-                         lastName='testing', email='t@t.com', homeType='apt', income='1000',
+        test_user = User(id=uuid.uuid4(), username='testuser', password=User.hash_password('ab1234'), firstName='test',
+                         lastName='testing', email='t@t.com', homeType='apt', income='1000', phone="654",
                          homeSize='4', residence='3', country='Israel', address='bla', city='blabla')
         test_user.save()
         for user in User.objects:

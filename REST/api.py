@@ -79,6 +79,7 @@ def verify_authentication(func):
        if user is None:
            raise Unauthorized("the token is not valid you son of a bitch")
 
+       g.user = user
        return func()
     return wrapper
 
@@ -246,6 +247,7 @@ def download_file(file_name):
     pass
 
 @api_bp.route("/user/update", methods=['POST', 'OPTIONS'])
+@verify_authentication
 @crossdomain(origin='*')
 def update_user():
     firstname = request.json.get('firstName')
@@ -283,10 +285,18 @@ def update_user():
     elif residence is None:
         abort(400)  # missing arguments
 
-
     connect(config.DB_NAME)
-    username = request.g.user
-
-    user = User(id=request.g.user, username=username,password=User.hash_password(password))
+    user = g.user
+    user.firstName = firstname
+    user.lastName = lastname
+    user.email = email
+    user.phone = phone
+    user.country = country
+    user.city = city
+    user.address = address
+    user.homeType = hometype
+    user.homeSize = homesize
+    user.income = income
+    user.residence = residence
     user.save()
-    return jsonify({ 'username': user.username }), 201,
+    return jsonify({'username': user.username}), 200,
