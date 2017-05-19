@@ -17,7 +17,7 @@ from Entities.UserImage import UserImage
 from Entities.ScannedImage import ScannedImage
 
 from ML.ClassificationManager import ClassificationManager
-
+from ML.FeedNoteManager import FeedNoteManager
 
 api_bp = Blueprint('v1', __name__)
 
@@ -67,7 +67,13 @@ def crossdomain(origin=None, methods=None, headers=None,
 @api_bp.route("/test", methods=['GET'])
 @crossdomain(origin='*')
 def test():
+    manager = FeedNoteManager()
+    manager.add("a9ab55e1-419c-43c6-9cb4-8e71462c84b3","Water Report","New bill uploaded")
+    manager.add("a9ab55e1-419c-43c6-9cb4-8e71462c84b3","Electricity Report", "New bill uploaded")
+    manager.get_all_notes()
     return "test....."
+
+
 
 
 @api_bp.route("/register",methods = ['POST'])

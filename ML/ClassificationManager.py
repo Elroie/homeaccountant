@@ -1,4 +1,6 @@
 import threading, utils, os, uuid
+
+from ML.FeedNoteManager import FeedNoteManager
 from config import BASE_PATH, DB_NAME
 from ImageRecognitionModel import ImageRecognitionModel
 from Queue import Queue
@@ -13,7 +15,7 @@ class ClassificationManager(threading.Thread):
 
     def __init__(self):
         threading.Thread.__init__(self, name="Classification_Manager")
-
+        self.feed_note_manager = FeedNoteManager()
         self.electricity = 'Electricity Bill'
         self.water = 'Water Bill'
 
@@ -122,5 +124,5 @@ class ClassificationManager(threading.Thread):
         user = User.objects(id=classification_task['user_id']).get()
         user_image.user = user
         user_image.save()
-
+        self.feed_note_manager.add(classification_task['user_id'], classification_result.get_type() + " Report", "New report uploaded", user_image.id, attachment_type="REPORT")
         return user_image
