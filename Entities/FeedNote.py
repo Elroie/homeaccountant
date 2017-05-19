@@ -3,10 +3,11 @@ from Entities.User import User
 
 
 class FeedNote(Document):
-    id_user = ReferenceField(User, reverse_delete_rule=CASCADE)
-    id = UUIDField(required=True, primary_key=True)
+    user_id = ReferenceField(User, reverse_delete_rule=CASCADE)
+    note_id = UUIDField(required=True, primary_key=True)
+    title = StringField(required=True)
     text = StringField(required=True)
-    time = StringField(required=True)
-    attachment_link = StringField
+    time = DateTimeField(required=True)
+    attachment_id = StringField
     attachment_type= StringField
 

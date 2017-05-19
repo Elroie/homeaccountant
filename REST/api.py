@@ -3,19 +3,23 @@ import random
 import string
 import werkzeug
 import config
+import json
+import uuid
+
 
 from mongoengine import connect
 from flask import Flask, current_app as app, Blueprint, current_app
 from flask_restful import reqparse, abort
 from datetime import timedelta
-from flask import make_response, request, current_app
+from flask import make_response, request, current_app , jsonify , g
 from functools import update_wrapper
 from Entities.User import User
+import Entities.User
 from Entities.UserImage import UserImage
 from Entities.ScannedImage import ScannedImage
 
 from ML.ClassificationManager import ClassificationManager
-
+from ML.FeedNoteManager import FeedNoteManager
 
 api_bp = Blueprint('v1', __name__)
 
@@ -63,14 +67,70 @@ def crossdomain(origin=None, methods=None, headers=None,
 
 
 @api_bp.route("/test", methods=['GET'])
+@crossdomain(origin='*')
 def test():
+    manager = FeedNoteManager()
+    manager.add("a9ab55e1-419c-43c6-9cb4-8e71462c84b3","Water Report","New bill uploaded")
+    manager.add("a9ab55e1-419c-43c6-9cb4-8e71462c84b3","Electricity Report", "New bill uploaded")
+    manager.get_all_notes()
     return "test....."
 
+@api_bp.route("/addnote", methods=['POST'])
+def test():
+    manager = FeedNoteManager()
+    user_id = request.args.get('user_id', '746fc33a-fb7c-4595-ba83-19842631859b')
+    note_title = request.args.get('note_title', 'note_text')
+    note_text = request.args.get('note_text', '746fc33a-fb7c-4595-ba83-19842631859b')
+    manager.add(user_id,note_title,note_text)
+    return
 
-@api_bp.route("/login")
-def login(username, password):
-    pass
+@api_bp.route("/notes", methods=['GET'])
+def test():
+    manager = FeedNoteManager()
+    user_id = request.args.get('user_id', '746fc33a-fb7c-4595-ba83-19842631859b')
+    notes = manager.get_all_notes(user_id)
+    return json.dumps(notes)
 
+@api_bp.route("/register",methods = ['POST'])
+@crossdomain(origin='*')
+def register_new_user():
+    username = request.json.get('username')
+    password = request.json.get('password')
+    if username is None or password is None:
+        abort(400) # missing arguments
+    if User.objects(username = username).first() is not None:
+        abort(400) # existing user
+
+    connect(config.DB_NAME)
+    user = User(id=uuid.uuid4(), username=username,password=User.hash_password(password))
+    user.hash_password(password)
+    user.save()
+    return jsonify({ 'username': user.username }), 201,
+
+
+@api_bp.route("/login",methods = ['POST'])
+@crossdomain(origin='*')
+def login(username_or_token, password):
+    # first try to authenticate by token
+    user = User.verify_auth_token(username_or_token)
+    if not user:
+        # try to authenticate with username/password
+        user = User.objects(username = username_or_token).first()
+        if not user or not user.verify_password(password):
+            return False
+
+    g.user = user
+    return True
+
+@api_bp.route("/logout")
+@crossdomain(origin='*')
+
+
+@api_bp.route('/token')
+@crossdomain(origin='*')
+def get_auth_token():
+    token = g.user.generate_auth_token()
+    return jsonify({ 'token': token.decode('ascii') })
 
 @api_bp.route("/upload", methods=['POST', 'OPTIONS'])
 @crossdomain(origin='*')
