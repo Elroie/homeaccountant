@@ -6,13 +6,11 @@ import config
 import json
 import uuid
 
-
-
 from mongoengine import connect
 from flask import Flask, current_app as app, Blueprint, current_app
 from flask_restful import reqparse, abort
 from datetime import timedelta
-from flask import make_response, request, current_app , jsonify , g
+from flask import make_response, request, current_app, jsonify, g
 from functools import update_wrapper, wraps
 from Entities.User import User
 import Entities.User
@@ -66,28 +64,32 @@ def crossdomain(origin=None, methods=None, headers=None,
 
         f.provide_automatic_options = False
         return update_wrapper(wrapped_function, f)
+
     return decorator
 
 
 def verify_authentication(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
-       token = request.headers.get('token')
-       if token is None:
-           raise Unauthorized("the token is not valid you son of a bitch")
-       user = User.verify_auth_token(token)
-       if user is None:
-           raise Unauthorized("the token is not valid you son of a bitch")
+        token = request.headers.get('token')
+        if token is None:
+            raise Unauthorized("the token is not valid you son of a bitch")
+        user = User.verify_auth_token(token)
+        if user is None:
+            raise Unauthorized("the token is not valid you son of a bitch")
 
-       g.user = user
-       return func()
+        g.user = user
+        return func()
+
     return wrapper
+
 
 @verify_authentication
 @api_bp.route("/test", methods=['GET'])
 @crossdomain(origin='*')
 def test():
     return "test....."
+
 
 @api_bp.route("/addnote", methods=['POST'])
 def add_note():
@@ -100,8 +102,9 @@ def add_note():
     user_id = 'a9ab55e1-419c-43c6-9cb4-8e71462c84b3'
     note_title = 'Sample Title'
     note_text = 'Sample Text'
-    manager.add(user_id,note_title,note_text)
+    manager.add(user_id, note_title, note_text)
     return "", 204
+
 
 @api_bp.route("/allnotes", methods=['GET'])
 def return_all_notes():
@@ -109,6 +112,7 @@ def return_all_notes():
     user_id = request.args.get('user_id', 'a9ab55e1-419c-43c6-9cb4-8e71462c84b3')
     notes = manager.get_all_notes(user_id)
     return notes.to_json()
+
 
 @api_bp.route("/notescount", methods=['GET'])
 def return_notes_count():
@@ -127,36 +131,37 @@ def add_comment():
     user_id = request.args.get('user_id', 'a9ab55e1-419c-43c6-9cb4-8e71462c84b3')
     bill_id = request.args.get('bill_id', '746fc33a-fb7c-4595-ba83-198426311234')
     comment_text = request.args.get('comment_text', 'Sample Text')
-    manager.add(user_id,bill_id,comment_text)
+    manager.add(user_id, bill_id, comment_text)
     return
+
 
 @api_bp.route("/allcomments", methods=['GET'])
 def return_all_comments():
     manager = BillCommentManager()
     user_id = request.args.get('user_id', 'a9ab55e1-419c-43c6-9cb4-8e71462c84b3')
     bill_id = request.args.get('bill_id', '746fc33a-fb7c-4595-ba83-198426311234')
-    comments = manager.get_all_comments(user_id,bill_id)
+    comments = manager.get_all_comments(user_id, bill_id)
     return json.dumps(comments)
 
 
-@api_bp.route("/register",methods = ['POST'])
+@api_bp.route("/register", methods=['POST'])
 @crossdomain(origin='*')
 def register_new_user():
     username = request.json.get('username')
     password = request.json.get('password')
     if username is None or password is None:
-        abort(400) # missing arguments
-    if User.objects(username = username).first() is not None:
-        abort(400) # existing user
+        abort(400)  # missing arguments
+    if User.objects(username=username).first() is not None:
+        abort(400)  # existing user
 
     connect(config.DB_NAME)
-    user = User(id=uuid.uuid4(), username=username,password=User.hash_password(password))
+    user = User(id=uuid.uuid4(), username=username, password=User.hash_password(password))
     user.hash_password(password)
     user.save()
-    return jsonify({ 'username': user.username }), 201,
+    return jsonify({'username': user.username}), 201,
 
 
-@api_bp.route("/login",methods = ['GET'])
+@api_bp.route("/login", methods=['GET'])
 @crossdomain(origin='*')
 def login():
     username_or_token = request.json.get('username')
@@ -165,15 +170,16 @@ def login():
     if user is None:
         password = request.json.get('password')
         # try to authenticate with username/password
-        user = User.objects(username = username_or_token).first()
+        user = User.objects(username=username_or_token).first()
         if not user or not user.verify_hashed_password(password):
             return "", 404
         g.user = user
         token = g.user.generate_auth_token()
-        return jsonify({ 'token': token.decode('ascii') })
+        return jsonify({'token': token.decode('ascii')})
 
     g.user = user
     return "", 200
+
 
 @api_bp.route("/logout")
 @crossdomain(origin='*')
@@ -186,7 +192,8 @@ def logout(token):
 @crossdomain(origin='*')
 def get_auth_token():
     token = g.user.generate_auth_token()
-    return jsonify({ 'token': token.decode('ascii') })
+    return jsonify({'token': token.decode('ascii')})
+
 
 @api_bp.route("/upload", methods=['POST', 'OPTIONS'])
 @crossdomain(origin='*')
@@ -246,24 +253,26 @@ def upload_image():
 def download_file(file_name):
     pass
 
+
 @api_bp.route("/user/update", methods=['POST', 'OPTIONS'])
-@verify_authentication
-@crossdomain(origin='*')
-def update_user():
-    firstname = request.json.get('firstName')
-    lastname = request.json.get('lastName')
-    email = request.json.get('email')
-    phone = request.json.get('phone')
-    country = request.json.get('country')
-    city = request.json.get('city')
-    address = request.json.get('address')
-    hometype = request.json.get('homeType')
-    homesize = request.json.get('homeSize')
-    income = request.json.get('income')
-    residence = request.json.get('residence')
+# @verify_authentication
+@crossdomain(origin='*', methods=['POST'], headers="Access-Control-Allow-Headers Origin, X-Requested-With, Content-Type, Accept")
+def update_user_settings():
+    account = request.json.get('account')
+    firstname = account['firstName']
+    lastname = account['lastName']
+    email = account['email']
+    phone = account['phone']
+    country = account['country']
+    city = account['city']
+    address = account['address']
+    hometype = account['homeType']
+    homesize = account['homeSize']
+    income = account['income']
+    residence = account['residence']
 
     if firstname is None:
-        abort(400) # missing arguments
+        abort(400)  # missing arguments
     elif lastname is None:
         abort(400)  # missing arguments
     elif email is None:
@@ -286,7 +295,8 @@ def update_user():
         abort(400)  # missing arguments
 
     connect(config.DB_NAME)
-    user = g.user
+    user = User.objects(username='testuser').first()
+    # user = g.user
     user.firstName = firstname
     user.lastName = lastname
     user.email = email
@@ -300,3 +310,40 @@ def update_user():
     user.residence = residence
     user.save()
     return jsonify({'username': user.username}), 200,
+
+
+@api_bp.route("/user/settings", methods=['GET', 'OPTIONS'])
+# @verify_authentication
+@crossdomain(origin='*', methods=['POST', 'GET', 'OPTIONS'])
+def get_user_settings():
+    connect(config.DB_NAME)
+    user = User.objects(username='testuser').first()
+    user_settings = {
+        'firstName': user.firstName,
+        'lastName': user.lastName,
+        'email': user.email,
+        'phone': user.phone,
+        'country': user.country,
+        'city': user.city,
+        'address': user.address,
+        'homeType': user.homeType,
+        'homeSize': user.homeSize,
+        'income': user.income,
+        'residence': user.residence
+    }
+    return jsonify(user_settings), 200,
+    # user = g.user
+    # user_settings = {
+    #     'firstName': user.firstName,
+    #     'lastName': user.lastName,
+    #     'email': user.email,
+    #     'phone': user.phone,
+    #     'country': user.country,
+    #     'city': user.city,
+    #     'address': user.address,
+    #     'homeType': user.homeType,
+    #     'homeSize': user.homeSize,
+    #     'income': user.income,
+    #     'residence': user.residence
+    # }
+    # return jsonify(user_settings), 200,

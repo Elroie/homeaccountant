@@ -31,7 +31,7 @@ angular.module('app.auth').config(['$stateProvider', '$httpProvider', function($
             url: '/login',
             views: {
                 root: {
-                    templateUrl: 'smart/app/auth/views/login.html',
+                    templateUrl: 'app/auth/views/login.html',
                     controller: 'loginController',
                     controllerAs: 'loginController',
                 }
@@ -39,20 +39,13 @@ angular.module('app.auth').config(['$stateProvider', '$httpProvider', function($
             data: {
                 title: 'Login',
                 htmlId: 'extr-page'
-            },
-            resolve: {
-                srcipts: function(lazyScript){
-                    return lazyScript.register([
-                        'smart/build/vendor.ui.js'
-                    ]);
-                }
             }
         })
         .state('forgotPassword', {
             url: '/forgot-password',
             views: {
                 root: {
-                    templateUrl: 'smart/app/auth/views/forgot-password.html',
+                    templateUrl: 'app/auth/views/forgot-password.html',
                     controller: 'loginController',
                     controllerAs: 'ctrl'
                 }
@@ -66,7 +59,7 @@ angular.module('app.auth').config(['$stateProvider', '$httpProvider', function($
             url: '/lock',
             views: {
                 root: {
-                    templateUrl: 'smart/app/auth/views/lock.html'
+                    templateUrl: 'app/auth/views/lock.html'
                 }
             },
             data: {
