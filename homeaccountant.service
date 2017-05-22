@@ -1,0 +1,13 @@
+[Unit]
+Description=Gunicorn instance to serve home accountant
+After=network.target
+
+[Service]
+User=root
+Group=www-data
+WorkingDirectory=/homeaccountant
+Environment="PATH=/usr/bin"
+ExecStart=/homeaccountant/homeaccountant.sh
+
+[Install]
+WantedBy=multi-user.target
