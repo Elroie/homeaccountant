@@ -13,7 +13,7 @@ from flask_script import Manager, Shell, prompt, prompt_pass, prompt_bool
 from REST.api import api_bp
 from config import Config, basedir
 from Entities.User import User
-from . import create_app
+from app import create_app
 
 app = create_app()
 manager = Manager(app)
