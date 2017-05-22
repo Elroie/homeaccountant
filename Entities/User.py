@@ -25,7 +25,6 @@ class User(Document):
     income = IntField(required=True)
     residence = IntField(required=True)
 
-
     @staticmethod
     def hash_password(password):
         password = pwd_context.encrypt(password)
@@ -38,7 +37,6 @@ class User(Document):
         s = Serializer(Config.SECRET_KEY, expires_in = expiration)
         return s.dumps({ 'id': str(self.id) })
 
-
     @staticmethod
     def verify_auth_token(token):
         s = Serializer(Config.SECRET_KEY)
@@ -49,7 +47,5 @@ class User(Document):
         except BadSignature:
             return None # invalid token
         id = uuid.UUID(data['id'])
-        user = User.objects(id = id).first()
+        user = User.objects(id=id).first()
         return user
-
-    # images = ListField(EmbeddedDocumentField('UserImage'))

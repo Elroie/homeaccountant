@@ -21,7 +21,7 @@ angular.module('app', [
     'SmartAdmin',
 
     // App
-    // 'app.auth',
+     'app.auth',
 
     'app.layout',
     //'app.chat',
