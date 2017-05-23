@@ -104,6 +104,7 @@ def add_note():
     return "", 204
 
 @api_bp.route("/allnotes", methods=['GET'])
+@crossdomain(origin='*', methods=['GET'], headers="Access-Control-Allow-Headers Origin, X-Requested-With, Content-Type, Accept")
 def return_all_notes():
     manager = FeedNoteManager()
     user_id = request.args.get('user_id', 'a9ab55e1-419c-43c6-9cb4-8e71462c84b3')
@@ -111,6 +112,7 @@ def return_all_notes():
     return notes.to_json()
 
 @api_bp.route("/notescount", methods=['GET'])
+@crossdomain(origin='*', methods=['GET'], headers="Access-Control-Allow-Headers Origin, X-Requested-With, Content-Type, Accept")
 def return_notes_count():
     manager = FeedNoteManager()
     user_id = request.args.get('user_id', 'a9ab55e1-419c-43c6-9cb4-8e71462c84b3')
