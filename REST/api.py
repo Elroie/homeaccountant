@@ -142,16 +142,28 @@ def return_all_comments():
 @api_bp.route("/register",methods = ['POST'])
 @crossdomain(origin='*')
 def register_new_user():
-    username = request.json.get('username')
-    password = request.json.get('password')
+    account = request.json.get('account')
+    username = account['username']
+    password = account['password']
+    firstname = account['firstName']
+    lastname = account['lastName']
+    email = account['email']
+    phone = account['phone']
+    country = account['country']
+    city = account['city']
+    address = account['address']
+    hometype = account['homeType']
+    homesize = account['homeSize']
+    income = account['income']
+    residence = account['residence']
+
     if username is None or password is None:
         abort(400) # missing arguments
     if User.objects(username = username).first() is not None:
         abort(400) # existing user
 
     connect(config.DB_NAME)
-    user = User(id=uuid.uuid4(), username=username,password=User.hash_password(password))
-    user.hash_password(password)
+    user = User(id=uuid.uuid4(), username=username,password=User.hash_password(password), firstName=firstname, lastName=lastname, email=email, phone=phone, country=country, city=city, address=address, hometype=hometype, homesize=homesize, income=income, residence=residence)
     user.save()
     return jsonify({ 'username': user.username }), 201,
 

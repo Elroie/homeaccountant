@@ -41,6 +41,20 @@ angular.module('app.auth').config(['$stateProvider', '$httpProvider', function($
                 htmlId: 'extr-page'
             }
         })
+        .state('register', {
+            url: '/register',
+            views: {
+                root: {
+                    templateUrl: 'app/auth/views/register.html',
+                    controller: 'loginController',
+                    controllerAs: 'loginController',
+                }
+            },
+            data: {
+                title: 'Login',
+                htmlId: 'extr-page'
+            }
+        })
         .state('forgotPassword', {
             url: '/forgot-password',
             views: {

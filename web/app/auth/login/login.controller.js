@@ -3,10 +3,23 @@
 angular.module('app.auth').controller('loginController', ['$scope', '$state', 'authService', '$uibModalStack', '$rootScope', '$alert', '$translate', '$window', '$location', function($scope, $state, authService, $uibModalStack, $rootScope, $alert, $translate, $window, $location){
     var ctrl = this;
 
-    ctrl.email = '';
+    ctrl.username = '';
     ctrl.password = '';
-
     ctrl.loggingIn = false;
+    ctrl.account = {username : '',
+    password: '',
+    firstName : '',
+    lastName :  '',
+    email : '',
+    phone : '',
+    country : '',
+    city : '',
+    address : '',
+    homeType : '',
+    homeSize : '',
+    income : '',
+    residence : ''}
+
 
     $rootScope.$on('$locationChangeStart', function () {
         var openedModal = $uibModalStack.getTop();
@@ -48,5 +61,24 @@ angular.module('app.auth').controller('loginController', ['$scope', '$state', 'a
             ctrl.resetInProgress = false;
             $alert.info(res.data.message);
         })
+    };
+
+
+    ctrl.register = function(){
+        console.log('update....');
+        var req = {
+         method: 'POST',
+         url: 'http://127.0.0.1:5000/api/register',
+         headers: {
+          'Content-Type' : 'application/json'
+         },
+         data: { account : ctrl.account}
+        }
+
+        $http(req).then(function(response){
+            console.log(response);
+        }, function(error){
+            console.log(error);
+        });
     };
 }]);

@@ -24,6 +24,7 @@ def secure():
     """Runs the Flask development server with https enabled."""
     manager.app.run('0.0.0.0', debug=True, port=5000, ssl_context='adhoc')
 
+
 @manager.command
 def profile():
     """Runs the Flask development server with profiling."""

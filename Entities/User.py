@@ -9,6 +9,7 @@ from itsdangerous import (TimedJSONWebSignatureSerializer
 
 import config
 
+
 class User(Document):
     id = UUIDField(required=True, primary_key=True)
     username = StringField(required=True)
