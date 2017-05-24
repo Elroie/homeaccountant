@@ -1,34 +1,37 @@
 "use strict";
 
-angular.module('app.auth').controller('loginController', ['$scope', '$state', 'authService', '$uibModalStack', '$rootScope', '$alert', '$translate', '$window', '$location', function($scope, $state, authService, $uibModalStack, $rootScope, $alert, $translate, $window, $location){
+/*angular.module('app.auth').controller('loginController', ['$scope', '$state', 'authService', '$uibModalStack', '$rootScope', '$alert', '$translate', '$window', '$location','$http', function($scope, $state, authService, $uibModalStack, $rootScope, $alert, $translate, $window, $location, $http){
+*/
+    angular.module('app.auth').controller('loginController', ['$scope', '$timeout', '$http', function ($scope, $timeout, $http) {
     var ctrl = this;
 
-    ctrl.username = '';
+    /*ctrl.username = '';
     ctrl.password = '';
-    ctrl.loggingIn = false;
-    ctrl.account = {username : '',
-    password: '',
-    firstName : '',
-    lastName :  '',
-    email : '',
-    phone : '',
-    country : '',
-    city : '',
-    address : '',
-    homeType : '',
-    homeSize : '',
-    income : '',
-    residence : ''}
+    ctrl.loggingIn = false;*/
+
+    $scope.account = {username:'',
+    password:'',
+    firstName:'',
+    lastName: '',
+    email:'',
+    phone:'',
+    country:'',
+    city:'',
+    address:'',
+    homeType:'',
+    homeSize:'',
+    income:'',
+    residence:''};
 
 
-    $rootScope.$on('$locationChangeStart', function () {
+    /*$rootScope.$on('$locationChangeStart', function () {
         var openedModal = $uibModalStack.getTop();
         if (openedModal) {
             $uibModalStack.dismiss(openedModal.key);
         }
-    });
+    });*/
 
-    ctrl.login = function(){
+   /* ctrl.login = function(){
         if (ctrl.loggingIn) return;
         ctrl.loggingIn = true;
         authService.login(ctrl.email, ctrl.password).then(
@@ -41,8 +44,9 @@ angular.module('app.auth').controller('loginController', ['$scope', '$state', 'a
                 $alert.error(data.data.message);
             }
         );
-    };
+    };*/
 
+    /*
     ctrl.resetInProgress = false;
     ctrl.resetPassword = function (form) {
         if(form.$invalid) return;
@@ -62,17 +66,16 @@ angular.module('app.auth').controller('loginController', ['$scope', '$state', 'a
             $alert.info(res.data.message);
         })
     };
+    */
 
-
-    ctrl.register = function(){
-        console.log('update....');
+   $scope.register = function register (){
         var req = {
          method: 'POST',
          url: 'http://127.0.0.1:5000/api/register',
          headers: {
           'Content-Type' : 'application/json'
          },
-         data: { account : ctrl.account}
+         data: { "account"  : $scope.account }
         }
 
         $http(req).then(function(response){

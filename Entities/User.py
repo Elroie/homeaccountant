@@ -24,7 +24,7 @@ class User(Document):
     homeType = StringField(required=True)
     homeSize = IntField(required=True)
     income = IntField(required=True)
-    residence = IntField(required=True)
+    residence = StringField(required=True)
 
     @staticmethod
     def hash_password(password):
