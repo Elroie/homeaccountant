@@ -5,7 +5,7 @@ angular.module('app.home').controller('ManageReportsController', ['$scope', '$ti
 
     $http({
         method : "GET",
-        url : "http://127.0.0.1:5000/api/reports"
+        url : "/api/reports"
         }).then(function mySuccess(response) {
             console.log(response.data);
             $scope.reports = response.data[0];

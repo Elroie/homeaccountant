@@ -48,6 +48,7 @@ def verify_authentication(func):
 def test():
     return "test....", 204
 
+@verify_authentication
 @api_bp.route("/note/addnote", methods=['POST'])
 def add_note():
     parser = reqparse.RequestParser(bundle_errors=True)
@@ -56,26 +57,29 @@ def add_note():
     # args = parser.parse_args()
     # file_obj = args['file']
     manager = FeedNoteManager()
-    user_id = 'a9ab55e1-419c-43c6-9cb4-8e71462c84b3'
+    user_id = g.user.id
     note_title = 'User Updated Settings'
     note_text = ''
     manager.add(user_id,note_title,note_text,"234","Settings")
     return "", 204
 
+@verify_authentication
 @api_bp.route("/note/allnotes", methods=['GET'])
 def return_all_notes():
     manager = FeedNoteManager()
-    user_id = request.args.get('user_id', 'a9ab55e1-419c-43c6-9cb4-8e71462c84b3')
+    user_id = g.user.id
     notes = manager.get_all_notes(user_id)
     return notes.to_json()
 
+@verify_authentication
 @api_bp.route("/note/count", methods=['GET'])
 def return_notes_count():
     manager = FeedNoteManager()
-    user_id = request.args.get('user_id', 'a9ab55e1-419c-43c6-9cb4-8e71462c84b3')
+    user_id = g.user.id
     return str(manager.get_note_count(user_id))
 
 
+@verify_authentication
 @api_bp.route("/statusbar", methods=['GET'])
 def return_statusbar():
     connect(config.DB_NAME)
@@ -85,6 +89,7 @@ def return_statusbar():
     response['expenseChanges'] = "50"
     return json.dumps(response)
 
+@verify_authentication
 @api_bp.route("/comment/addcomment", methods=['POST'])
 def add_comment():
     parser = reqparse.RequestParser(bundle_errors=True)
@@ -92,21 +97,22 @@ def add_comment():
     args = parser.parse_args()
     file_obj = args['file']
     manager = BillCommentManager()
-    user_id = request.args.get('user_id', 'a9ab55e1-419c-43c6-9cb4-8e71462c84b3')
+    user_id = g.user.id
     bill_id = request.args.get('bill_id', '746fc33a-fb7c-4595-ba83-198426311234')
     comment_text = request.args.get('comment_text', 'Sample Text')
     manager.add(user_id,bill_id,comment_text)
     return
 
+@verify_authentication
 @api_bp.route("/comment/allcomments", methods=['GET'])
 def return_all_comments():
     manager = BillCommentManager()
-    user_id = request.args.get('user_id', 'a9ab55e1-419c-43c6-9cb4-8e71462c84b3')
+    user_id = g.user.id
     bill_id = request.args.get('bill_id', '746fc33a-fb7c-4595-ba83-198426311234')
     comments = manager.get_all_comments(user_id,bill_id)
     return json.dumps(comments)
 
-
+@verify_authentication
 @api_bp.route("/register",methods=['POST','OPTIONS'])
 def register_new_user():
     account = request.json.get('account')
@@ -155,7 +161,7 @@ def get_user_settings():
     }
     return jsonify(user_settings), 200,
 
-
+@verify_authentication
 @api_bp.route("/login",methods=['POST'])
 def login():
     username_or_token = request.json.get('username')
@@ -174,18 +180,19 @@ def login():
     g.user = user
     return jsonify({'token': g.user.generate_auth_token().decode('ascii')})
 
+@verify_authentication
 @api_bp.route("/logout")
 def logout(token):
     g.user = ""
     return "", 200
 
-
+@verify_authentication
 @api_bp.route('/token')
 def get_auth_token():
     token = g.user.generate_auth_token()
     return jsonify({ 'token': token.decode('ascii') })
 
-
+@verify_authentication
 @api_bp.route("/scanned-images", methods=['GET', 'OPTIONS'])
 def get_scanned_images():
     parser = reqparse.RequestParser(bundle_errors=True)
@@ -200,7 +207,7 @@ def get_scanned_images():
 
     return images.to_json()
 
-
+@verify_authentication
 @api_bp.route("/upload", methods=['POST', 'OPTIONS'])
 def upload_image():
     parser = reqparse.RequestParser(bundle_errors=True)
@@ -219,7 +226,7 @@ def upload_image():
     # amount = args['amount']
 
     # elroie todo: remove this when the endpoint is ready
-    user_id = args.get('user_id', 'a9ab55e1-419c-43c6-9cb4-8e71462c84b3')
+    user_id = g.user.id
 
     is_valid_extension = True
     # extract and validate file extension
@@ -256,7 +263,7 @@ def upload_image():
 
     return "", 204
 
-
+@verify_authentication
 @api_bp.route("/download", methods=['POST'])
 def download_file(file_name):
     pass
@@ -317,7 +324,7 @@ def update_user():
     feed_note_manager.add(g.user.id, "Settings Update","Account settings changed", None, "Settings")
     return jsonify({'username': user.username}), 200,
 
-
+@verify_authentication
 @api_bp.route("/reports", methods=['POST'])
 def return_reports():
     connect(config.DB_NAME)
@@ -333,16 +340,17 @@ def return_reports():
     return reports.to_json()
 
 
-
+@verify_authentication
 @api_bp.route("/graph/adddata", methods=['POST'])
 def add_graphdata():
     manager = GraphDataManager()
-    user_id = 'a9ab55e1-419c-43c6-9cb4-8e71462c84b3'
+    user_id = g.user.id
     note_title = 'User Updated Settings'
     note_text = ''
     manager.add(user_id,"5","100","200","300")
     return "add data request", 200
 
+@verify_authentication
 @api_bp.route("/graph/getdata", methods=['GET'])
 def return_graphdata():
     manager = GraphDataManager()
