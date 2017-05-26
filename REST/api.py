@@ -320,3 +320,18 @@ def update_user():
     user.residence = residence
     user.save()
     return jsonify({'username': user.username}), 200,
+
+
+@api_bp.route("/reports", methods=['GET'])
+def return_reports():
+    connect(config.DB_NAME)
+    user = g.user
+    images = UserImage.objects(id = user.id)
+    reports = {}
+    for image in images:
+        if image.classification_type not in reports:
+            reports[image.classification_type] = []
+            reports[image.classification_type].append(image)
+        else:
+            reports[image.classification_type].append(image)
+    return reports.to_json()
