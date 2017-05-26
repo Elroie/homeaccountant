@@ -1,12 +1,18 @@
 'use strict';
 
-angular.module('app.home').controller('SettingsController', ['$scope', '$timeout', '$http', function ($scope, $timeout, $http) {
+angular.module('app.home').controller('SettingsController', ['$scope', '$timeout', '$http',
+function ($scope, $timeout, $http) {
 
     var ctrl = this;
     ctrl.countries = [{name: 'Israel', value: 1}, {name: 'United States', value: 2}];
 
+//    console.log("header " + $http.defaults.headers.common.Authorization)
+//    console.log('elroie test ' + $localStorage.currentUser.token);
     $http({
         method : "GET",
+        headers: {
+          'token' : localStorage.currentUser.token
+         },
         url : "http://127.0.0.1:5000/api/user/settings"
         }).then(function mySucces(response) {
             ctrl.account = response.data;

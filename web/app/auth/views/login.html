@@ -37,7 +37,7 @@
                             <section>
                                 <label class="label">User Name</label>
                                 <label class="input"> <i class="icon-append fa fa-user"></i>
-                                    <input type="input" name="" data-smart-validate-input
+                                    <input type="input" name="username" ng-model="username" data-smart-validate-input
                                           data-required
                                           data-minlength="3"
                                           data-maxnlength="20"
@@ -48,7 +48,7 @@
                             <section>
                                 <label class="label">Password</label>
                                 <label class="input"> <i class="icon-append fa fa-lock"></i>
-                                   <input type="password" name="password"
+                                   <input type="password" name="password" ng-model="password"
                                           data-smart-validate-input
                                           data-required
                                           data-minlength="3"
@@ -68,7 +68,7 @@
                             </section>
                         </fieldset>
                         <footer>
-                            <button type="submit" class="btn btn-primary">
+                            <button type="button" class="btn btn-primary" ng-click="login()">
                                 Sign in
                             </button>
                         </footer>

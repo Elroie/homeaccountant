@@ -44,14 +44,9 @@ def verify_authentication(func):
     return wrapper
 
 @verify_authentication
-@api_bp.route("/test", methods=['GET'])
+@api_bp.route("/test",methods=['POST','OPTIONS'])
 def test():
-    manager = FeedNoteManager()
-    user_id = 'a9ab55e1-419c-43c6-9cb4-8e71462c84b3'
-    note_title = 'Sample Title'
-    note_text = 'Sample Text'
-    manager.add(user_id, note_title, note_text)
-    return "", 204
+    return "test....", 204
 
 @api_bp.route("/note/addnote", methods=['POST'])
 def add_note():
@@ -140,7 +135,29 @@ def register_new_user():
     return jsonify({'username': user.username}), 201,
 
 
-@api_bp.route("/login",methods = ['GET'])
+@api_bp.route("/user/settings", methods=['GET', 'OPTIONS'])
+@verify_authentication
+def get_user_settings():
+    connect(config.DB_NAME)
+    user = User.objects(username=g.user).first()
+    user_settings = {
+        'firstName': user.firstName,
+        'lastName': user.lastName,
+        'email': user.email,
+        'phone': user.phone,
+        'country': user.country,
+        'city': user.city,
+        'address': user.address,
+        'homeType': user.homeType,
+        'homeSize': user.homeSize,
+        'income': user.income,
+        'residence': user.residence
+    }
+    return jsonify(user_settings), 200,
+
+
+@api_bp.route("/login",methods=['POST','OPTIONS'])
+@crossdomain(origin='*', headers="Access-Control-Allow-Origin, Access-Control-Allow-Headers Origin, X-Requested-With, Content-Type, Accept")
 def login():
     username_or_token = request.json.get('username')
     # first try to authenticate by token
@@ -150,13 +167,13 @@ def login():
         # try to authenticate with username/password
         user = User.objects(username = username_or_token).first()
         if not user or not user.verify_hashed_password(password):
-            return "", 404
+            return "Wrong password", 404
         g.user = user
         token = g.user.generate_auth_token()
-        return jsonify({ 'token': token.decode('ascii') })
+        return jsonify({'token': token.decode('ascii')})
 
     g.user = user
-    return "", 200
+    return jsonify({'token': g.user.generate_auth_token().decode('ascii')})
 
 @api_bp.route("/logout")
 def logout(token):
