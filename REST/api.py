@@ -271,17 +271,18 @@ def download_file(file_name):
 @api_bp.route("/user/update", methods=['POST', 'OPTIONS'])
 @verify_authentication
 def update_user():
-    firstname = request.json.get('firstName')
-    lastname = request.json.get('lastName')
-    email = request.json.get('email')
-    phone = request.json.get('phone')
-    country = request.json.get('country')
-    city = request.json.get('city')
-    address = request.json.get('address')
-    hometype = request.json.get('homeType')
-    homesize = request.json.get('homeSize')
-    income = request.json.get('income')
-    residence = request.json.get('residence')
+    account =  request.json.get('account')
+    firstname = account['firstName']
+    lastname = account['lastName']
+    email = account['email']
+    phone = account['phone']
+    country = account['country']
+    city = account['city']
+    address = account['address']
+    hometype = account['homeType']
+    homesize = account['homeSize']
+    income = account['income']
+    residence = account['residence']
 
     if firstname is None:
         abort(400) # missing arguments
