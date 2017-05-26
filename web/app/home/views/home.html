@@ -66,7 +66,7 @@
 			<div class="smart-timeline">
 				<ul class="smart-timeline-list">
 
-					<div ng-repeat="note in notes">
+					<div ng-repeat="note in notes | orderBy: 'created_at':true">
 
 						<div ng-if="note.attachment_type == 'Report'">
 							<li>
@@ -260,10 +260,6 @@
 							<!--<a href="javascript:void(0);" class="btn btn-xs btn-default">Read more</a>-->
 						<!--</div>-->
 					<!--</li>-->
-
-					<li class="text-center">
-						<a href="javascript:void(0)" class="btn btn-sm btn-default"><i class="fa fa-arrow-down text-muted"></i> LOAD MORE</a>
-					</li>
 				</ul>
 			</div>
 			<!-- END Timeline Content -->
