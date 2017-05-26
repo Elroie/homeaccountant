@@ -11,7 +11,7 @@ import uuid
 from mongoengine import connect, Q
 from flask import Flask, current_app as app, Blueprint, current_app
 from flask_restful import reqparse, abort
-from datetime import timedelta
+from datetime import timedelta, datetime
 from flask import make_response, request, current_app , jsonify , g
 from functools import update_wrapper, wraps
 
@@ -196,9 +196,7 @@ def get_scanned_images():
     if args['status']:
         query &= Q(status=args['status'])
 
-
-    images = ScannedImage().objects(query).get()
-
+    images = ScannedImage.objects(query)
 
     return images.to_json()
 
