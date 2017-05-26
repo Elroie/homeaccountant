@@ -12,6 +12,7 @@
 angular.module('app', [
     'ngSanitize',
     'ngAnimate',
+    'ngCookies',
     'restangular',
     'ui.router',
     'ui.bootstrap',

@@ -44,7 +44,7 @@ def verify_authentication(func):
     return wrapper
 
 @verify_authentication
-@api_bp.route("/test",methods=['POST','OPTIONS'])
+@api_bp.route("/test",methods=['POST'])
 def test():
     return "test....", 204
 
@@ -135,11 +135,11 @@ def register_new_user():
     return jsonify({'username': user.username}), 201,
 
 
-@api_bp.route("/user/settings", methods=['GET', 'OPTIONS'])
+@api_bp.route("/user/settings", methods=['GET'])
 @verify_authentication
 def get_user_settings():
     connect(config.DB_NAME)
-    user = User.objects(username=g.user).first()
+    user = g.user
     user_settings = {
         'firstName': user.firstName,
         'lastName': user.lastName,
@@ -156,7 +156,7 @@ def get_user_settings():
     return jsonify(user_settings), 200,
 
 
-@api_bp.route("/login",methods=['POST','OPTIONS'])
+@api_bp.route("/login",methods=['POST'])
 def login():
     username_or_token = request.json.get('username')
     # first try to authenticate by token

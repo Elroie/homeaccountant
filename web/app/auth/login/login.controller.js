@@ -2,8 +2,8 @@
 
 /*angular.module('app.auth').controller('loginController', ['$scope', '$state', 'authService', '$uibModalStack', '$rootScope', '$alert', '$translate', '$window', '$location','$http', function($scope, $state, authService, $uibModalStack, $rootScope, $alert, $translate, $window, $location, $http){
 */
-    angular.module('app.auth').controller('loginController', ['$scope', '$timeout', '$http', '$state',
-    function ($scope, $timeout, $http, $state) {
+    angular.module('app.auth').controller('loginController', ['$scope', '$timeout', '$http', '$state','$rootScope',
+    function ($scope, $timeout, $http, $state, $rootScope) {
     var ctrl = this;
 
     $scope.username = '';
@@ -71,7 +71,8 @@
 
     $scope.login = function Login(username, password) {
             console.log("login function...")
-            $http.post('http://127.0.0.1:5000/api/login', { username: $scope.username, password: $scope.password })
+            console.log($scope.username + " " + $scope.password)
+            $http.post('/api/login', { username: $scope.username, password: $scope.password })
                 .success(function (response) {
                     // login successful if there's a token in the response
                     console.log(response)
@@ -79,33 +80,34 @@
                         console.log("token " + response.token)
                         //testing the token
 
-                     var req = {
-                     method: 'POST',
-                     url: 'http://127.0.0.1:5000/api/test',
-                     headers: {
-                      'Content-Type' : 'application/json',
-                      'token': response.token
-                     }
-
-                    }
-
-                    $http(req).then(function(response){
-                        console.log(response);
-                    }, function(error){
-                        console.log(error);
-                    });
+//                     var req = {
+//                     method: 'POST',
+//                     url: '/api/test',
+//                     headers: {
+//                      'Content-Type' : 'application/json',
+//                      'token': response.token
+//                     }
+//
+//                    }
+//
+//                    $http(req).then(function(response){
+//                        console.log(response);
+//                    }, function(error){
+//                        console.log(error);
+//                    });
                         // store username and token in local storage to keep user logged in between page refreshes
 //                        localStorage.currentUser = { username: $scope.username, token: response.token };
-                        localStorage.setItem('currentUser', { username: $scope.username, token:response.token });
-                        console.log(localStorage.getItem('currentUser').token);
-//                        localStorage.currentUser = { username: $scope.username, token:response.token };
-//                        console.log(localStorage.currentUser.username + " "+localStorage.currentUser.token );
-//                        localStorage.user = { username: $scope.username, token: response.token };
-
-                        // add jwt token to auth header for all requests made by the $http service
-                        $http.defaults.headers.common.Authorization = 'Bearer ' + response.token;
+//                       localStorage.currentUser = { username: username, token: response.token };
+//                        console.log(localStorage.getItem('currentUser').token);
+////                        localStorage.currentUser = { username: $scope.username, token:response.token };
+////                        console.log(localStorage.currentUser.username + " "+localStorage.currentUser.token );
+////                        localStorage.user = { username: $scope.username, token: response.token };
+//
+//                        // add jwt token to auth header for all requests made by the $http service
+//                        $http.defaults.headers.common.Authorization = 'Bearer ' + response.token;
 
                         //$state.go('app.home');
+                        $rootScope.$broadcast('user-authenticated',response.token)
 
                     } else {
                         // show login error.
@@ -122,7 +124,7 @@
    $scope.register = function register (){
         var req = {
          method: 'POST',
-         url: 'http://127.0.0.1:5000/api/register',
+         url: '/api/register',
          headers: {
           'Content-Type' : 'application/json'
          },
