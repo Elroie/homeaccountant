@@ -213,15 +213,15 @@ def get_auth_token():
 def upload_image():
     parser = reqparse.RequestParser(bundle_errors=True)
     parser.add_argument('file', type=werkzeug.FileStorage, location='files', required=True)
-    parser.add_argument('date', type=str, location='form', required=True)
-    parser.add_argument('note', type=str, location='form', required=True)
-    parser.add_argument('amount', type=str, location='form', required=True)
+    # parser.add_argument('date', type=str, location='form', required=True)
+    # parser.add_argument('amount', type=str, location='form', required=True)
+    # parser.add_argument('note', type=str, location='form', required=True)
     args = parser.parse_args()
 
     file_obj = args['file']
-    date = args['date']
-    note = args['note']
-    amount = args['amount']
+    # date = args['date']
+    # note = args['note']
+    # amount = args['amount']
 
     # elroie todo: remove this when the endpoint is ready
     user_id = args.get('user_id', '746fc33a-fb7c-4595-ba83-19842631859b')
@@ -322,7 +322,7 @@ def update_user():
     return jsonify({'username': user.username}), 200,
 
 
-@api_bp.route("/reports", methods=['GET'])
+@api_bp.route("/reports", methods=['POST'])
 def return_reports():
     connect(config.DB_NAME)
     user = g.user
