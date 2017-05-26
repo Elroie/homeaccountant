@@ -157,7 +157,6 @@ def get_user_settings():
 
 
 @api_bp.route("/login",methods=['POST','OPTIONS'])
-@crossdomain(origin='*', headers="Access-Control-Allow-Origin, Access-Control-Allow-Headers Origin, X-Requested-With, Content-Type, Accept")
 def login():
     username_or_token = request.json.get('username')
     # first try to authenticate by token
