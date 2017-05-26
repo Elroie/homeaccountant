@@ -315,6 +315,8 @@ def update_user():
     user.income = income
     user.residence = residence
     user.save()
+    feed_note_manager = FeedNoteManager()
+    feed_note_manager.add(g.user.id, "Settings Update","Account settings changed", None, "Settings")
     return jsonify({'username': user.username}), 200,
 
 
@@ -331,3 +333,20 @@ def return_reports():
         else:
             reports[image.classification_type].append(image)
     return reports.to_json()
+
+
+
+@api_bp.route("/graph/adddata", methods=['POST'])
+def add_graphdata():
+    manager = GraphDataManager()
+    user_id = 'a9ab55e1-419c-43c6-9cb4-8e71462c84b3'
+    note_title = 'User Updated Settings'
+    note_text = ''
+    manager.add(user_id,"5","100","200","300")
+    return "add data request", 200
+
+@api_bp.route("/graph/getdata", methods=['GET'])
+def return_graphdata():
+    manager = GraphDataManager()
+    data = manager.get_all_graphdata()
+    return json.dumps(data)

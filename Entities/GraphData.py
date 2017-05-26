@@ -4,7 +4,6 @@ from Entities.ScannedImage import ScannedImage
 
 class GraphData(Document):
     user_id = UUIDField(required=True)
-    is_forecast = BooleanField(required=True)
     id = UUIDField(required=True, primary_key=True)
     month = IntField(required=True)
     electricity_price = IntField(required=True)
