@@ -1,10 +1,21 @@
 'use strict';
 
-angular.module('app.graphs').directive('chartjsDoughnutChart', function () {
+angular.module('app.graphs').directive('chartjsDoughnutChart',['$http', function ($http) {
+
+    var graphdata;
+
     return {
         restrict: 'A',
         link: function (scope, element, attributes) {
-            var doughnutOptions = {
+        $http({
+            method : "GET",
+            url : "http://127.0.0.1:5000/api/graph/getdata"
+            }).then(function mySuccess(response) {
+                console.log(response.data);
+                graphdata = response.data[0];
+                console.log(graphdata.electricity_price);
+
+                var doughnutOptions = {
                 //Boolean - Whether we should show a stroke on each segment
                 segmentShowStroke : true,
                 //String - The colour of each segment stroke
@@ -27,29 +38,33 @@ angular.module('app.graphs').directive('chartjsDoughnutChart', function () {
                 legendTemplate : "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<segments.length; i++){%><li><span style=\"background-color:<%=segments[i].fillColor%>\"></span><%if(segments[i].label){%><%=segments[i].label%><%}%></li><%}%></ul>"
             };
 
-            var doughnutData = [
-                {
-                    value: 300,
-                    color:"rgba(220,220,0,0.5)",
-                    highlight: "rgba(220,220,0,0.3)",
-                    label: "Electricity"
-                },
-                {
-                    value: 50,
-                    color: "rgba(151,187,205,1)",
-                    highlight: "rgba(151,187,205,0.4)",
-                    label: "Water"
-                },
-                {
-                    value: 100,
-                    color: "rgba(169, 3, 41, 0.7)",
-                    highlight: "rgba(169, 3, 41, 0.4)",
-                    label: "Other"
-                }
-            ];
+                var doughnutData = [
+                    {
 
-            // render chart
-            var ctx = element[0].getContext("2d");
-            new Chart(ctx).Doughnut(doughnutData, doughnutOptions);
+                        value: graphdata.electricity_price,
+                        color:"rgba(220,220,0,0.5)",
+                        highlight: "rgba(220,220,0,0.3)",
+                        label: "Electricity"
+                    },
+                    {
+                        value: graphdata.water_price,
+                        color: "rgba(151,187,205,1)",
+                        highlight: "rgba(151,187,205,0.4)",
+                        label: "Water"
+                    },
+                    {
+                        value: graphdata.other_price,
+                        color: "rgba(169, 3, 41, 0.7)",
+                        highlight: "rgba(169, 3, 41, 0.4)",
+                        label: "Other"
+                    }
+                ];
+
+                // render chart
+                var ctx = element[0].getContext("2d");
+                new Chart(ctx).Doughnut(doughnutData, doughnutOptions);
+            }, function myError(response) {
+                $scope.error = response.statusText;
+            });
         }}
-});
+}]);

@@ -355,4 +355,4 @@ def add_graphdata():
 def return_graphdata():
     manager = GraphDataManager()
     data = manager.get_all_graphdata()
-    return json.dumps(data)
+    return data.to_json()
