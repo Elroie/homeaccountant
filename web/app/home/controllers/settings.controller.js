@@ -10,7 +10,7 @@ function ($scope, $timeout, $http) {
 //    console.log('elroie test ' + $localStorage.currentUser.token);
     $http({
         method : "GET",
-        url : "/api/user/settings",
+        url : "/api/user/settings"
         }).then(function mySuccess(response) {
             ctrl.account = response.data;
             ctrl.accountToUpdate = {};

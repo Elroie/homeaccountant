@@ -27,8 +27,9 @@ def create_app():
                          lastName='testing', email='t@t.com', homeType='apt', income='1000', phone="654",
                          homeSize='4', residence='3', country='Israel', address='bla', city='blabla')
         test_user.save()
-        for user in User.objects:
-            print user.id, user.username
+
+    for user in User.objects:
+        print user.id, user.username
 
     if config.SHOULD_USE_MACHINE_LEARNING:
         # start the classification thread.
