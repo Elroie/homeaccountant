@@ -14,7 +14,7 @@ function ($scope, $timeout, $http) {
           'token' : localStorage.currentUser.token
          },
         url : "/api/user/settings"
-        }).then(function mySucces(response) {
+        }).then(function mySuccess(response) {
             ctrl.account = response.data;
             ctrl.accountToUpdate = {};
             angular.copy(ctrl.account, ctrl.accountToUpdate);
