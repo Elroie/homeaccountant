@@ -4,11 +4,11 @@ angular.module('app.home').controller('ManageReportsController', ['$scope', '$ti
 
 
     $http({
-        method : "GET",
+        method : "POST",
         url : "/api/reports"
         }).then(function mySuccess(response) {
             console.log(response.data);
-            $scope.reports = response.data[0];
+            $scope.reports = response.data;
         }, function myError(response) {
             $scope.error = response.statusText;
         });

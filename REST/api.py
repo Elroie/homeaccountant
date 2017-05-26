@@ -48,8 +48,8 @@ def verify_authentication(func):
 def test():
     return "test....", 204
 
-@verify_authentication
 @api_bp.route("/note/addnote", methods=['POST'])
+@verify_authentication
 def add_note():
     parser = reqparse.RequestParser(bundle_errors=True)
     parser.add_argument('user_id', type=werkzeug.FileStorage, location='files', required=True)
@@ -63,24 +63,23 @@ def add_note():
     manager.add(user_id,note_title,note_text,"234","Settings")
     return "", 204
 
-@verify_authentication
 @api_bp.route("/note/allnotes", methods=['GET'])
+@verify_authentication
 def return_all_notes():
     manager = FeedNoteManager()
     user_id = g.user.id
     notes = manager.get_all_notes(user_id)
     return notes.to_json()
 
-@verify_authentication
 @api_bp.route("/note/count", methods=['GET'])
+@verify_authentication
 def return_notes_count():
     manager = FeedNoteManager()
     user_id = g.user.id
     return str(manager.get_note_count(user_id))
 
-
-@verify_authentication
 @api_bp.route("/statusbar", methods=['GET'])
+@verify_authentication
 def return_statusbar():
     connect(config.DB_NAME)
     response = {}
@@ -89,8 +88,8 @@ def return_statusbar():
     response['expenseChanges'] = "50"
     return json.dumps(response)
 
-@verify_authentication
 @api_bp.route("/comment/addcomment", methods=['POST'])
+@verify_authentication
 def add_comment():
     parser = reqparse.RequestParser(bundle_errors=True)
     parser.add_argument('file', type=werkzeug.FileStorage, location='files', required=True)
@@ -103,8 +102,8 @@ def add_comment():
     manager.add(user_id,bill_id,comment_text)
     return
 
-@verify_authentication
 @api_bp.route("/comment/allcomments", methods=['GET'])
+@verify_authentication
 def return_all_comments():
     manager = BillCommentManager()
     user_id = g.user.id
@@ -207,8 +206,9 @@ def get_scanned_images():
 
     return images.to_json()
 
-@verify_authentication
+
 @api_bp.route("/upload", methods=['POST', 'OPTIONS'])
+@verify_authentication
 def upload_image():
     parser = reqparse.RequestParser(bundle_errors=True)
     parser.add_argument('file', type=werkzeug.FileStorage, location='files', required=True)
@@ -263,8 +263,8 @@ def upload_image():
 
     return "", 204
 
-@verify_authentication
 @api_bp.route("/download", methods=['POST'])
+@verify_authentication
 def download_file(file_name):
     pass
 
@@ -324,8 +324,9 @@ def update_user():
     feed_note_manager.add(g.user.id, "Settings Update","Account settings changed", None, "Settings")
     return jsonify({'username': user.username}), 200,
 
-@verify_authentication
+
 @api_bp.route("/reports", methods=['POST'])
+@verify_authentication
 def return_reports():
     connect(config.DB_NAME)
     user = g.user
@@ -337,11 +338,11 @@ def return_reports():
             reports[image.classification_type].append(image)
         else:
             reports[image.classification_type].append(image)
-    return reports.to_json()
+    return json.dumps(reports)
 
 
-@verify_authentication
 @api_bp.route("/graph/adddata", methods=['POST'])
+@verify_authentication
 def add_graphdata():
     manager = GraphDataManager()
     user_id = g.user.id
@@ -350,8 +351,8 @@ def add_graphdata():
     manager.add(user_id,"5","100","200","300")
     return "add data request", 200
 
-@verify_authentication
 @api_bp.route("/graph/getdata", methods=['GET'])
+@verify_authentication
 def return_graphdata():
     manager = GraphDataManager()
     data = manager.get_all_graphdata()
