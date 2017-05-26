@@ -79,7 +79,7 @@
                         console.log("token " + response.token)
                         //testing the token
 
-                     /*var req = {
+                     var req = {
                      method: 'POST',
                      url: 'http://127.0.0.1:5000/api/test',
                      headers: {
@@ -93,7 +93,7 @@
                         console.log(response);
                     }, function(error){
                         console.log(error);
-                    });*/
+                    });
                         // store username and token in local storage to keep user logged in between page refreshes
 //                        localStorage.currentUser = { username: $scope.username, token: response.token };
                         localStorage.setItem('currentUser', { username: $scope.username, token:response.token });

@@ -80,7 +80,7 @@ def return_notes_count():
 def return_statusbar():
     connect(config.DB_NAME)
     response = {}
-    response['reportCount'] = str(len(ScannedImage.objects()))
+    response['reportCount'] = str(len(UserImage.objects()))
     response['currentMonthExpenses'] = "200"
     response['expenseChanges'] = "50"
     return json.dumps(response)
@@ -157,7 +157,6 @@ def get_user_settings():
 
 
 @api_bp.route("/login",methods=['POST','OPTIONS'])
-@crossdomain(origin='*', headers="Access-Control-Allow-Origin, Access-Control-Allow-Headers Origin, X-Requested-With, Content-Type, Accept")
 def login():
     username_or_token = request.json.get('username')
     # first try to authenticate by token
