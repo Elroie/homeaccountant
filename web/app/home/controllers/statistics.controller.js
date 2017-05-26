@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('app.home').controller('StatisticsController', ['$scope', '$timeout', 'Upload', function ($scope, $timeout, Upload) {
+angular.module('app.home').controller('StatisticsController', ['$scope', '$timeout' ,'$http', function ($scope, $timeout, $http) {
 
 
     var ctrl = this;
@@ -307,4 +307,6 @@ angular.module('app.home').controller('StatisticsController', ['$scope', '$timeo
         data : visitors,
         label : "Site visitors"
     }];
+
+
 }]);
