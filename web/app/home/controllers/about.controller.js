@@ -10,8 +10,6 @@ angular.module('app.home').controller('AboutController', ['$scope', '$timeout', 
         }).then(function mySucces(response) {
             console.log(response);
             ctrl.notes = response.data;
-            ctrl.note1 = response.data[0];
-            ctrl.note2 = response.data[1];
         }, function myError(response) {
             $scope.error = response.statusText;
         });
