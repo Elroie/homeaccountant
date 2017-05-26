@@ -9,6 +9,7 @@ class ScannedImage(Document):
     price = FloatField()
     from_date = DateTimeField()
     to_date = DateTimeField()
+    status = StringField()
     created_at = DateTimeField()
     updated_at = DateTimeField(default=datetime.datetime.now)
 

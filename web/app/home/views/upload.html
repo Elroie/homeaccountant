@@ -81,7 +81,11 @@
 
 					<div class="row">
 						<form id="wizard-1" novalidate="novalidate" data-smart-validate-form>
-							<div id="bootstrap-wizard-1" class="col-sm-12" data-smart-wizard smart-wizard-callback="wizard1CompleteCallback">
+							<div id="bootstrap-wizard-1" class="col-sm-12"
+								 data-smart-wizard
+								 smart-wizard-callback="wizard1CompleteCallback"
+								 pane-init-1="upload()"
+							>
 								<div class="form-bootstrapWizard">
 									<ul class="bootstrapWizard form-wizard">
 										<li class="active" data-smart-wizard-tab="1">
@@ -120,7 +124,7 @@
 																ngf-resize-if="ctrl.logoType.resizeIfFn($file, $width, $height)"
 																ngf-dimensions="ctrl.logoType.dimensionsFn($file, $width, $height)"
 														><span>Choose file</span></button>
-														<!--<button class="btn btn-primary btn-md" ng-if="!ctrl.image_path" ng-click="ctrl.upload()">Upload<span ng-if="ctrl.progressPercentage">{{ ctrl.progressPercentage }}%</span></button>-->
+														<button class="btn btn-primary btn-md" ng-if="!ctrl.image_path" ng-click="upload()">Upload<span ng-if="ctrl.progressPercentage">{{ ctrl.progressPercentage }}%</span></button>
 
 													</div>
 
