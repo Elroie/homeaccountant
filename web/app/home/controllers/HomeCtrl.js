@@ -4,7 +4,7 @@ angular.module('app.home').controller('HomeController', ['$scope', '$timeout', '
 
    $http({
         method : "GET",
-        url : "http://127.0.0.1:5000/api/note/allnotes"
+        url : "/api/note/allnotes"
         }).then(function mySucces(response) {
             console.log(response.data);
             $scope.notes = response.data;
@@ -14,7 +14,7 @@ angular.module('app.home').controller('HomeController', ['$scope', '$timeout', '
 
     $http({
         method : "GET",
-        url : "http://127.0.0.1:5000/api/statusbar"
+        url : "/api/statusbar"
         }).then(function mySucces(response) {
             console.log(response.data);
             $scope.bardata = response.data;

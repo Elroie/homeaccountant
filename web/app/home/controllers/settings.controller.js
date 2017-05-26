@@ -13,7 +13,7 @@ function ($scope, $timeout, $http) {
         headers: {
           'token' : localStorage.currentUser.token
          },
-        url : "http://127.0.0.1:5000/api/user/settings"
+        url : "/api/user/settings"
         }).then(function mySucces(response) {
             ctrl.account = response.data;
             ctrl.accountToUpdate = {};
@@ -26,7 +26,7 @@ function ($scope, $timeout, $http) {
         console.log('update....');
         var req = {
          method: 'POST',
-         url: 'http://127.0.0.1:5000/api/user/update',
+         url: '/api/user/update',
          headers: {
           'Content-Type' : 'application/json'
          },

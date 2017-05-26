@@ -46,7 +46,7 @@ angular.module('app.home').controller('ReportController', ['$scope', '$timeout',
             ctrl.showWidget = true;
             Upload.upload({
                 // url: 'http://10.0.0.12:5000/api/upload',
-                url: 'http://127.0.0.1:5000/api/upload',
+                url: '/api/upload',
                 data: {
                     file: ctrl.logoFile,
                     // date: ctrl.billDate,
