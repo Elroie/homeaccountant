@@ -1,7 +1,9 @@
 'use strict';
 
-angular.module('app.home').controller('ManageReportsController', ['$scope', '$timeout', '$http', function ($scope, $timeout, $http) {
+angular.module('app.home').controller('ManageReportsController', ['$scope', '$timeout', '$http','$cookies', function ($scope, $timeout, $http,$cookies) {
 
+
+    $scope.user=$cookies.get('token');
 
     $http({
         method : "POST",

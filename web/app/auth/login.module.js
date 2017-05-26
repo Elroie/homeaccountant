@@ -4,15 +4,18 @@ angular.module('app.auth', ['ui.router']);
 
 angular.module('app.auth').factory('xAuthTokenHttpInterceptor', ['$rootScope', '$cookies', function ($rootScope, $cookies) {
     var _token = null;
+    var _username = null;
 
-    $rootScope.$on('user-authenticated', function($e, token){
+    $rootScope.$on('user-authenticated', function($e, token,username){
         _token = token;
-        //localStorage.token = token;
+        _username  = username;
         $cookies.put('token', _token);
+        $cookies.put('username',_username);
     });
 
       if ($cookies.get('token')) {
             _token = $cookies.get('token');
+            _username = $cookies.get('username');
         }
     $rootScope.$on('user-unauthenticated', function(){
         _token = null;

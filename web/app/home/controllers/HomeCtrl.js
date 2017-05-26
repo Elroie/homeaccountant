@@ -1,7 +1,8 @@
 'use strict';
 
-angular.module('app.home').controller('HomeController', ['$scope', '$timeout', '$http', '$state', function ($scope, $timeout, $http, $state) {
+angular.module('app.home').controller('HomeController', ['$scope', '$timeout', '$http', '$state','$cookies', function ($scope, $timeout, $http, $state,$cookies) {
 
+    $scope.user = $cookies.get('username');
    $http({
         method : "GET",
         url : "/api/note/allnotes"

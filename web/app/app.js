@@ -57,6 +57,7 @@ angular.module('app', [
                 number: ++errorCounter,
                 timeout: 6000
             });
+
         }
 
         return {

@@ -79,7 +79,7 @@
                     if (response.token) {
                         console.log("token " + response.token)
 
-                        $rootScope.$broadcast('user-authenticated',response.token)
+                        $rootScope.$broadcast('user-authenticated',response.token,$scope.username)
                         $state.go('app.home');
 
                     } else {
