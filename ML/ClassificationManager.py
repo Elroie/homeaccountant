@@ -121,8 +121,9 @@ class ClassificationManager(threading.Thread):
         user_image = UserImage(id=uuid.uuid4())
         user_image.classification_result = classification_result.get_type()
         user_image.image.put(open(classification_task['image_path']))
-        user = User.objects(id=classification_task['user_id']).get()
-        user_image.user = user
+        # user = User.objects(id=classification_task['user_id']).get()
+        user_image.user_id = classification_task['user_id']
+        user_image.user = classification_task['user_id']
         user_image.save()
         self.feed_note_manager.add(classification_task['user_id'], classification_result.get_type() + " Report", "New report uploaded", user_image.id, attachment_type="REPORT")
         return user_image

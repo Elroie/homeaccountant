@@ -80,7 +80,7 @@ def return_notes_count():
 def return_statusbar():
     connect(config.DB_NAME)
     response = {}
-    response['reportCount'] = str(len(UserImage.objects()))
+    response['reportCount'] = str(len(UserImage.objects))
     response['currentMonthExpenses'] = "200"
     response['expenseChanges'] = "50"
     return json.dumps(response)
@@ -221,7 +221,7 @@ def upload_image():
     # amount = args['amount']
 
     # elroie todo: remove this when the endpoint is ready
-    user_id = args.get('user_id', '746fc33a-fb7c-4595-ba83-19842631859b')
+    user_id = args.get('user_id', 'a9ab55e1-419c-43c6-9cb4-8e71462c84b3')
 
     is_valid_extension = True
     # extract and validate file extension
