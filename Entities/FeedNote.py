@@ -8,6 +8,6 @@ class FeedNote(Document):
     title = StringField(required=True)
     text = StringField(required=True)
     time = DateTimeField(required=True)
-    attachment_id = StringField
-    attachment_type= StringField
+    attachment_id = StringField()
+    attachment_type= StringField()
 

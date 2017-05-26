@@ -6,11 +6,15 @@ angular.module('app.home').controller('AboutController', ['$scope', '$timeout', 
    var ctrl = this;
    $http({
         method : "GET",
-        url : "http://127.0.0.1:5000/api/allnotes"
+        url : "http://127.0.0.1:5000/api/note/allnotes"
         }).then(function mySucces(response) {
-            ctrl.text = response.data[0];
+            console.log(response);
+            ctrl.notes = response.data;
+            ctrl.note1 = response.data[0];
+            ctrl.note2 = response.data[1];
         }, function myError(response) {
             $scope.error = response.statusText;
         });
+
 
 }]);

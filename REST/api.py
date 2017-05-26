@@ -23,6 +23,7 @@ from ML.BillCommentManager import BillCommentManager
 
 from ML.ClassificationManager import ClassificationManager
 from ML.FeedNoteManager import FeedNoteManager
+from ML.GraphDataManager import GraphDataManager
 
 api_bp = Blueprint('v1', __name__)
 
@@ -87,9 +88,14 @@ def verify_authentication(func):
 @api_bp.route("/test", methods=['GET'])
 @crossdomain(origin='*')
 def test():
-    return "test....."
+    manager = FeedNoteManager()
+    user_id = 'a9ab55e1-419c-43c6-9cb4-8e71462c84b3'
+    note_title = 'Sample Title'
+    note_text = 'Sample Text'
+    manager.add(user_id, note_title, note_text)
+    return "", 204
 
-@api_bp.route("/addnote", methods=['POST'])
+@api_bp.route("/note/addnote", methods=['POST'])
 def add_note():
     parser = reqparse.RequestParser(bundle_errors=True)
     parser.add_argument('user_id', type=werkzeug.FileStorage, location='files', required=True)
@@ -100,10 +106,10 @@ def add_note():
     user_id = 'a9ab55e1-419c-43c6-9cb4-8e71462c84b3'
     note_title = 'Sample Title'
     note_text = 'Sample Text'
-    manager.add(user_id,note_title,note_text)
+    manager.add(user_id,note_title,note_text,"123","Report")
     return "", 204
 
-@api_bp.route("/allnotes", methods=['GET'])
+@api_bp.route("/note/allnotes", methods=['GET'])
 @crossdomain(origin='*', methods=['GET'], headers="Access-Control-Allow-Headers Origin, X-Requested-With, Content-Type, Accept")
 def return_all_notes():
     manager = FeedNoteManager()
@@ -111,7 +117,7 @@ def return_all_notes():
     notes = manager.get_all_notes(user_id)
     return notes.to_json()
 
-@api_bp.route("/notescount", methods=['GET'])
+@api_bp.route("/note/count", methods=['GET'])
 @crossdomain(origin='*', methods=['GET'], headers="Access-Control-Allow-Headers Origin, X-Requested-With, Content-Type, Accept")
 def return_notes_count():
     manager = FeedNoteManager()
@@ -119,7 +125,7 @@ def return_notes_count():
     return str(manager.get_note_count(user_id))
 
 
-@api_bp.route("/addcomment", methods=['POST'])
+@api_bp.route("/comment/addcomment", methods=['POST'])
 def add_comment():
     parser = reqparse.RequestParser(bundle_errors=True)
     parser.add_argument('file', type=werkzeug.FileStorage, location='files', required=True)
@@ -132,7 +138,7 @@ def add_comment():
     manager.add(user_id,bill_id,comment_text)
     return
 
-@api_bp.route("/allcomments", methods=['GET'])
+@api_bp.route("/comment/allcomments", methods=['GET'])
 def return_all_comments():
     manager = BillCommentManager()
     user_id = request.args.get('user_id', 'a9ab55e1-419c-43c6-9cb4-8e71462c84b3')
