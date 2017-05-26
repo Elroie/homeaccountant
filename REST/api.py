@@ -14,6 +14,8 @@ from flask_restful import reqparse, abort
 from datetime import timedelta
 from flask import make_response, request, current_app , jsonify , g
 from functools import update_wrapper, wraps
+
+from Entities import BillComment
 from Entities.User import User
 import Entities.User
 from Entities.UserImage import UserImage
@@ -104,9 +106,9 @@ def add_note():
     # file_obj = args['file']
     manager = FeedNoteManager()
     user_id = 'a9ab55e1-419c-43c6-9cb4-8e71462c84b3'
-    note_title = 'Sample Title'
-    note_text = 'Sample Text'
-    manager.add(user_id,note_title,note_text,"234","Comment")
+    note_title = 'User Updated Settings'
+    note_text = ''
+    manager.add(user_id,note_title,note_text,"234","Settings")
     return "", 204
 
 @api_bp.route("/note/allnotes", methods=['GET'])
@@ -124,6 +126,16 @@ def return_notes_count():
     user_id = request.args.get('user_id', 'a9ab55e1-419c-43c6-9cb4-8e71462c84b3')
     return str(manager.get_note_count(user_id))
 
+
+@api_bp.route("/statusbar", methods=['GET'])
+@crossdomain(origin='*', methods=['GET'], headers="Access-Control-Allow-Headers Origin, X-Requested-With, Content-Type, Accept")
+def return_statusbar():
+    connect(config.DB_NAME)
+    response = {}
+    response['reportCount'] = str(len(ScannedImage.objects()))
+    response['currentMonthExpenses'] = "200"
+    response['expenseChanges'] = "50"
+    return json.dumps(response)
 
 @api_bp.route("/comment/addcomment", methods=['POST'])
 def add_comment():
