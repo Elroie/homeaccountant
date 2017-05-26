@@ -192,12 +192,12 @@ def get_scanned_images():
     parser.add_argument('status', type=str, location='args')
     args = parser.parse_args()
 
-    query = {}
+    query = Q()
     if args['status']:
-        query['status'] = args['status']
+        query &= Q(status=args['status'])
 
 
-    images = ScannedImage(Q(**query))
+    images = ScannedImage().objects(query).get()
 
 
     return images.to_json()
