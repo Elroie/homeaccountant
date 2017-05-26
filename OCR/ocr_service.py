@@ -66,6 +66,7 @@ class OcrService(Thread):
                         connect(config.DB_NAME)
                         user_image = UserImage.objects(id=ocr_task['image_id'])[0]
                         scanned_image = ScannedImage()
+                        scanned_image.status = 'pending'
                         scanned_image.original_image = user_image
 
                         with open(ocr_task['resultFilePath']) as f:

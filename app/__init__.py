@@ -45,4 +45,8 @@ def create_app():
 
     app.register_blueprint(api_bp, url_prefix='/api')
 
+    if app.config['DEBUG']:
+        from .web import web as web_blueprint
+        app.register_blueprint(web_blueprint, url_prefix='')
+
     return app

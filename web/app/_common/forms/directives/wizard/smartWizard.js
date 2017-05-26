@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('SmartAdmin.Forms').directive('smartWizard', function () {
+angular.module('SmartAdmin.Forms').directive('smartWizard', ['$parse', '$compile', function ($parse, $compile) {
     return {
         restrict: 'A',
         scope: {
@@ -24,7 +24,6 @@ angular.module('SmartAdmin.Forms').directive('smartWizard', function () {
                 currentStep = step;
                 $('[data-smart-wizard-pane=' + step + ']', element).addClass('active').siblings('[data-smart-wizard-pane]').removeClass('active');
                 $('[data-smart-wizard-tab=' + step + ']', element).addClass('active').siblings('[data-smart-wizard-tab]').removeClass('active');
-
                 $prev.toggleClass('disabled', step == 1)
             }
 
@@ -47,6 +46,14 @@ angular.module('SmartAdmin.Forms').directive('smartWizard', function () {
                             .addClass('complete')
                             .find('.step')
                             .html('<i class="fa fa-check"></i>');
+                        //
+                        // var callback = 'paneInit' + currentStep;
+                        // if(callback in attributes){
+                        //     var fn = $parse(callback);
+                        //     console.dir(fn);
+                        //     fn();
+                        // }
+
                     }
                 }
                 if (currentStep < stepsCount) {
@@ -88,4 +95,4 @@ angular.module('SmartAdmin.Forms').directive('smartWizard', function () {
 
         }
     }
-});
+}]);
