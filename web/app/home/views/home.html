@@ -5,8 +5,6 @@
 
 <div>
     <h1> Welcome <a href>Guy Liberman</a> </h1>
-
-
 </div>
 
 
@@ -47,6 +45,31 @@
 			<!-- Timeline Content -->
 			<div class="smart-timeline">
 				<ul class="smart-timeline-list">
+
+
+					<div ng-repeat="note in notes">
+					<li>
+						<div class="smart-timeline-icon">
+							<i class="fa fa-file-text"></i>
+						</div>
+						<div class="smart-timeline-time">
+							<small>{{ note.time.$date | date:'yyyy-MM-dd HH:mm'}}</small>
+						</div>
+						<div class="smart-timeline-content">
+							<p>
+								<a href="javascript:void(0);"><strong>{{note.title}}</strong></a>
+							</p>
+							<p>
+								{{note.text}}
+							</p>
+							<p ng-if="note.attachment_id == '123'">
+								<a href="javascript:void(0);" class="btn btn-xs btn-primary"><i class="fa fa-file"></i> Report </a>
+							</p>
+
+						</div>
+					</li>
+					</div>
+
 					<li>
 						<div class="smart-timeline-icon">
 							<i class="fa fa-file-text"></i>
@@ -154,55 +177,55 @@
 <!-- end row -->
 
 
-<script type="text/javascript">
-	/* DO NOT REMOVE : GLOBAL FUNCTIONS!
-	 *
-	 * pageSetUp(); WILL CALL THE FOLLOWING FUNCTIONS
-	 *
-	 * // activate tooltips
-	 * $("[rel=tooltip]").tooltip();
-	 *
-	 * // activate popovers
-	 * $("[rel=popover]").popover();
-	 *
-	 * // activate popovers with hover states
-	 * $("[rel=popover-hover]").popover({ trigger: "hover" });
-	 *
-	 * // activate inline charts
-	 * runAllCharts();
-	 *
-	 * // setup widgets
-	 * setup_widgets_desktop();
-	 *
-	 * // run form elements
-	 * runAllForms();
-	 *
-	 ********************************
-	 *
-	 * pageSetUp() is needed whenever you load a page.
-	 * It initializes and checks for all basic elements of the page
-	 * and makes rendering easier.
-	 *
-	 */
+<!--<script type="text/javascript">-->
+	<!--/* DO NOT REMOVE : GLOBAL FUNCTIONS!-->
+	 <!--*-->
+	 <!--* pageSetUp(); WILL CALL THE FOLLOWING FUNCTIONS-->
+	 <!--*-->
+	 <!--* // activate tooltips-->
+	 <!--&lt;!&ndash;* $("[rel=tooltip]").tooltip();&ndash;&gt;-->
+	 <!--*-->
+	 <!--* // activate popovers-->
+	 <!--* $("[rel=popover]").popover();-->
+	 <!--*-->
+	 <!--* // activate popovers with hover states-->
+	 <!--* $("[rel=popover-hover]").popover({ trigger: "hover" });-->
+	 <!--*-->
+	 <!--* // activate inline charts-->
+	 <!--* runAllCharts();-->
+	 <!--*-->
+	 <!--* // setup widgets-->
+	 <!--* setup_widgets_desktop();-->
+	 <!--*-->
+	 <!--* // run form elements-->
+	 <!--* runAllForms();-->
+	 <!--*-->
+	 <!--********************************-->
+	 <!--*-->
+	 <!--* pageSetUp() is needed whenever you load a page.-->
+	 <!--* It initializes and checks for all basic elements of the page-->
+	 <!--* and makes rendering easier.-->
+	 <!--*-->
+	 <!--*/-->
 
-	pageSetUp();
+	<!--pageSetUp();-->
 
-	/*
-	 * ALL PAGE RELATED SCRIPTS CAN GO BELOW HERE
-	 * eg alert("my home function");
-	 */
+	<!--/*-->
+	 <!--* ALL PAGE RELATED SCRIPTS CAN GO BELOW HERE-->
+	 <!--* eg alert("my home function");-->
+	 <!--*/-->
 
-	// pagefunction
+	<!--// pagefunction-->
 
-	var pagefunction = function() {
+	<!--var pagefunction = function() {-->
 
-	};
+	<!--};-->
 
-	// end pagefunction
+	<!--// end pagefunction-->
 
-	// run pagefunction on load
+	<!--// run pagefunction on load-->
 
-	pagefunction();
+	<!--pagefunction();-->
 
-</script>
+<!--</script>-->
 </div>

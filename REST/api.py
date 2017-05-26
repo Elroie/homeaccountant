@@ -106,7 +106,7 @@ def add_note():
     user_id = 'a9ab55e1-419c-43c6-9cb4-8e71462c84b3'
     note_title = 'Sample Title'
     note_text = 'Sample Text'
-    manager.add(user_id,note_title,note_text,"123","Report")
+    manager.add(user_id,note_title,note_text,"234","Comment")
     return "", 204
 
 @api_bp.route("/note/allnotes", methods=['GET'])
