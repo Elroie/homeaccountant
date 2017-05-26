@@ -112,7 +112,7 @@ def return_all_comments():
     comments = manager.get_all_comments(user_id,bill_id)
     return json.dumps(comments)
 
-@verify_authentication
+
 @api_bp.route("/register",methods=['POST','OPTIONS'])
 def register_new_user():
     account = request.json.get('account')
