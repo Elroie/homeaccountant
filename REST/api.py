@@ -139,7 +139,7 @@ def register_new_user():
 @verify_authentication
 def get_user_settings():
     connect(config.DB_NAME)
-    user = User.objects(username=g.user).first()
+    user = g.user
     user_settings = {
         'firstName': user.firstName,
         'lastName': user.lastName,
