@@ -88,10 +88,10 @@ angular.module('app', [
 
 .run(function ($rootScope, $state, $stateParams,$http) {
 
-    if (angular.isDefined(localStorage.currentUser.token)) {
-        console.log(localStorage.currentUser.token);
-        $http.defaults.headers.common.Authorization = 'Bearer ' + localStorage.currentUser.token;
-    }
+    // if (angular.isDefined(localStorage.currentUser.token)) {
+    //     console.log(localStorage.currentUser.token);
+    //     $http.defaults.headers.common.Authorization = 'Bearer ' + localStorage.currentUser.token;
+    // }
     $rootScope.$state = $state;
     $rootScope.$stateParams = $stateParams;
     // editableOptions.theme = 'bs3';
