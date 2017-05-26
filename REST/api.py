@@ -147,21 +147,21 @@ def return_all_comments():
     return json.dumps(comments)
 
 
-@api_bp.route("/register",methods = ['POST'])
-@crossdomain(origin='*')
+@api_bp.route("/register",methods=['POST','OPTIONS'])
+@crossdomain(origin='*', headers="Access-Control-Allow-Origin, Access-Control-Allow-Headers Origin, X-Requested-With, Content-Type, Accept")
 def register_new_user():
     account = request.json.get('account')
     username = account['username']
     password = account['password']
-    firstname = account['firstName']
-    lastname = account['lastName']
+    firstName = account['firstName']
+    lastName = account['lastName']
     email = account['email']
     phone = account['phone']
     country = account['country']
     city = account['city']
     address = account['address']
-    hometype = account['homeType']
-    homesize = account['homeSize']
+    homeType = account['homeType']
+    homeSize = account['homeSize']
     income = account['income']
     residence = account['residence']
 
@@ -171,9 +171,9 @@ def register_new_user():
         abort(400) # existing user
 
     connect(config.DB_NAME)
-    user = User(id=uuid.uuid4(), username=username,password=User.hash_password(password), firstName=firstname, lastName=lastname, email=email, phone=phone, country=country, city=city, address=address, hometype=hometype, homesize=homesize, income=income, residence=residence)
+    user = User(id=uuid.uuid4(), username=username,password=User.hash_password(password), firstName=firstName, lastName=lastName, email=email, phone=phone, country=country, city=city, address=address, homeType=homeType, homeSize=homeSize, income=income, residence=residence)
     user.save()
-    return jsonify({ 'username': user.username }), 201,
+    return jsonify({'username': user.username}), 201,
 
 
 @api_bp.route("/login",methods = ['GET'])
