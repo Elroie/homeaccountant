@@ -331,14 +331,19 @@ def update_user():
 def return_reports():
     connect(config.DB_NAME)
     user = g.user
-    images = UserImage.objects(id = user.id)
+    images = UserImage.objects(user_id = user.id)
     reports = {}
     for image in images:
-        if image.classification_type not in reports:
-            reports[image.classification_type] = []
-            reports[image.classification_type].append(image)
+        image_report = {}
+        image_report['id'] = str(image.id)
+        image_report['user_id'] = str(image.user_id)
+        image_report['name'] = image.name
+        image_report['classification_result'] = image.classification_result
+        if image.classification_result not in reports:
+            reports[image.classification_result] = []
+            reports[image.classification_result].append(image_report)
         else:
-            reports[image.classification_type].append(image)
+            reports[image.classification_result].append(image_report)
     return json.dumps(reports)
 
 
