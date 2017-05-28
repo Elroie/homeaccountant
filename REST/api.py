@@ -160,7 +160,7 @@ def get_user_settings():
     }
     return jsonify(user_settings), 200,
 
-@verify_authentication
+
 @api_bp.route("/login",methods=['POST'])
 def login():
     username_or_token = request.json.get('username')
@@ -181,9 +181,12 @@ def login():
 
 @verify_authentication
 @api_bp.route("/logout")
-def logout(token):
-    g.user = ""
-    return "", 200
+def logout():
+    if g.user is not null:
+        g.user = ""
+        return "", 200
+
+    return "",404
 
 @verify_authentication
 @api_bp.route('/token')
