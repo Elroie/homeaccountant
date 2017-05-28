@@ -4,16 +4,16 @@ angular.module('app').factory('activityService', function($http, $log, APP_CONFI
 
 	function getActivities(callback){
 
-		$http.get(APP_CONFIG.apiRootUrl + '/activities/activity.json').success(function(data){
-
-			callback(data);
-				
-		}).error(function(){
-
-			$log.log('Error');
-			callback([]);
-
-		});
+//		$http.get(APP_CONFIG.apiRootUrl + '/activities/activity.json').success(function(data){
+//
+//			callback(data);
+//
+//		}).error(function(){
+//
+//			$log.log('Error');
+//			callback([]);
+//
+//		});
 
 	}
 
