@@ -19,6 +19,8 @@ angular.module('app.auth').factory('xAuthTokenHttpInterceptor', ['$rootScope', '
         }
     $rootScope.$on('user-unauthenticated', function(){
         _token = null;
+        $cookies.remove('token');
+        $cookies.remove('username');
     });
 
     return {

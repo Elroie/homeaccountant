@@ -91,8 +91,7 @@
 
     $scope.logout = function Logout() {
             // remove user from local storage and clear http auth header
-            delete $localStorage.currentUser;
-            $http.defaults.headers.common.Authorization = '';
+            $rootScope.$broadcast('user-unauthenticated');
         }
    $scope.register = function register (){
         var req = {

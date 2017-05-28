@@ -19,16 +19,16 @@ angular.module('app').factory('Language', function($http, APP_CONFIG){
 
 	function getLanguages(callback) {
 
-		$http.get(APP_CONFIG.apiRootUrl + '/languages.json').success(function(data){
-
-			callback(data);
-			
-		}).error(function(){
-
-			$log.log('Error');
-			callback([]);
-
-		});
+//		$http.get(APP_CONFIG.apiRootUrl + '/languages.json').success(function(data){
+//
+//			callback(data);
+//
+//		}).error(function(){
+//
+//			$log.log('Error');
+//			callback([]);
+//
+//		});
 
 	}
 
