@@ -88,16 +88,24 @@ angular.module('app', [
 })
 .constant('APP_CONFIG', window.appConfig)
 
-.run(function ($rootScope, $state, $stateParams,$http) {
+.run(['$rootScope', '$state', '$stateParams','$http','$cookies','$window',function ($rootScope, $state, $stateParams,$http,$cookies,$window) {
 
-    // if (angular.isDefined(localStorage.currentUser.token)) {
-    //     console.log(localStorage.currentUser.token);
-    //     $http.defaults.headers.common.Authorization = 'Bearer ' + localStorage.currentUser.token;
-    // }
+
     $rootScope.$state = $state;
     $rootScope.$stateParams = $stateParams;
-    // editableOptions.theme = 'bs3';
+    //editableOptions.theme = 'bs3';
+    //Omer enable below
+    /*
+    $rootScope.$on('$stateChangeStart',function(evt,to,params){
+        if ($cookies.token == null){
+        console.log("inside")
+        evt.preventDefault();
+        $state.go('login')
+        }
 
-});
+    });
+    */
+
+}]);
 
 

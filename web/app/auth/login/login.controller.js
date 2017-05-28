@@ -2,8 +2,8 @@
 
 /*angular.module('app.auth').controller('loginController', ['$scope', '$state', 'authService', '$uibModalStack', '$rootScope', '$alert', '$translate', '$window', '$location','$http', function($scope, $state, authService, $uibModalStack, $rootScope, $alert, $translate, $window, $location, $http){
 */
-    angular.module('app.auth').controller('loginController', ['$scope', '$timeout', '$http', '$state','$rootScope',
-    function ($scope, $timeout, $http, $state, $rootScope) {
+    angular.module('app.auth').controller('loginController', ['$scope', '$timeout', '$http', '$state','$rootScope','$cookies',
+    function ($scope, $timeout, $http, $state, $rootScope, $cookies) {
     var ctrl = this;
 
     $scope.username = '';
@@ -90,9 +90,18 @@
 
 
     $scope.logout = function Logout() {
-            // remove user from local storage and clear http auth header
-            delete $localStorage.currentUser;
-            $http.defaults.headers.common.Authorization = '';
+        debugger;
+        console.log("logout function...")
+        console.log("token: " + $cookies.get('token'))
+        $http.post('/api/logout', { token: $cookies.get('token')})
+                .success(function (response) {
+                    // login successful if there's a token in the response
+
+                    console.log(response)
+                    $rootScope.$broadcast('user-unauthenticated')
+                    $state.go('app.auth');
+               });
+
         }
    $scope.register = function register (){
         var req = {
