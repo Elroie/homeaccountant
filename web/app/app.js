@@ -45,7 +45,7 @@ angular.module('app', [
 
 
     // Intercept http calls.
-    $provide.factory('ErrorHttpInterceptor', function ($q) {
+    $provide.factory('ErrorHttpInterceptor', function ($q, $rootScope) {
         var errorCounter = 0;
         function notifyError(rejection){
             console.log(rejection);
@@ -72,8 +72,12 @@ angular.module('app', [
 
             // On response failure
             responseError: function (rejection) {
-                // show notification
-                notifyError(rejection);
+                if (rejection.status === 401) {
+                    $rootScope.logout();
+                }else{
+                    // show notification
+                    notifyError(rejection);
+                }
                 // Return the promise rejection.
                 return $q.reject(rejection);
             }

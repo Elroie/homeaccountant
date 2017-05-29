@@ -19,6 +19,7 @@ modules_dir = os.path.join(static_dir, 'app')
 libs_dir = os.path.join(static_dir, 'libs')
 styles_dir = os.path.join(static_dir, 'styles')
 sounds_dir = os.path.join(static_dir, 'sound')
+resources_dir = os.path.join(static_dir, 'resources')
 
 
 @web.route('/')
@@ -40,6 +41,11 @@ def modules(filename):
 @web.route('/sound/<path:filename>')
 def sound(filename):
     return send_from_directory(sounds_dir, filename)
+
+
+@web.route('/resources/<path:filename>')
+def resources(filename):
+    return send_from_directory(resources_dir, filename)
 
 
 @web.route('/build/<path:filename>')
