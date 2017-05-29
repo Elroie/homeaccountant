@@ -88,23 +88,19 @@ angular.module('app', [
 })
 .constant('APP_CONFIG', window.appConfig)
 
-.run(['$rootScope', '$state', '$stateParams','$http','$cookies','$window',function ($rootScope, $state, $stateParams,$http,$cookies,$window) {
+.run(['$rootScope', '$state', '$stateParams','$http','$cookies','$window', 'authService',
+function ($rootScope, $state, $stateParams,$http,$cookies,$window, authService) {
 
+
+    $rootScope.logout = function () {
+        authService.logout();
+    };
 
     $rootScope.$state = $state;
     $rootScope.$stateParams = $stateParams;
     //editableOptions.theme = 'bs3';
     //Omer enable below
-    /*
-    $rootScope.$on('$stateChangeStart',function(evt,to,params){
-        if ($cookies.token == null){
-        console.log("inside")
-        evt.preventDefault();
-        $state.go('login')
-        }
 
-    });
-    */
 
 }]);
 

@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('app.auth').service('authService', ['$http', '$state', '$cookies', '$q', '$rootScope', 'usersService', 'localStorageService', 'DS', function($http, $state, $cookies, $q, $rootScope, usersService, localStorageService, DS){
-    var _token = null;
+angular.module('app.auth').service('authService', ['$http', '$state', '$cookies', '$q', '$rootScope', '$interval', function($http, $state, $cookies, $q, $rootScope, $interval){
+    var _token = $cookies.get('token');
     var _user = null;
     var _permissions = null;
 
@@ -32,14 +32,14 @@ angular.module('app.auth').service('authService', ['$http', '$state', '$cookies'
             logout();
         }
         else {
-            usersService.getLoggedUser(token).then(
-                function(user){
-                    createSession(token, user, user.permissions);
-                },
-                function(){
-                    logout();
-                }
-            );
+            // usersService.getLoggedUser(token).then(
+            //     function(user){
+            //         createSession(token, user, user.permissions);
+            //     },
+            //     function(){
+            //         logout();
+            //     }
+            // );
         }
     }
 
@@ -82,28 +82,12 @@ angular.module('app.auth').service('authService', ['$http', '$state', '$cookies'
      */
     function logout(){
         var q = $q.defer();
-        $http({
-            url: 'auth',
-            method: 'DELETE'
-        }).then(
-            function(data){
-                _token = null;
-                _isAuthenticated = false;
 
-                $cookies.remove('token', _token);
-                $cookies.remove('laravel_session', _token);
-                setUser(null);
-                _permissions = null;
-                $cookies.remove('permissions', _permissions);
-                $rootScope.$broadcast('user-unauthenticated');
-                $state.go('login');
-                DS.clear();
-                q.resolve();
-            },
-            function(data){
-                q.reject(data);
-            }
-        );
+        $cookies.remove('token');
+        $rootScope.$broadcast('user-unauthenticated');
+        $state.go('login');
+        q.resolve();
+
         return q.promise;
     }
 
@@ -112,59 +96,29 @@ angular.module('app.auth').service('authService', ['$http', '$state', '$cookies'
     }
 
     function getUser() {
-        return _user || localStorageService.get('currentUser');
+        // return _user || localStorageService.get('currentUser');
     }
 
     function setUser(user) {
         _user = user;
-        localStorageService.set('currentUser', user);
-    }
-
-    function isAllowed(permissions) {
-        return _.isEmpty(permissions) || (!_.isEmpty(_user) && !_.isEmpty(_permissions) && _.intersection(permissions, _permissions).length);
+        // localStorageService.set('currentUser', user);
     }
 
     function isAuthenticated(){
         return _isAuthenticated;
     }
 
-    function can(permission) {
-        if (!permission) return false;
-
-        if (_.indexOf(_permissions, permission) != -1) return true;
-
-        return false;
-    }
-
-    function resetPassword(data) {
-        return $http({
-            url: 'reset-password',
-            method: 'POST',
-            data: data
-        }).then(function (res) {
-            return res.data;
-        })
-    }
-
-    $rootScope.$on('$stateChangeStart', function($e, state){
-        if (!isAllowed(state.permissions)) {
-            $e.preventDefault();
-            $state.go('login');
-        }
-    });
-
     // init
     authenticate();
+
+    var authCheck = $interval(authenticate, 500);
 
     return {
         login: login,
         logout: logout,
         getToken: getToken,
         getUser: getUser,
-        isAllowed: isAllowed,
-        can: can,
         authenticate: authenticate,
         isAuthenticated: isAuthenticated,
-        resetPassword: resetPassword
     };
 }]);
