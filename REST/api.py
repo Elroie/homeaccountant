@@ -1,3 +1,4 @@
+import functools
 import os
 import random
 import string
@@ -43,6 +44,28 @@ def verify_authentication(func):
        return func()
     return wrapper
 
+
+def json(f):
+    @functools.wraps(f)
+    def wrapped(*args, **kwargs):
+        rv = f(*args, **kwargs)
+        status_or_headers = None
+        headers = None
+        if isinstance(rv, tuple):
+            rv, status_or_headers, headers = rv + (None,) * (3 - len(rv))
+        if isinstance(status_or_headers, (dict, list)):
+            headers, status_or_headers = status_or_headers, None
+        if not isinstance(rv, dict):
+            rv = rv.to_json()
+        rv = jsonify(rv)
+        if status_or_headers is not None:
+            rv.status_code = status_or_headers
+        if headers is not None:
+            rv.headers.extend(headers)
+        return rv
+    return wrapped
+
+
 @verify_authentication
 @api_bp.route("/test",methods=['POST'])
 def test():
@@ -80,13 +103,14 @@ def return_notes_count():
 
 @api_bp.route("/statusbar", methods=['GET'])
 @verify_authentication
+@json
 def return_statusbar():
-    connect(config.DB_NAME)
-    response = {}
-    response['reportCount'] = str(len(UserImage.objects))
-    response['currentMonthExpenses'] = "200"
-    response['expenseChanges'] = "50"
-    return json.dumps(response)
+
+    return {
+        'reportCount': UserImage.objects.count(),
+        'currentMonthExpenses': 200,
+        'expenseChanges': 50
+    }
 
 @api_bp.route("/comment/addcomment", methods=['POST'])
 @verify_authentication
@@ -182,7 +206,7 @@ def login():
 @verify_authentication
 @api_bp.route("/logout")
 def logout():
-    if g.user is not null:
+    if g.user is not None:
         g.user = ""
         return "", 200
 
@@ -194,20 +218,60 @@ def get_auth_token():
     token = g.user.generate_auth_token()
     return jsonify({ 'token': token.decode('ascii') })
 
-@verify_authentication
+
+def prepare_scanned_image(image):
+    return {
+        'id': str(image.id),
+        'status': image.status,
+        'price': image.price,
+        'to_date': str(image.to_date),
+        'created_at': str(image.created_at),
+        'updated_at': str(image.updated_at),
+    }
+
+
 @api_bp.route("/scanned-images", methods=['GET', 'OPTIONS'])
+@verify_authentication
+@json
 def get_scanned_images():
     parser = reqparse.RequestParser(bundle_errors=True)
     parser.add_argument('status', type=str, location='args')
+    parser.add_argument('user', type=str, location='args')
     args = parser.parse_args()
 
     query = Q()
     if args['status']:
         query &= Q(status=args['status'])
+    if args['user'] == 'currentUser':
+        query &= Q(user_id=g.user.id)
 
     images = ScannedImage.objects(query)
 
-    return images.to_json()
+    return {'scanned_images': map(prepare_scanned_image, images)}
+
+
+@verify_authentication
+@json
+@api_bp.route('/scanned-images/<string:imageId>', methods=['PUT'])
+def update_scanned_image(imageId):
+    parser = reqparse.RequestParser(bundle_errors=True)
+    parser.add_argument('billAmount', type=int, location='json')
+    parser.add_argument('billDate', type=str, location='json')
+    parser.add_argument('billNote', type=str, location='json')
+    args = parser.parse_args()
+
+    image = ScannedImage.objects(id=imageId).get()
+
+    image.original_image.price = args['billAmount']
+    image.original_image.to_date = args['billDate']
+    image.original_image.notes = args['billNote']
+
+    image.original_image.save()
+
+    image.status = 'done'
+    image.save()
+
+    return "", 204
 
 
 @api_bp.route("/upload", methods=['POST', 'OPTIONS'])
@@ -215,20 +279,11 @@ def get_scanned_images():
 def upload_image():
     parser = reqparse.RequestParser(bundle_errors=True)
     parser.add_argument('file', type=werkzeug.FileStorage, location='files', required=True)
-    # parser.add_argument('date', type=str, location='form', required=True)
-    # parser.add_argument('note', type=str, location='form', required=True)
-    # parser.add_argument('amount', type=str, location='form', required=True)
-    # parser.add_argument('date', type=str, location='form', required=True)
-    # parser.add_argument('amount', type=str, location='form', required=True)
-    # parser.add_argument('note', type=str, location='form', required=True)
+
     args = parser.parse_args()
 
     file_obj = args['file']
-    # date = args['date']
-    # note = args['note']
-    # amount = args['amount']
 
-    # elroie todo: remove this when the endpoint is ready
     user_id = g.user.id
 
     is_valid_extension = True
@@ -263,6 +318,21 @@ def upload_image():
 
     classification_manager = ClassificationManager()
     classification_manager.enqueue_classification_task(user_id, file_path)
+
+    # user_image = UserImage(id=uuid.uuid4())
+    # user_image.classification_result = 'Electricity Bill'
+    # user_image.image.put(open(os.path.join(path, file_name)))
+    # user_image.user_id = user_id
+    # user_image.user = user_id
+    # user_image.save()
+    #
+    # scanned_image = ScannedImage()
+    # scanned_image.status = 'pending'
+    # scanned_image.user_id = user_id
+    # scanned_image.original_image = user_image
+    # scanned_image.to_date = datetime.now()
+    # scanned_image.price = 600
+    # scanned_image.save()
 
     return "", 204
 

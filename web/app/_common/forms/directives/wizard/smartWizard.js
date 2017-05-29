@@ -4,7 +4,8 @@ angular.module('SmartAdmin.Forms').directive('smartWizard', ['$parse', '$compile
     return {
         restrict: 'A',
         scope: {
-            'smartWizardCallback': '&'
+            'smartWizardCallback': '&',
+            'paneCallbacks': '=?',
         },
         link: function (scope, element, attributes) {
 
@@ -46,13 +47,10 @@ angular.module('SmartAdmin.Forms').directive('smartWizard', ['$parse', '$compile
                             .addClass('complete')
                             .find('.step')
                             .html('<i class="fa fa-check"></i>');
-                        //
-                        // var callback = 'paneInit' + currentStep;
-                        // if(callback in attributes){
-                        //     var fn = $parse(callback);
-                        //     console.dir(fn);
-                        //     fn();
-                        // }
+
+                        if('paneCallbacks' in scope && currentStep in scope.paneCallbacks){
+                            scope.paneCallbacks[currentStep]();
+                        }
 
                     }
                 }

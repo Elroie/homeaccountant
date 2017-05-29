@@ -30,6 +30,8 @@ class OcrService(Thread):
             print "Using proxy at %s" % proxyString
             self.processor.Proxy = urllib2.ProxyHandler({"http": proxyString})
 
+        return
+
     def run(self):
         try:
             while not self.should_stop:

@@ -84,7 +84,7 @@
 							<div id="bootstrap-wizard-1" class="col-sm-12"
 								 data-smart-wizard
 								 smart-wizard-callback="wizard1CompleteCallback"
-								 pane-init-1="upload()"
+								 pane-callbacks="callbacks"
 							>
 								<div class="form-bootstrapWizard">
 									<ul class="bootstrapWizard form-wizard">
@@ -111,20 +111,18 @@
 											<div class="col-sm-6">
 												<div class="form-group">
 													<div class="input-group">
-														<img ng-if="ctrl.image_path" ng-src="{{ ctrl.image_path }}" width="50px" height="50px" />
+
 														<button id="logoFile"
 																class="btn btn-default btn-md filter choose-file theFileInput"
 																ng-model="ctrl.logoFile"
-																ng-if="!ctrl.image_path"
 																ngf-select
 																ngf-change="selectFile($files, $file, $newFiles, $duplicateFiles, $invalidFiles, $event)"
 																ngf-pattern="ctrl.logoType.allowedFileType"
 																ngf-accept="ctrl.logoType.accept"
-																ngf-resize="ctrl.logoType.resizeObj"
-																ngf-resize-if="ctrl.logoType.resizeIfFn($file, $width, $height)"
-																ngf-dimensions="ctrl.logoType.dimensionsFn($file, $width, $height)"
 														><span>Choose file</span></button>
-														<button class="btn btn-primary btn-md" ng-if="!ctrl.image_path" ng-click="upload()">Upload<span ng-if="ctrl.progressPercentage">{{ ctrl.progressPercentage }}%</span></button>
+
+														<span ng-if="ctrl.image_path">File: {{ctrl.image_path}}</span>
+														<!--<button class="btn btn-primary btn-md" ng-if="!ctrl.image_path" ng-click="upload()">Upload<span ng-if="ctrl.progressPercentage">{{ ctrl.progressPercentage }}%</span></button>-->
 
 													</div>
 
@@ -149,7 +147,7 @@
 											<div class="form-group">
 												<div class="input-group">
 													<span class="input-group-addon"><i class="fa fa-dollar fa-lg fa-fw"></i></span>
-													<input class="form-control input-lg" data-mask="999" data-mask-placeholder="X" name="billsum" id="billsum" type="text" ng-model="ctrl.billAmount">
+													<input class="form-control input-lg" data-mask="999" data-mask-placeholder="X" name="billsum" id="billsum" type="text" ng-model="billAmount">
 												</div>
 											</div>
 										</div>
@@ -157,7 +155,7 @@
 											<div class="form-group">
 												<div class="input-group">
 													<span class="input-group-addon"><i class="fa fa-calendar fa-lg fa-fw"></i></span>
-													<input type="date" class="form-control input-lg"  name="date" id="datepicker" type="text" data-date-inline-picker="true" ng-model="ctrl.billDate">
+													<input type="date" class="form-control input-lg"  name="date" id="datepicker" type="text" data-date-inline-picker="true" ng-model="billDate">
 												</div>
 											</div>
 										</div>
@@ -173,7 +171,7 @@
 										<div class="form-group">
 											<div class="input-group">
 												<span class="input-group-addon"><i class="fa fa-comment-o fa-lg fa-fw"></i></span>
-												<input class="form-control input-lg" placeholder="Write comment ..." name="etc" id="etc" type="text" ng-model="ctrl.billNote">
+												<input class="form-control input-lg" placeholder="Write comment ..." name="etc" id="etc" type="text" ng-model="billNote">
 											</div>
 										</div>
 										<div class="alert alert-info fade in">

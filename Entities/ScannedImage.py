@@ -5,6 +5,7 @@ from Entities.UserImage import UserImage
 
 class ScannedImage(Document):
     original_image = ReferenceField(UserImage, reverse_delete_rule=CASCADE)
+    user_id = UUIDField(required=True)
     text = MultiLineStringField()
     price = FloatField()
     from_date = DateTimeField()

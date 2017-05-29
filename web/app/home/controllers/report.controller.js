@@ -1,12 +1,20 @@
 'use strict';
 
-angular.module('app.home').controller('ReportController', ['$scope', '$timeout', 'Upload', function ($scope, $timeout, Upload) {
+angular.module('app.home').controller('ReportController', ['$scope', '$timeout', 'Upload', '$interval', '$http', function ($scope, $timeout, Upload, $interval, $http) {
 
 
     var ctrl = this;
 
+    var pollingInterval = null;
+
+    $scope.billAmount = null;
+    $scope.billDate = null;
+    $scope.billNote = null;
+    $scope.imageId = null;
+
     $scope.wizard1CompleteCallback = function(wizardData){
         // $scope.upload();
+        update();
 
         $.smallBox({
             title: "Congratulations! Smart wizard finished",
@@ -15,6 +23,12 @@ angular.module('app.home').controller('ReportController', ['$scope', '$timeout',
             iconSmall: "fa fa-check bounce animated",
             timeout: 4000
         });
+    };
+
+    $scope.callbacks = {
+        1: function () {
+            $scope.upload();
+        }
     };
 
     ctrl.progressPercentage = 0;
@@ -27,41 +41,79 @@ angular.module('app.home').controller('ReportController', ['$scope', '$timeout',
     ctrl.logoType = {
         allowedFileType: '.image/*,.jpg,.jpeg,.gif,.png',
         accept: 'image/*',
-        // resizeObj: {width: 300, height: 100, centerCrop: true},
-        postUrl:  '/services/upload-image',
-        dimensionsFn: function($file, $width, $height){
-            return $width < 12000 || $height < 12000;
-        },
-        // resizeIfFn: function($file, $width, $height){
-        //     return $width > 600 || $height > 300;
-        // }
+    };
+
+    $scope.selectFile = function ($files, $file, $newFiles, $duplicateFiles, $invalidFiles, $event) {
+        ctrl.image_path = $file.name;
     };
 
     $scope.upload = function () {
+        start();
         ctrl.showWidget = false;
         ctrl.uploadCompleted = false;
         ctrl.inUploadProgress = true;
         $scope.inProgress = true;
-        $timeout(function(){
-            ctrl.showWidget = true;
-            Upload.upload({
-                // url: 'http://10.0.0.12:5000/api/upload',
-                url: '/api/upload',
-                data: {
-                    file: ctrl.logoFile,
-                    // date: ctrl.billDate,
-                    // note: ctrl.billNote,
-                    // amount: ctrl.billAmount
-                }
-            }).then(function (resp) {
-                ctrl.uploadCompleted = true;
-                ctrl.service.image_path = resp.data.image_path;
-            }, function (resp) {
-                $scope.inProgress = false;
-            }, function (evt) {
-                ctrl.progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
-            });
-        }, 500);
+        return Upload.upload({
+            url: '/api/upload',
+            data: {
+                file: ctrl.logoFile
+            }
+        }).then(function (resp) {
+            ctrl.uploadCompleted = true;
+            $scope.inProgress = false;
+        }, function (resp) {
+            $scope.inProgress = false;
+            stop();
+        }, function (evt) {
+            ctrl.progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
+        });
     };
 
+    function poll() {
+        $scope.billAmount = null;
+        $scope.billDate = null;
+
+        $http({
+            method : "GET",
+            url : "/api/scanned-images",
+            params: {status: 'pending', user: 'currentUser'}
+        }).then(function mySuccess(response) {
+            if (!response.data.scanned_images.length) return;
+
+            $scope.imageId = response.data.scanned_images[0].id;
+            $scope.billAmount = response.data.scanned_images[0].price;
+            $scope.billDate = new Date(response.data.scanned_images[0].to_date);
+            stop();
+        }, function myError(response) {
+
+        });
+
+    }
+
+    function update() {
+        $http({
+            method : "PUT",
+            url : "/api/scanned-images/" + $scope.imageId,
+            data: {
+                billNote: $scope.billNote,
+                billAmount: $scope.billAmount,
+                billDate: $scope.billDate,
+                imageId: $scope.imageId,
+            }
+        }).then(function mySuccess(response) {
+
+        }, function myError(response) {
+
+        });
+
+    }
+
+    function start() {
+        pollingInterval = $interval(poll, 250);
+    }
+
+    function stop() {
+        $interval.cancel(pollingInterval);
+        pollingInterval = null;
+    }
 }]);
