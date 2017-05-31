@@ -7,6 +7,7 @@ class UserImage(Document):
     id = UUIDField(required=True, primary_key=True)
     user_id = UUIDField(required=True)
     name = StringField()
+    unique_id = StringField()
     image = ImageField()
     price = FloatField()
     from_date = DateTimeField()

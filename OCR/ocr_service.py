@@ -70,6 +70,7 @@ class OcrService(Thread):
                         scanned_image = ScannedImage()
                         scanned_image.status = 'pending'
                         scanned_image.original_image = user_image
+                        scanned_image.unique_id = ocr_task['unique_id']
 
                         with open(ocr_task['resultFilePath']) as f:
                             scanned_image.text = f.read()
@@ -89,14 +90,15 @@ class OcrService(Thread):
             # we should suppress and log the errors inside the threads since we don't want this manager to die.
             print ex.message
 
-    def enqueue_ocr_task(self, image_id, filePath, resultFilePath, classification_type,language='Hebrew', outputFormat='txt'):
+    def enqueue_ocr_task(self, image_id, filePath, resultFilePath, classification_type,language='Hebrew', outputFormat='txt', unique_id=None):
         ocr_task = {
             'image_id': image_id,
             'filePath': filePath,
             'resultFilePath': resultFilePath,
             'classification_type': classification_type,
             'language': language,
-            'outputFormat': outputFormat
+            'outputFormat': outputFormat,
+            'unique_id': unique_id
         }
 
         self.ocr_queue.put(ocr_task)

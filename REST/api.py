@@ -237,6 +237,7 @@ def get_scanned_images():
     parser = reqparse.RequestParser(bundle_errors=True)
     parser.add_argument('status', type=str, location='args')
     parser.add_argument('user', type=str, location='args')
+    parser.add_argument('uniqueId', type=str, location='args', default=None)
     args = parser.parse_args()
 
     query = Q()
@@ -244,6 +245,8 @@ def get_scanned_images():
         query &= Q(status=args['status'])
     if args['user'] == 'currentUser':
         query &= Q(user_id=g.user.id)
+    if args['uniqueId']:
+        query &= Q(unique_id=args['uniqueId'])
 
     images = ScannedImage.objects(query)
 
@@ -279,10 +282,12 @@ def update_scanned_image(imageId):
 def upload_image():
     parser = reqparse.RequestParser(bundle_errors=True)
     parser.add_argument('file', type=werkzeug.FileStorage, location='files', required=True)
+    parser.add_argument('uniqueId', type=str, location='form', required=True)
 
     args = parser.parse_args()
 
     file_obj = args['file']
+    unique_id = args['uniqueId']
 
     user_id = g.user.id
 
@@ -317,7 +322,7 @@ def upload_image():
         d.write(file_obj.stream.read())
 
     classification_manager = ClassificationManager()
-    classification_manager.enqueue_classification_task(user_id, file_path)
+    classification_manager.enqueue_classification_task(user_id, file_path, unique_id)
 
     # user_image = UserImage(id=uuid.uuid4())
     # user_image.classification_result = 'Electricity Bill'

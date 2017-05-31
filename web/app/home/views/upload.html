@@ -1,8 +1,8 @@
 
 <script>
-    $( function() {
-        $( "#datepicker" ).datepicker();
-    } );
+//    $( function() {
+//        $( "#datepicker" ).datepicker();
+//    } );
 </script>
 <div id="content">
 	<div class="row">
@@ -122,6 +122,16 @@
 														><span>Choose file</span></button>
 
 														<span ng-if="ctrl.image_path">File: {{ctrl.image_path}}</span>
+														<input type="text"
+															   name="bla"
+															   id="bla"
+														   class="form-control input-lg"
+														   ng-model="ctrl.image_path"
+														   data-smart-validate-input
+														   data-required
+														   data-message-required="Please select report"
+															   style="visibility: hidden; width: 0;height: 0;"
+													/>
 														<!--<button class="btn btn-primary btn-md" ng-if="!ctrl.image_path" ng-click="upload()">Upload<span ng-if="ctrl.progressPercentage">{{ ctrl.progressPercentage }}%</span></button>-->
 
 													</div>
@@ -141,13 +151,23 @@
 
 									</div>
 									<div class="tab-pane" id="tab2" data-smart-wizard-pane="2">
+										<div id="uploadOverlay" ng-hide="!watingForOcr"></div>
 										<br>
 										<h3><strong>Step 2</strong> - Add Bill Information</h3>
 										<div class="col-sm-6">
 											<div class="form-group">
 												<div class="input-group">
 													<span class="input-group-addon"><i class="fa fa-dollar fa-lg fa-fw"></i></span>
-													<input class="form-control input-lg" data-mask="999" data-mask-placeholder="X" name="billsum" id="billsum" type="text" ng-model="billAmount">
+													<input class="form-control input-lg"
+														   data-mask="999"
+														   data-mask-placeholder="X"
+														   name="billsum" id="billsum"
+														   type="text"
+														   ng-model="billAmount"
+															data-smart-validate-input
+														   data-required
+														   data-message-required=""
+													/>
 												</div>
 											</div>
 										</div>
@@ -155,7 +175,16 @@
 											<div class="form-group">
 												<div class="input-group">
 													<span class="input-group-addon"><i class="fa fa-calendar fa-lg fa-fw"></i></span>
-													<input type="date" class="form-control input-lg"  name="date" id="datepicker" type="text" data-date-inline-picker="true" ng-model="billDate">
+													<input type="date"
+														   class="form-control input-lg"
+														   name="date" id="datepicker"
+														   type="text"
+														   data-date-inline-picker="true"
+														   ng-model="billDate"
+														   data-smart-validate-input
+														   data-required
+														   data-message-required=""
+													/>
 												</div>
 											</div>
 										</div>

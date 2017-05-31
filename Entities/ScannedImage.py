@@ -4,6 +4,7 @@ from Entities.UserImage import UserImage
 #change the entity name to BillInfo
 
 class ScannedImage(Document):
+    unique_id = StringField()
     original_image = ReferenceField(UserImage, reverse_delete_rule=CASCADE)
     user_id = UUIDField(required=True)
     text = MultiLineStringField()

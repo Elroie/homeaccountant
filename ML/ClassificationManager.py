@@ -51,14 +51,27 @@ class ClassificationManager(threading.Thread):
                     # save to db as electricity bill.
                     print 'save to db as electricity bill.'
                     user_image = self._save_classification_result(classification_task, classification_result)
-                    ocr_service.enqueue_ocr_task(user_image.id, image_path, os.path.join(image_path, '_scanned' + '.txt'), self.electricity)
+
+                    ocr_service.enqueue_ocr_task(
+                        user_image.id,
+                        image_path,
+                        os.path.join(image_path, '_scanned' + '.txt'),
+                        self.electricity,
+                        classification_task['unique_id']
+                    )
                 else:
                     classification_result = self._water_classifier.classify(classification_task['image_path'])
                     if classification_result.get_type() == self.water and classification_result.get_result() == True:
                         # save to db as water bill.
                         print "save to db as water bill."
                         user_image = self._save_classification_result(classification_task, classification_result)
-                        ocr_service.enqueue_ocr_task(user_image.id, image_path, os.path.join(image_path, '_scanned' + '.txt'), self.water)
+                        ocr_service.enqueue_ocr_task(
+                            user_image.id,
+                            image_path,
+                            os.path.join(image_path, '_scanned' + '.txt'),
+                            self.water,
+                            classification_task['unique_id']
+                        )
                     else:
                         # we couldn't classify this image... no OCR required
                         print "we couldn't classify this image... no OCR required"
@@ -70,8 +83,8 @@ class ClassificationManager(threading.Thread):
     def stop(self):
         self._should_stop = True
 
-    def enqueue_classification_task(self, user_id, image_path):
-        self._classification_queue.put({'user_id': user_id, 'image_path': image_path})
+    def enqueue_classification_task(self, user_id, image_path, unique_id):
+        self._classification_queue.put({'user_id': user_id, 'image_path': image_path, 'unique_id': unique_id})
 
     def _train(self):
         """ Train all classification models """
@@ -127,6 +140,7 @@ class ClassificationManager(threading.Thread):
         # user = User.objects(id=classification_task['user_id']).get()
         user_image.user_id = classification_task['user_id']
         user_image.user = classification_task['user_id']
+        user_image.unique_id = classification_task['unique_id']
         user_image.save()
         self.feed_note_manager.add(classification_task['user_id'], classification_result.get_type() + " Report", "New report uploaded", "123", "Report")
         return user_image

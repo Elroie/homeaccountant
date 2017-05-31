@@ -12,6 +12,9 @@ angular.module('app.home').controller('ReportController', ['$scope', '$timeout',
     $scope.billNote = null;
     $scope.imageId = null;
 
+    var pollLimit = 10;
+    var sessionHash = null;
+
     $scope.wizard1CompleteCallback = function(wizardData){
         // $scope.upload();
         update();
@@ -53,10 +56,14 @@ angular.module('app.home').controller('ReportController', ['$scope', '$timeout',
         ctrl.uploadCompleted = false;
         ctrl.inUploadProgress = true;
         $scope.inProgress = true;
+
+        sessionHash = $.now();
+
         return Upload.upload({
             url: '/api/upload',
             data: {
-                file: ctrl.logoFile
+                file: ctrl.logoFile,
+                uniqueId: sessionHash
             }
         }).then(function (resp) {
             ctrl.uploadCompleted = true;
@@ -70,13 +77,20 @@ angular.module('app.home').controller('ReportController', ['$scope', '$timeout',
     };
 
     function poll() {
+        if(pollLimit <= 0){
+            stop();
+            return;
+        }
+
+        pollLimit -= 1;
+
         $scope.billAmount = null;
         $scope.billDate = null;
 
         $http({
             method : "GET",
             url : "/api/scanned-images",
-            params: {status: 'pending', user: 'currentUser'}
+            params: {status: 'pending', user: 'currentUser', uniqueId: sessionHash}
         }).then(function mySuccess(response) {
             if (!response.data.scanned_images.length) return;
 
@@ -108,11 +122,14 @@ angular.module('app.home').controller('ReportController', ['$scope', '$timeout',
 
     }
 
+    $scope.watingForOcr = false;
     function start() {
-        pollingInterval = $interval(poll, 250);
+        $scope.watingForOcr = true;
+        pollingInterval = $interval(poll, 1000);
     }
 
     function stop() {
+        $scope.watingForOcr = false;
         $interval.cancel(pollingInterval);
         pollingInterval = null;
     }
