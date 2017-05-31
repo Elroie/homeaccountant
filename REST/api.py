@@ -198,6 +198,8 @@ def login():
             return "Wrong password", 404
         g.user = user
         token = g.user.generate_auth_token()
+        feed_note_manager = FeedNoteManager()
+        feed_note_manager.add(g.user.id, "Login", "User logged on", None, "Settings")
         return jsonify({'token': token.decode('ascii')})
 
     g.user = user
