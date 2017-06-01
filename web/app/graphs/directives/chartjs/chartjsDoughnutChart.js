@@ -9,7 +9,7 @@ angular.module('app.graphs').directive('chartjsDoughnutChart',['$http', function
         link: function (scope, element, attributes) {
         $http({
             method : "GET",
-            url : "http://127.0.0.1:5000/api/graph/getdata"
+            url : "/api/graph/getpreviousmonth"
             }).then(function mySuccess(response) {
                 console.log(response.data);
                 graphdata = response.data[0];

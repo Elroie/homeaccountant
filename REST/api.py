@@ -7,15 +7,14 @@ import config
 import json
 import uuid
 
-
-
 from mongoengine import connect, Q
 from flask import Flask, current_app as app, Blueprint, current_app
 from flask_restful import reqparse, abort
 from datetime import timedelta, datetime
-from flask import make_response, request, current_app , jsonify , g
+from flask import make_response, request, current_app, jsonify, g
 from functools import update_wrapper, wraps
 
+from Entities import GraphData
 from Entities import BillComment
 from Entities.User import User
 import Entities.User
@@ -30,18 +29,20 @@ from ML.GraphDataManager import GraphDataManager
 
 api_bp = Blueprint('v1', __name__)
 
+
 def verify_authentication(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
-       token = request.headers.get('token')
-       if token is None:
-           raise Unauthorized("the token is not valid you son of a bitch")
-       user = User.verify_auth_token(token)
-       if user is None:
-           raise Unauthorized("the token is not valid you son of a bitch")
+        token = request.headers.get('token')
+        if token is None:
+            raise Unauthorized("the token is not valid you son of a bitch")
+        user = User.verify_auth_token(token)
+        if user is None:
+            raise Unauthorized("the token is not valid you son of a bitch")
 
-       g.user = user
-       return func()
+        g.user = user
+        return func()
+
     return wrapper
 
 
@@ -63,28 +64,26 @@ def json(f):
         if headers is not None:
             rv.headers.extend(headers)
         return rv
+
     return wrapped
 
 
 @verify_authentication
-@api_bp.route("/test",methods=['POST'])
+@api_bp.route("/test", methods=['POST'])
 def test():
     return "test....", 204
+
 
 @api_bp.route("/note/addnote", methods=['POST'])
 @verify_authentication
 def add_note():
-    parser = reqparse.RequestParser(bundle_errors=True)
-    parser.add_argument('user_id', type=werkzeug.FileStorage, location='files', required=True)
-    parser.add_argument('user_id', type=werkzeug.FileStorage, location='files', required=True)
-    # args = parser.parse_args()
-    # file_obj = args['file']
     manager = FeedNoteManager()
     user_id = g.user.id
     note_title = 'User Updated Settings'
     note_text = ''
-    manager.add(user_id,note_title,note_text,"234","Settings")
+    manager.add(user_id, note_title, note_text, "234", "Settings")
     return "", 204
+
 
 @api_bp.route("/note/allnotes", methods=['GET'])
 @verify_authentication
@@ -94,6 +93,7 @@ def return_all_notes():
     notes = manager.get_all_notes(user_id)
     return notes.to_json()
 
+
 @api_bp.route("/note/count", methods=['GET'])
 @verify_authentication
 def return_notes_count():
@@ -101,30 +101,28 @@ def return_notes_count():
     user_id = g.user.id
     return str(manager.get_note_count(user_id))
 
+
 @api_bp.route("/statusbar", methods=['GET'])
 @verify_authentication
 @json
 def return_statusbar():
-
     return {
         'reportCount': UserImage.objects.count(),
         'currentMonthExpenses': 200,
         'expenseChanges': 50
     }
 
+
 @api_bp.route("/comment/addcomment", methods=['POST'])
 @verify_authentication
 def add_comment():
-    parser = reqparse.RequestParser(bundle_errors=True)
-    parser.add_argument('file', type=werkzeug.FileStorage, location='files', required=True)
-    args = parser.parse_args()
-    file_obj = args['file']
     manager = BillCommentManager()
     user_id = g.user.id
     bill_id = request.args.get('bill_id', '746fc33a-fb7c-4595-ba83-198426311234')
     comment_text = request.args.get('comment_text', 'Sample Text')
-    manager.add(user_id,bill_id,comment_text)
+    manager.add(user_id, bill_id, comment_text)
     return
+
 
 @api_bp.route("/comment/allcomments", methods=['GET'])
 @verify_authentication
@@ -132,11 +130,11 @@ def return_all_comments():
     manager = BillCommentManager()
     user_id = g.user.id
     bill_id = request.args.get('bill_id', '746fc33a-fb7c-4595-ba83-198426311234')
-    comments = manager.get_all_comments(user_id,bill_id)
+    comments = manager.get_all_comments(user_id, bill_id)
     return json.dumps(comments)
 
 
-@api_bp.route("/register",methods=['POST','OPTIONS'])
+@api_bp.route("/register", methods=['POST', 'OPTIONS'])
 def register_new_user():
     account = request.json.get('account')
     username = account['username']
@@ -154,12 +152,14 @@ def register_new_user():
     residence = account['residence']
 
     if username is None or password is None:
-        abort(400) # missing arguments
-    if User.objects(username = username).first() is not None:
-        abort(400) # existing user
+        abort(400)  # missing arguments
+    if User.objects(username=username).first() is not None:
+        abort(400)  # existing user
 
     connect(config.DB_NAME)
-    user = User(id=uuid.uuid4(), username=username,password=User.hash_password(password), firstName=firstName, lastName=lastName, email=email, phone=phone, country=country, city=city, address=address, homeType=homeType, homeSize=homeSize, income=income, residence=residence)
+    user = User(id=uuid.uuid4(), username=username, password=User.hash_password(password), firstName=firstName,
+                lastName=lastName, email=email, phone=phone, country=country, city=city, address=address,
+                homeType=homeType, homeSize=homeSize, income=income, residence=residence)
     user.save()
     return jsonify({'username': user.username}), 201,
 
@@ -185,7 +185,7 @@ def get_user_settings():
     return jsonify(user_settings), 200,
 
 
-@api_bp.route("/login",methods=['POST'])
+@api_bp.route("/login", methods=['POST'])
 def login():
     username_or_token = request.json.get('username')
     # first try to authenticate by token
@@ -193,7 +193,7 @@ def login():
     if user is None:
         password = request.json.get('password')
         # try to authenticate with username/password
-        user = User.objects(username = username_or_token).first()
+        user = User.objects(username=username_or_token).first()
         if not user or not user.verify_hashed_password(password):
             return "Wrong password", 404
         g.user = user
@@ -205,6 +205,7 @@ def login():
     g.user = user
     return jsonify({'token': g.user.generate_auth_token().decode('ascii')})
 
+
 @verify_authentication
 @api_bp.route("/logout")
 def logout():
@@ -212,13 +213,14 @@ def logout():
         g.user = ""
         return "", 200
 
-    return "",404
+    return "", 404
+
 
 @verify_authentication
 @api_bp.route('/token')
 def get_auth_token():
     token = g.user.generate_auth_token()
-    return jsonify({ 'token': token.decode('ascii') })
+    return jsonify({'token': token.decode('ascii')})
 
 
 def prepare_scanned_image(image):
@@ -343,15 +345,17 @@ def upload_image():
 
     return "", 204
 
+
 @api_bp.route("/download", methods=['POST'])
 @verify_authentication
 def download_file(file_name):
     pass
 
+
 @api_bp.route("/user/update", methods=['POST', 'OPTIONS'])
 @verify_authentication
 def update_user():
-    account =  request.json.get('account')
+    account = request.json.get('account')
     firstname = account['firstName']
     lastname = account['lastName']
     email = account['email']
@@ -365,7 +369,7 @@ def update_user():
     residence = account['residence']
 
     if firstname is None:
-        abort(400) # missing arguments
+        abort(400)  # missing arguments
     elif lastname is None:
         abort(400)  # missing arguments
     elif email is None:
@@ -402,7 +406,7 @@ def update_user():
     user.residence = residence
     user.save()
     feed_note_manager = FeedNoteManager()
-    feed_note_manager.add(g.user.id, "Settings Update","Account settings changed", None, "Settings")
+    feed_note_manager.add(g.user.id, "Settings Update", "Account settings changed", None, "Settings")
     return jsonify({'username': user.username}), 200,
 
 
@@ -411,7 +415,7 @@ def update_user():
 def return_reports():
     connect(config.DB_NAME)
     user = g.user
-    images = UserImage.objects(user_id = user.id)
+    images = UserImage.objects(user_id=user.id)
     reports = {}
     for image in images:
         image_report = {}
@@ -434,12 +438,71 @@ def add_graphdata():
     user_id = g.user.id
     note_title = 'User Updated Settings'
     note_text = ''
-    manager.add(user_id,"5","100","200","300")
+    manager.add(user_id, "5", "100", "200", "300")
     return "add data request", 200
+
 
 @api_bp.route("/graph/getdata", methods=['GET'])
 @verify_authentication
 def return_graphdata():
+    import json
     manager = GraphDataManager()
-    data = manager.get_all_graphdata()
+    objects = []
+    #empty_record = GraphData.GraphData(user_id = g.user.id , month = 0 , electricity_price = 0 , water_price = 0 , other_price = 0)
+    for x in range(1, 13):
+        data_record = manager.get_month(x)
+        if len(data_record) != 0:
+            objects.append({ "electricity_price" : data_record[0].electricity_price,
+                             "water_price" : data_record[0].water_price,
+                             "other_price" : data_record[0].other_price,
+                             "month" : x
+                             })
+        elif x == (datetime.now().month + 1):
+            objects.append(manager.get_detailed_forecast())
+        else:
+            empty_record = {
+                 'electricity_price': 0,
+                 'water_price': 0,
+                 'other_price': 0,
+                 'month': x
+            }
+            objects.append(empty_record)
+    return json.dumps(objects)
+
+
+@api_bp.route("/graph/totalexpense", methods=['GET'])
+@verify_authentication
+def return_total_expense():
+    import json
+    manager = GraphDataManager()
+    yearly = []
+    for x in range(1, 13):
+        datarecord = manager.get_month(x)
+        if len(datarecord) != 0:
+            yearly.append(datarecord[0].electricity_price + datarecord[0].water_price + datarecord[0].other_price)
+        else:
+            yearly.append(0)
+    print(manager.get_forecast())
+    return json.dumps(yearly)
+
+
+@api_bp.route('/graph/getcurrentmonth', methods=['GET'])
+@verify_authentication
+def return_current():
+    manager = GraphDataManager()
+    data = manager.get_month(str(datetime.now().month))
+    if len(data) == 0:
+        manager.add(g.user.id, str(datetime.now().month), "0", "0", "0")
+        data = manager.get_month(str(datetime.now().month))
+    return data.to_json()
+
+
+@api_bp.route("/graph/getpreviousmonth", methods=['GET'])
+@verify_authentication
+def return_previous():
+    manager = GraphDataManager()
+    data = manager.get_month(str(datetime.now().month-1))
+    if len(data) == 0:
+        manager.add(g.user.id, str(datetime.now().month-1), "0", "0", "0")
+        data = manager.get_month(str(datetime.now().month-1))
     return data.to_json()

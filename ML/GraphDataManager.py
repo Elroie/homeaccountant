@@ -21,11 +21,12 @@ class GraphDataManager(object):
         return jsonify({'total': electricity_price+water_price+other_price}), 201,
 
     def get_all_graphdata(self):
+        graphdata = GraphData.objects().order_by('month')
+        return graphdata
+
+    def get_month(self,month):
         connect(config.DB_NAME)
-        # return list(FeedNote.objects(user_id=uuid.UUID(user_id)))
-        # return list(FeedNote.objects(user_id=user_id))
-        #user =  User.objects(id=uuid.UUID(user_id)).first()
-        graphdata = GraphData.objects()
+        graphdata = GraphData.objects(month = month)
         return graphdata
 
     def get_temperature(self):
@@ -34,3 +35,33 @@ class GraphDataManager(object):
         url = 'http://api.openweathermap.org/data/2.5/forecast?id='+city+'&APPID='+appid
         response = requests.get(url,verify=False)
         return response.text
+
+    def get_forecast(self):
+        graphdata = GraphData.objects()
+        total = 0
+        for data in graphdata:
+            if data.electricity_price + data.water_price + data.other_price > 0:
+                total += data.electricity_price + data.water_price + data.other_price
+        total = total/len(graphdata)
+        return total
+
+    def get_detailed_forecast(self):
+        graphdata = GraphData.objects()
+        total_electricity = 0
+        total_water = 0
+        total_other = 0
+        for data in graphdata:
+            if data.electricity_price + data.water_price + data.other_price > 0:
+                total_electricity += data.electricity_price
+                total_water += data.water_price
+                total_other += data.other_price
+        month = datetime.now().month + 1
+        if month == 13:
+            month = 1
+        empty_record = {
+            'electricity_price': total_electricity/len(graphdata),
+            'water_price': total_water/len(graphdata),
+            'other_price': total_other/len(graphdata),
+            'month': str(month)
+        }
+        return empty_record
