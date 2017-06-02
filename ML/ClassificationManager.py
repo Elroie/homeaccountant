@@ -9,6 +9,8 @@ from Entities.User import User
 from Entities.UserImage  import UserImage
 from OCR.ocr_service import OcrService
 
+from homeaccountant.ML import ClassificationResult
+
 
 class ClassificationManager(threading.Thread):
     __metaclass__ = utils.Singleton
@@ -75,6 +77,7 @@ class ClassificationManager(threading.Thread):
                     else:
                         # we couldn't classify this image... no OCR required
                         print "we couldn't classify this image... no OCR required"
+                        classification_result = ClassificationResult.ClassificationResult("General", False)
                         self._save_classification_result(classification_task, classification_result)
             except Exception as ex:
                 # we should suppress and log the errors inside the threads since we don't want this manager to die.

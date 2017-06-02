@@ -412,6 +412,7 @@ def update_user():
 
 @api_bp.route("/reports", methods=['POST'])
 @verify_authentication
+@json
 def return_reports():
     connect(config.DB_NAME)
     user = g.user
@@ -428,7 +429,7 @@ def return_reports():
             reports[image.classification_result].append(image_report)
         else:
             reports[image.classification_result].append(image_report)
-    return json.dumps(reports)
+    return reports
 
 
 @api_bp.route("/graph/adddata", methods=['POST'])
