@@ -54,12 +54,14 @@ class ClassificationManager(threading.Thread):
                     print 'save to db as electricity bill.'
                     user_image = self._save_classification_result(classification_task, classification_result)
 
+                    file_name = image_path.split('.')[0]
                     ocr_service.enqueue_ocr_task(
+                        classification_task['user_id'],
                         user_image.id,
                         image_path,
-                        os.path.join(image_path, '_scanned' + '.txt'),
+                        file_name + '_scanned.txt',
                         self.electricity,
-                        classification_task['unique_id']
+                        unique_id=classification_task['unique_id']
                     )
                 else:
                     classification_result = self._water_classifier.classify(classification_task['image_path'])
@@ -67,10 +69,12 @@ class ClassificationManager(threading.Thread):
                         # save to db as water bill.
                         print "save to db as water bill."
                         user_image = self._save_classification_result(classification_task, classification_result)
+                        file_name = image_path.split('.')[0]
                         ocr_service.enqueue_ocr_task(
+                            classification_task['user_id'],
                             user_image.id,
                             image_path,
-                            os.path.join(image_path, '_scanned' + '.txt'),
+                            file_name,
                             self.water,
                             classification_task['unique_id']
                         )
@@ -145,7 +149,7 @@ class ClassificationManager(threading.Thread):
         user_image.user = classification_task['user_id']
         user_image.unique_id = classification_task['unique_id']
         user_image.save()
-        self.feed_note_manager.add(classification_task['user_id'], classification_result.get_type() + " Report", "New report uploaded", "123", "Report")
+        # self.feed_note_manager.add(classification_task['user_id'], classification_result.get_type() + " Report", "New report uploaded", "123", "Report")
         return user_image
 
 

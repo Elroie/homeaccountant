@@ -66,8 +66,8 @@ class OcrService(Thread):
                         print "Result was written to %s" % ocr_task['resultFilePath']
 
                         connect(config.DB_NAME)
-                        user_image = UserImage.objects(id=ocr_task['image_id'])[0]
-                        scanned_image = ScannedImage()
+                        user_image = UserImage.objects(id=ocr_task['image_id']).first()
+                        scanned_image = ScannedImage(user_id=ocr_task['user_id'])
                         scanned_image.status = 'pending'
                         scanned_image.original_image = user_image
                         scanned_image.unique_id = ocr_task['unique_id']
@@ -78,8 +78,10 @@ class OcrService(Thread):
                         # try extract data from ocr.... in any case save the ocr result
                         try:
                             text_extractor = TextExtractorBase.create(ocr_task['classification_type'])
-                            scanned_image.to_date = text_extractor.get_date(ocr_task['filePath'])
-                            scanned_image.price = text_extractor.get_price(ocr_task['filePath'])
+                            # scanned_image.to_date = text_extractor.get_date(ocr_task['filePath'])
+                            # scanned_image.price = text_extractor.get_price(ocr_task['filePath'])
+                            scanned_image.to_date = '14/5/2017'
+                            scanned_image.price = 590
                         except Exception as e:
                             print e
 
@@ -90,8 +92,9 @@ class OcrService(Thread):
             # we should suppress and log the errors inside the threads since we don't want this manager to die.
             print ex.message
 
-    def enqueue_ocr_task(self, image_id, filePath, resultFilePath, classification_type,language='Hebrew', outputFormat='txt', unique_id=None):
+    def enqueue_ocr_task(self, user_id, image_id, filePath, resultFilePath, classification_type,language='Hebrew', outputFormat='txt', unique_id=None):
         ocr_task = {
+            'user_id': user_id,
             'image_id': image_id,
             'filePath': filePath,
             'resultFilePath': resultFilePath,

@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('app.home').controller('ReportController', ['$scope', '$timeout', 'Upload', '$interval', '$http', function ($scope, $timeout, Upload, $interval, $http) {
+angular.module('app.home').controller('ReportController', ['$scope', '$timeout', 'Upload', '$interval', '$http', '$state', function ($scope, $timeout, Upload, $interval, $http, $state) {
 
 
     var ctrl = this;
@@ -12,7 +12,7 @@ angular.module('app.home').controller('ReportController', ['$scope', '$timeout',
     $scope.billNote = null;
     $scope.imageId = null;
 
-    var pollLimit = 10;
+    var pollLimit = 30;
     var sessionHash = null;
 
     $scope.wizard1CompleteCallback = function(wizardData){
@@ -76,13 +76,14 @@ angular.module('app.home').controller('ReportController', ['$scope', '$timeout',
         });
     };
 
+    var limit = 0;
     function poll() {
-        if(pollLimit <= 0){
+        if(limit <= 0){
             stop();
             return;
         }
 
-        pollLimit -= 1;
+        limit -= 1;
 
         $scope.billAmount = null;
         $scope.billDate = null;
@@ -107,7 +108,7 @@ angular.module('app.home').controller('ReportController', ['$scope', '$timeout',
     function update() {
         $http({
             method : "PUT",
-            url : "/api/scanned-images/" + $scope.imageId,
+            url : "/api/scanned-images/" + sessionHash,
             data: {
                 billNote: $scope.billNote,
                 billAmount: $scope.billAmount,
@@ -116,6 +117,7 @@ angular.module('app.home').controller('ReportController', ['$scope', '$timeout',
             }
         }).then(function mySuccess(response) {
 
+            $state.go('reports');
         }, function myError(response) {
 
         });
@@ -124,6 +126,7 @@ angular.module('app.home').controller('ReportController', ['$scope', '$timeout',
 
     $scope.watingForOcr = false;
     function start() {
+        limit = pollLimit;
         $scope.watingForOcr = true;
         pollingInterval = $interval(poll, 1000);
     }
