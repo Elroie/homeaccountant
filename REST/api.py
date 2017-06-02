@@ -8,7 +8,7 @@ import json
 import uuid
 
 from mongoengine import connect, Q
-from flask import Flask, current_app as app, Blueprint, current_app
+from flask import Flask, current_app as app, Blueprint, current_app, send_file, send_from_directory
 from flask_restful import reqparse, abort
 from datetime import timedelta, datetime
 from flask import make_response, request, current_app, jsonify, g
@@ -27,6 +27,8 @@ from ML.ClassificationManager import ClassificationManager
 from ML.FeedNoteManager import FeedNoteManager
 from ML.GraphDataManager import GraphDataManager
 
+from homeaccountant.config import basedir
+
 api_bp = Blueprint('v1', __name__)
 
 
@@ -41,7 +43,7 @@ def verify_authentication(func):
             raise Unauthorized("the token is not valid you son of a bitch")
 
         g.user = user
-        return func()
+        return func(*args, **kwargs)
 
     return wrapper
 
@@ -420,6 +422,7 @@ def update_user():
 
 @api_bp.route("/reports", methods=['POST'])
 @verify_authentication
+@json
 def return_reports():
     connect(config.DB_NAME)
     user = g.user
@@ -431,13 +434,40 @@ def return_reports():
         image_report['user_id'] = str(image.user_id)
         image_report['name'] = image.name
         image_report['classification_result'] = image.classification_result
+        image_report['date'] = image.created_at
+        image_report['price'] = image.price
+        image_report['image'] = image.image
+        image_report['notes'] = image.notes
         if image.classification_result not in reports:
             reports[image.classification_result] = []
             reports[image.classification_result].append(image_report)
         else:
             reports[image.classification_result].append(image_report)
-    return json.dumps(reports)
+    return reports
 
+@api_bp.route("/reportPicture/<string:billId>", methods=['GET'])
+@verify_authentication
+@json
+def return_reportPicture(billId):
+    connect(config.DB_NAME)
+    user = g.user
+    image = UserImage.objects(id=billId).first()
+    # reports = {}
+    # for image in images:
+    #     image_report = {}
+    #     image_report['id'] = str(image.id)
+    #     image_report['user_id'] = str(image.user_id)
+    #     image_report['name'] = image.name
+    #     image_report['classification_result'] = image.classification_result
+    #     image_report['date'] = image.created_at
+    #     image_report['price'] = image.price
+    #     image_report['notes'] = image.notes
+    #     if image.classification_result not in reports:
+    #         reports[image.classification_result] = []
+    #         reports[image.classification_result].append(image_report)
+    #     else:
+    #         reports[image.classification_result].append(image_report)
+    return image
 
 @api_bp.route("/graph/adddata", methods=['POST'])
 @verify_authentication
@@ -522,3 +552,9 @@ def return_previous():
         manager.add(g.user.id, str(datetime.now().month-1), "0", "0", "0")
         data = manager.get_month(str(datetime.now().month-1))
     return data.to_json()
+
+
+@api_bp.route('/bills/<path:filename>')
+def get_bill_image(filename):
+    path = current_app.config['UPLOADS_PATH']
+    return send_from_directory(path, filename)

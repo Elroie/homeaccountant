@@ -70,15 +70,11 @@
     */
 
     $scope.login = function Login(username, password) {
-            console.log("login function...")
-            console.log($scope.username + " " + $scope.password)
             $http.post('/api/login', { username: $scope.username, password: $scope.password })
                 .success(function (response) {
                     // login successful if there's a token in the response
                     console.log(response)
                     if (response.token) {
-                        console.log("token " + response.token)
-
                         $rootScope.$broadcast('user-authenticated',response.token,$scope.username)
                         $state.go('app.home');
 
@@ -91,13 +87,9 @@
 
     $scope.logout = function Logout() {
         debugger;
-        console.log("logout function...")
-        console.log("token: " + $cookies.get('token'))
         $http.post('/api/logout', { token: $cookies.get('token')})
                 .success(function (response) {
                     // login successful if there's a token in the response
-
-                    console.log(response)
                     $rootScope.$broadcast('user-unauthenticated')
                     $state.go('app.auth');
                });
@@ -114,7 +106,6 @@
         }
 
         $http(req).then(function(response){
-            console.log(response);
             $state.go('login');
         }, function(error){
             console.log(error);

@@ -3,7 +3,6 @@
     <big-breadcrumbs items="['Manage Reports']" icon="fa fa-lg fa-fw fa-database" class="col-xs-12 col-sm-7 col-md-7 col-lg-4"></big-breadcrumbs>
 </div>
 
-	{{reports}}
 <div class="row">
 
 	<div class="col-sm-12">
@@ -15,8 +14,6 @@
 					<tr>
 						<th colspan="2">Bill Category</th>
 						<th class="text-center hidden-xs hidden-sm" style="width: 100px;">Bills</th>
-						<th class="text-center hidden-xs hidden-sm" style="width: 100px;">Comments</th>
-						<th class="hidden-xs hidden-sm" style="width: 200px;">Last Bill</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -24,7 +21,7 @@
 					<!-- TR -->
 					<tr>
 						<td class="text-center" style="width: 40px;"><i class="fa fa-bolt fa-2x text-muted"></i></td>
-						<td data-ui-sref="app.report_type">
+						<td data-ui-sref="app.report_type({type :'Electricity Bill'})">
 							<h4><a href="#ajax/forum-topic.html">
 								Electricity Bills
 							</a>
@@ -32,15 +29,7 @@
 							</h4>
 						</td>
 						<td class="text-center hidden-xs hidden-sm">
-							<a href="javascript:void(0);">1</a>
-						</td>
-						<td class="text-center hidden-xs hidden-sm">
-							<a href="javascript:void(0);">1</a>
-						</td>
-						<td class="hidden-xs hidden-sm">by
-							<a href="javascript:void(0);">{{user}}</a>
-							<br>
-							<small><i>May 1, 2017</i></small>
+								<a href="javascript:void(0);">{{reports['Electricity Bill'].length || 0}}</a>
 						</td>
 					</tr>
 					<!-- end TR -->
@@ -48,7 +37,7 @@
 					<!-- TR -->
 					<tr>
 						<td class="text-center" style="width: 40px;"><i class="fa fa-cloud fa-2x text-muted"></i></td>
-						<td>
+						<td data-ui-sref="app.report_type({type :'Water Bill'})">
 							<h4><a href="#ajax/forum-topic.html">
 								Water Bills
 							</a>
@@ -56,15 +45,7 @@
 							</h4>
 						</td>
 						<td class="text-center hidden-xs hidden-sm">
-							<a href="javascript:void(0);">5</a>
-						</td>
-						<td class="text-center hidden-xs hidden-sm">
-							<a href="javascript:void(0);">3</a>
-						</td>
-						<td class="hidden-xs hidden-sm">by
-							<a href="javascript:void(0);">Guy Liberman</a>
-							<br>
-							<small><i>May 1, 2017</i></small>
+							<a href="javascript:void(0);">{{reports['Water Bill'].length || 0}}</a>
 						</td>
 					</tr>
 					<!-- end TR -->
@@ -72,7 +53,7 @@
 					<!-- TR -->
 					<tr>
 						<td class="text-center" style="width: 40px;"><i class="fa fa-database fa-2x text-muted"></i></td>
-						<td>
+						<td data-ui-sref="app.report_type({type :'General'})">
 							<h4><a href="#ajax/forum-topic.html">
 								General Collection
 							</a>
@@ -80,15 +61,7 @@
 							</h4>
 						</td>
 						<td class="text-center hidden-xs hidden-sm">
-							<a href="javascript:void(0);">10</a>
-						</td>
-						<td class="text-center hidden-xs hidden-sm">
-							<a href="javascript:void(0);">4</a>
-						</td>
-						<td class="hidden-xs hidden-sm">by
-							<a href="javascript:void(0);">Guy Liberman</a>
-							<br>
-							<small><i>May 1, 2017</i></small>
+							<a href="javascript:void(0);">{{reports['General'].length || 0}}</a>
 						</td>
 					</tr>
 					<!-- end TR -->

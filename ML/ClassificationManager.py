@@ -1,5 +1,6 @@
 import threading, utils, os, uuid
 
+import ntpath
 from ML.FeedNoteManager import FeedNoteManager
 from config import BASE_PATH, DB_NAME
 from ImageRecognitionModel import ImageRecognitionModel
@@ -8,6 +9,8 @@ from mongoengine import connect
 from Entities.User import User
 from Entities.UserImage  import UserImage
 from OCR.ocr_service import OcrService
+
+from homeaccountant.ML import ClassificationResult
 
 
 class ClassificationManager(threading.Thread):
@@ -79,6 +82,7 @@ class ClassificationManager(threading.Thread):
                     else:
                         # we couldn't classify this image... no OCR required
                         print "we couldn't classify this image... no OCR required"
+                        classification_result = ClassificationResult.ClassificationResult("General", False)
                         self._save_classification_result(classification_task, classification_result)
             except Exception as ex:
                 # we should suppress and log the errors inside the threads since we don't want this manager to die.
@@ -140,7 +144,8 @@ class ClassificationManager(threading.Thread):
         connect(DB_NAME)
         user_image = UserImage(id=uuid.uuid4())
         user_image.classification_result = classification_result.get_type()
-        user_image.image.put(open(classification_task['image_path']))
+        # user_image.image.put(open(classification_task['image_path']))
+        user_image.image = ntpath.basename(classification_task['image_path'])
         # user = User.objects(id=classification_task['user_id']).get()
         user_image.user_id = classification_task['user_id']
         user_image.user = classification_task['user_id']
