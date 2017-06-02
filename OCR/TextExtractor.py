@@ -30,9 +30,17 @@ class TextExtractorBase(object):
 
 class ElectricityTextExtractor(TextExtractorBase):
 
+    def prepare_data(self, file):
+        new_text = ''
+        for line in file:
+            if line.rstrip():
+                new_text += re.sub(r'\s+', '', line)
+        return new_text
+
     def get_date(self, image_path):
         with open(image_path) as f:
             text = f.read()
+            text.replace('\n', '')
             match = re.search(r'ל-(\d+/\d+/\d+)', text)
             if match is not None and match.lastindex == 1:
                 to_date = match.group(1)
@@ -91,3 +99,4 @@ class WaterTextExtractor(TextExtractorBase):
                             print 'invalid cast while trying to extract electricity price'
 
             return round(price + (price * 0.17), 2)
+
