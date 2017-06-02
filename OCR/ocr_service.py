@@ -78,10 +78,10 @@ class OcrService(Thread):
                         # try extract data from ocr.... in any case save the ocr result
                         try:
                             text_extractor = TextExtractorBase.create(ocr_task['classification_type'])
-                            # scanned_image.to_date = text_extractor.get_date(ocr_task['filePath'])
-                            # scanned_image.price = text_extractor.get_price(ocr_task['filePath'])
-                            scanned_image.to_date = '14/5/2017'
-                            scanned_image.price = 590
+                            scanned_image.to_date = text_extractor.get_date(ocr_task['resultFilePath'])
+                            scanned_image.price = text_extractor.get_price(ocr_task['resultFilePath'])
+                            # scanned_image.to_date = '14/5/2017'
+                            # scanned_image.price = 590
                         except Exception as e:
                             print e
 
