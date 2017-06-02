@@ -259,24 +259,32 @@ def get_scanned_images():
 
 @verify_authentication
 @json
-@api_bp.route('/scanned-images/<string:imageId>', methods=['PUT'])
-def update_scanned_image(imageId):
+@api_bp.route('/scanned-images/<string:uniqueId>', methods=['PUT'])
+def update_scanned_image(uniqueId):
     parser = reqparse.RequestParser(bundle_errors=True)
     parser.add_argument('billAmount', type=int, location='json')
     parser.add_argument('billDate', type=str, location='json')
     parser.add_argument('billNote', type=str, location='json')
     args = parser.parse_args()
 
-    image = ScannedImage.objects(id=imageId).get()
+    image = ScannedImage.objects(unique_id=uniqueId).first()
 
-    image.original_image.price = args['billAmount']
-    image.original_image.to_date = args['billDate']
-    image.original_image.notes = args['billNote']
+    if not image:
+        image = UserImage.objects(unique_id=uniqueId).first()
+        image.price = args['billAmount']
+        image.to_date = args['billDate']
+        image.notes = args['billNote']
 
-    image.original_image.save()
+        image.save()
+    else:
+        image.original_image.price = args['billAmount']
+        image.original_image.to_date = args['billDate']
+        image.original_image.notes = args['billNote']
 
-    image.status = 'done'
-    image.save()
+        image.original_image.save()
+
+        image.status = 'done'
+        image.save()
 
     return "", 204
 

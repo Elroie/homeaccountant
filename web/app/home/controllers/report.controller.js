@@ -107,7 +107,7 @@ angular.module('app.home').controller('ReportController', ['$scope', '$timeout',
     function update() {
         $http({
             method : "PUT",
-            url : "/api/scanned-images/" + $scope.imageId,
+            url : "/api/scanned-images/" + sessionHash,
             data: {
                 billNote: $scope.billNote,
                 billAmount: $scope.billAmount,
