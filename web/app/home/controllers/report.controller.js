@@ -12,7 +12,7 @@ angular.module('app.home').controller('ReportController', ['$scope', '$timeout',
     $scope.billNote = null;
     $scope.imageId = null;
 
-    var pollLimit = 10;
+    var pollLimit = 30;
     var sessionHash = null;
 
     $scope.wizard1CompleteCallback = function(wizardData){
