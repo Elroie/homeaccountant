@@ -117,7 +117,7 @@ angular.module('app.home').controller('ReportController', ['$scope', '$timeout',
             }
         }).then(function mySuccess(response) {
 
-            $state.go('reports');
+            $state.go('app.reports');
         }, function myError(response) {
 
         });
