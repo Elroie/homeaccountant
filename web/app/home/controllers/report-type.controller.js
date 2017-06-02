@@ -1,13 +1,25 @@
 'use strict';
 
-angular.module('app.home').controller('ReportTypeController', ['$scope', '$timeout', '$uibModal', function ($scope, $timeout, $uibModal) {
+angular.module('app.home').controller('ReportTypeController', ['$scope', '$timeout', '$uibModal','$stateParams','$rootScope','$http', function ($scope, $timeout, $uibModal,$stateParams,$rootScope,$http) {
 
 
     var ctrl = this;
+    var typeid = $stateParams.type;
+    $scope.typeid = typeid;
+    console.log(typeid)
+    //$rootScope.reports
+     if (typeid == "Electricity Bill"){
+        $scope.report_list = $rootScope.reports['Electricity Bill'];
+     }
+     else if (typeid == "Water Bill") {
+        $scope.report_list = $rootScope.reports['Water Bill'];
+     }
+     else{
+        $scope.report_list = $rootScope.reports['General'];
+     }
 
+    $scope.openBill = function (image) {
 
-
-    $scope.openBill = function (billId) {
 
         var modalInstance = $uibModal.open({
             animation: true,
@@ -23,7 +35,7 @@ angular.module('app.home').controller('ReportTypeController', ['$scope', '$timeo
             appendTo: undefined,
             resolve: {
                 billUrl: function () {
-                    return 'http://127.0.0.1:8888/resources/test1.jpg'
+                    return 'api/bills/' + image
                 }
             }
         });
@@ -31,7 +43,11 @@ angular.module('app.home').controller('ReportTypeController', ['$scope', '$timeo
         return modalInstance.result;
 
 
+
+
     };
+
+
 
 
 

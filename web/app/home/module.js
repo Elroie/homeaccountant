@@ -84,7 +84,7 @@ angular.module('app.home', ['ui.router'])
             }
         })
         .state('app.report_type', {
-            url: '/reports-list',
+            url: '/reports-list/:type',
             data: {
                 title: 'Electricity Reports'
             },

@@ -37,17 +37,12 @@
                         </tr>
                      </thead>
                      <tbody>
-                        <tr role="row" class="odd" ng-click="openBill(1)">
-                           <td>Electricity</td>
-                           <td>01/05/17</td>
-                           <td>231$</td>
-                           <td>Must be Paid in 2 weeks!</td>
-                        </tr>
-                        <tr role="row" class="even">
-                           <td>Electricity</td>
-                           <td>01/04/17</td>
-                           <td>213$</td>
-                           <td>Checked..</td>
+
+                        <tr ng-repeat = "report in report_list" role="row" class="odd" ng-click="openBill(report.image)">
+                           <td>{{typeid}}</td>
+                           <td>{{report.date}}</td>
+                           <td>{{report.price}}</td>
+                           <td>{{report.notes}}</td>
                         </tr>
                      </tbody>
                   </table>

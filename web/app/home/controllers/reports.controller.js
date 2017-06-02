@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('app.home').controller('ManageReportsController', ['$scope', '$timeout', '$http','$cookies', function ($scope, $timeout, $http,$cookies) {
+angular.module('app.home').controller('ManageReportsController', ['$scope', '$timeout', '$http','$cookies','$rootScope', function ($scope, $timeout, $http,$cookies,$rootScope) {
 
 
     $scope.user=$cookies.get('token');
@@ -10,7 +10,7 @@ angular.module('app.home').controller('ManageReportsController', ['$scope', '$ti
         url : "/api/reports"
         }).then(function mySuccess(response) {
             console.log(response.data);
-            $scope.reports = response.data;
+            $rootScope.reports = response.data;
             /*for (var key in $scope.reports){
                 console.log(key + " " + $scope.reports[key][0].user_id)
             }*/
