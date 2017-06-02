@@ -27,7 +27,7 @@ from ML.ClassificationManager import ClassificationManager
 from ML.FeedNoteManager import FeedNoteManager
 from ML.GraphDataManager import GraphDataManager
 
-from homeaccountant.config import basedir
+from config import basedir
 
 api_bp = Blueprint('v1', __name__)
 

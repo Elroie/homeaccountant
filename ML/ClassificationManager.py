@@ -10,7 +10,7 @@ from Entities.User import User
 from Entities.UserImage  import UserImage
 from OCR.ocr_service import OcrService
 
-from homeaccountant.ML import ClassificationResult
+from ML import ClassificationResult
 
 
 class ClassificationManager(threading.Thread):
