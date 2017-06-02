@@ -3,6 +3,7 @@
 angular.module('app.graphs').directive('chartjsBarChart',['$http', function ($http) {
 
     var graphdata;
+    var forecastdata;
 
     return {
         restrict: 'A',
@@ -12,7 +13,8 @@ angular.module('app.graphs').directive('chartjsBarChart',['$http', function ($ht
             url : "/api/graph/totalexpense"
             }).then(function mySuccess(response) {
 
-                graphdata = response.data;
+                graphdata = response.data[0];
+                forecastdata = response.data[1];
 
                 var barOptions = {
                     //Boolean - Whether the scale should start at zero, or an order of magnitude down from the lowest value
@@ -40,14 +42,14 @@ angular.module('app.graphs').directive('chartjsBarChart',['$http', function ($ht
                 var barData = {
                     labels: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November","December"],
                     datasets: [
-                       /* {
+                       {
                             label: "My First dataset",
                             fillColor: "rgba(220,220,220,0.5)",
                             strokeColor: "rgba(220,220,220,0.8)",
                             highlightFill: "rgba(220,220,220,0.75)",
                             highlightStroke: "rgba(220,220,220,1)",
-                            data: [65, 59, 80, 81, 56, 55, 40]
-                        },*/
+                            data: graphdata
+                        },
                         {
                             label: "My Second dataset",
                             fillColor: "rgba(151,187,205,0.5)",
@@ -55,7 +57,7 @@ angular.module('app.graphs').directive('chartjsBarChart',['$http', function ($ht
                             highlightFill: "rgba(151,187,205,0.75)",
                             highlightStroke: "rgba(151,187,205,1)",
                        //     data: [graphdata[0], graphdata[1], graphdata[2], graphdata[3], graphdata[4], graphdata[5], graphdata[6],graphdata[7], graphdata[8], graphdata[9], graphdata[10], graphdata[11],]
-                            data: graphdata
+                            data: forecastdata
                         }
                     ]
                 };

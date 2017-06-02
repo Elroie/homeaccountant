@@ -447,27 +447,31 @@ def add_graphdata():
 def return_graphdata():
     import json
     manager = GraphDataManager()
-    objects = []
+    realvalue = []
+    forecastvalue=[]
     #empty_record = GraphData.GraphData(user_id = g.user.id , month = 0 , electricity_price = 0 , water_price = 0 , other_price = 0)
     for x in range(1, 13):
+        empty_record = {
+            'electricity_price': 0,
+            'water_price': 0,
+            'other_price': 0,
+            'month': x
+        }
         data_record = manager.get_month(x)
         if len(data_record) != 0:
-            objects.append({ "electricity_price" : data_record[0].electricity_price,
+            realvalue.append({ "electricity_price" : data_record[0].electricity_price,
                              "water_price" : data_record[0].water_price,
                              "other_price" : data_record[0].other_price,
                              "month" : x
                              })
-        elif x == (datetime.now().month + 1):
-            objects.append(manager.get_detailed_forecast())
+            forecastvalue.append(empty_record)
+        # elif x == (datetime.now().month + 1):
+        #     objects.append(manager.get_detailed_forecast(x))
         else:
-            empty_record = {
-                 'electricity_price': 0,
-                 'water_price': 0,
-                 'other_price': 0,
-                 'month': x
-            }
-            objects.append(empty_record)
-    return json.dumps(objects)
+            realvalue.append(empty_record)
+            forecastvalue.append(manager.get_detailed_forecast(x))
+    data = [realvalue, forecastvalue]
+    return json.dumps(data)
 
 
 @api_bp.route("/graph/totalexpense", methods=['GET'])
@@ -475,15 +479,19 @@ def return_graphdata():
 def return_total_expense():
     import json
     manager = GraphDataManager()
-    yearly = []
+    realvalue = []
+    forecastvalue=[]
     for x in range(1, 13):
         datarecord = manager.get_month(x)
         if len(datarecord) != 0:
-            yearly.append(datarecord[0].electricity_price + datarecord[0].water_price + datarecord[0].other_price)
+            realvalue.append(datarecord[0].electricity_price + datarecord[0].water_price + datarecord[0].other_price)
+            forecastvalue.append(0)
         else:
-            yearly.append(0)
-    print(manager.get_forecast())
-    return json.dumps(yearly)
+            forecastvalue.append(manager.get_forecast(x))
+            realvalue.append(0)
+    forecastvalue[datetime.now().month-1] = manager.get_forecast(datetime.now().month)
+    data = [realvalue,forecastvalue]
+    return json.dumps(data)
 
 
 @api_bp.route('/graph/getcurrentmonth', methods=['GET'])

@@ -36,7 +36,7 @@ class GraphDataManager(object):
         response = requests.get(url,verify=False)
         return response.text
 
-    def get_forecast(self):
+    def get_forecast(self, month):
         graphdata = GraphData.objects()
         total = 0
         for data in graphdata:
@@ -45,7 +45,7 @@ class GraphDataManager(object):
         total = total/len(graphdata)
         return total
 
-    def get_detailed_forecast(self):
+    def get_detailed_forecast(self, month):
         graphdata = GraphData.objects()
         total_electricity = 0
         total_water = 0
@@ -55,7 +55,7 @@ class GraphDataManager(object):
                 total_electricity += data.electricity_price
                 total_water += data.water_price
                 total_other += data.other_price
-        month = datetime.now().month + 1
+        month = datetime.now().month
         if month == 13:
             month = 1
         empty_record = {
