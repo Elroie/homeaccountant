@@ -18,7 +18,19 @@ class GraphDataManager(object):
     def __init__(self):
         pass
 
-    def add(self, user_id, month=5, electricity_price=0, water_price=0,other_price=0):
+    def init_Data_DB(self,user_id):
+        connect(config.DB_NAME)
+        count = len(GraphData.objects())
+        if 12 > count:
+            GraphData.drop_collection()
+            len(GraphData.objects())
+            for x in range(1, 13):
+                self.add(user_id, x , 0 , 0 , 0)
+        else:
+            print("Graph DB is OK")
+        return 200
+
+    def add(self, user_id, month, electricity_price=0, water_price=0,other_price=0):
         connect(config.DB_NAME)
         graphdata = GraphData(id=uuid.uuid4(), user_id=user_id, month=month, electricity_price=electricity_price, water_price=water_price, other_price=other_price)
         graphdata.save()
@@ -43,30 +55,33 @@ class GraphDataManager(object):
     def get_forecast(self, month):
         graphdata = GraphData.objects()
         total = 0
+        records_count = 0
         for data in graphdata:
             if data.electricity_price + data.water_price + data.other_price > 0:
                 total += data.electricity_price + data.water_price + data.other_price
-        total = total/len(graphdata) + round((25-(self.get_future_temp(month)[0]))*1000)
-        return total
+                records_count += 1
+        if total != 0:
+            return (total/records_count + abs(round((25-(self.get_future_temp(month)[0]))*500)))
+        else:
+            return 0
 
     def get_detailed_forecast(self, month):
         graphdata = GraphData.objects()
         total_electricity = 0
         total_water = 0
         total_other = 0
-        addition = round((25 - (self.get_future_temp(month)[0])) * 333)
+        records_count=0
+        addition = abs(round((25 - (self.get_future_temp(month)[0])) * 5gi00))
         for data in graphdata:
             if data.electricity_price + data.water_price + data.other_price > 0:
                 total_electricity += data.electricity_price
                 total_water += data.water_price
                 total_other += data.other_price
-        month = datetime.now().month
-        if month == 13:
-            month = 1
+                records_count +=1
         empty_record = {
-            'electricity_price': total_electricity/len(graphdata)+addition,
-            'water_price': total_water/len(graphdata)+addition,
-            'other_price': total_other/len(graphdata)+addition,
+            'electricity_price': total_electricity/records_count+addition,
+            'water_price': total_water/records_count+addition,
+            'other_price': total_other/records_count+addition,
             'month': str(month)
         }
         return empty_record
@@ -124,7 +139,17 @@ class GraphDataManager(object):
         y = numpy.array(df['temp'].values)
         ln = linear_model.LinearRegression()
         ln.fit(x,y)
-        print("date : temp : predict")
+        #print("date : temp : predict")
         # for key in historical.keys():
         #     print(key + " : " + str(historical[key]) + " : " + str(ln.predict(numpy.array((datetime.strptime(key, '%m/%d/%Y') - datetime.strptime('1/1/2014', '%m/%d/%Y')).days))))
         return ln.predict(numpy.array((datetime.strptime(str(month)+'/1/2017', '%m/%d/%Y') - datetime.strptime('1/1/2014', '%m/%d/%Y')).days))
+
+    def update_record(self, month , billtype , price):
+        record = GraphData.objects(month=month).first()
+        if "Electricity" in billtype:
+            record.electricity_price = price
+        elif "Water" in billtype:
+            record.water_price = price
+        else:
+            record.other_price += price
+        record.save()

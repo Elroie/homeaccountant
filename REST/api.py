@@ -108,10 +108,16 @@ def return_notes_count():
 @verify_authentication
 @json
 def return_statusbar():
+    manager = GraphDataManager()
+    current_month = manager.get_month(str(datetime.now().month))
+    previous_month = manager.get_month(str(datetime.now().month-1))
+    current_month_total_expense = current_month[0].electricity_price + current_month[0].water_price + current_month[0].other_price
+    previous_month_total_expense = previous_month[0].electricity_price + previous_month[0].water_price + previous_month[0].other_price+1
+
     return {
         'reportCount': UserImage.objects.count(),
-        'currentMonthExpenses': 200,
-        'expenseChanges': 50
+        'currentMonthExpenses': current_month_total_expense,
+        'expenseChanges': (current_month_total_expense-previous_month_total_expense)
     }
 
 
@@ -263,6 +269,7 @@ def get_scanned_images():
 @json
 @api_bp.route('/scanned-images/<string:uniqueId>', methods=['PUT'])
 def update_scanned_image(uniqueId):
+    graph_data_manager = GraphDataManager()
     parser = reqparse.RequestParser(bundle_errors=True)
     parser.add_argument('billAmount', type=int, location='json')
     parser.add_argument('billDate', type=str, location='json')
@@ -278,6 +285,7 @@ def update_scanned_image(uniqueId):
         image.notes = args['billNote']
 
         image.save()
+        graph_data_manager.update_record(datetime.strptime(image.to_date[:10],'%Y-%m-%d').month, image.classification_result, image.price)
     else:
         image.original_image.price = args['billAmount']
         image.original_image.to_date = args['billDate']
@@ -287,7 +295,7 @@ def update_scanned_image(uniqueId):
 
         image.status = 'done'
         image.save()
-
+        graph_data_manager.update_record(datetime.strptime(image.original_image.to_date[:10],'%Y-%m-%d').month, image.original_image.classification_result, image.original_image.price)
     return "", 204
 
 
@@ -496,18 +504,17 @@ def return_graphdata():
             'month': x
         }
         data_record = manager.get_month(x)
-        if len(data_record) != 0:
+        if x <= datetime.now().month:
             realvalue.append({ "electricity_price" : data_record[0].electricity_price,
                              "water_price" : data_record[0].water_price,
                              "other_price" : data_record[0].other_price,
                              "month" : x
                              })
             forecastvalue.append(empty_record)
-        # elif x == (datetime.now().month + 1):
-        #     objects.append(manager.get_detailed_forecast(x))
         else:
             realvalue.append(empty_record)
             forecastvalue.append(manager.get_detailed_forecast(x))
+    forecastvalue[datetime.now().month - 1] = manager.get_detailed_forecast(x)
     data = [realvalue, forecastvalue]
     return json.dumps(data)
 
@@ -521,7 +528,7 @@ def return_total_expense():
     forecastvalue=[]
     for x in range(1, 13):
         datarecord = manager.get_month(x)
-        if len(datarecord) != 0:
+        if x <= datetime.now().month:
             realvalue.append(datarecord[0].electricity_price + datarecord[0].water_price + datarecord[0].other_price)
             forecastvalue.append(0)
         else:
@@ -536,9 +543,9 @@ def return_total_expense():
 @verify_authentication
 def return_current():
     manager = GraphDataManager()
+    manager.init_Data_DB(g.user.id)
     data = manager.get_month(str(datetime.now().month))
     if len(data) == 0:
-        manager.add(g.user.id, str(datetime.now().month), "0", "0", "0")
         data = manager.get_month(str(datetime.now().month))
     return data.to_json()
 
@@ -547,9 +554,9 @@ def return_current():
 @verify_authentication
 def return_previous():
     manager = GraphDataManager()
+    manager.init_Data_DB(g.user.id)
     data = manager.get_month(str(datetime.now().month-1))
     if len(data) == 0:
-        manager.add(g.user.id, str(datetime.now().month-1), "0", "0", "0")
         data = manager.get_month(str(datetime.now().month-1))
     return data.to_json()
 
