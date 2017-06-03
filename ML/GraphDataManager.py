@@ -71,7 +71,7 @@ class GraphDataManager(object):
         total_water = 0
         total_other = 0
         records_count=0
-        addition = abs(round((25 - (self.get_future_temp(month)[0])) * 5gi00))
+        addition = abs(round((25 - (self.get_future_temp(month)[0])) * 500))
         for data in graphdata:
             if data.electricity_price + data.water_price + data.other_price > 0:
                 total_electricity += data.electricity_price
