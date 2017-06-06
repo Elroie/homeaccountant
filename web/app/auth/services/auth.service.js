@@ -25,6 +25,7 @@ angular.module('app.auth').service('authService', ['$http', '$state', '$cookies'
     }
 
     function authenticate() {
+        if($state.current.name == 'login' || $state.current.name == 'register') return;
         _isAuthenticated = false;
         var token = $cookies.get('token');
         $rootScope.$broadcast('user-authenticated', token);
